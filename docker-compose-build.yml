@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  tceam_build:
+    image: node:20.11.1-alpine
+    container_name: tceam_build
+    network_mode: bridge
+    working_dir: /app
+    command: sh -c 'yarn install && yarn build'
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/app
+      - '/etc/timezone:/etc/timezone:ro'
+      - '/etc/localtime:/etc/localtime:ro'
