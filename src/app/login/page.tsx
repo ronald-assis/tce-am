@@ -3,13 +3,13 @@
 import Image from 'next/image'
 import { Form } from '@/components/Form'
 import reddata from '@/assets/reddata.png'
-import tceam from '@/assets/tceam-logo.jpg'
+import tceam from '@/assets/logo.png'
 
 export default function Login() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue_warm-30 to-blue_warm-80">
-      <div className="flex h-[544px] w-2/4 max-w-[600px] flex-col items-center rounded-lg bg-blue_warm-10">
-        <div className="mb-28 flex w-full justify-between">
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue_warm-80 to-blue_warm-30">
+      <div className="flex h-[644px] w-2/4 max-w-[500px] flex-col items-center rounded-lg bg-[#87aae7] shadow-2xl">
+        <div className="mb-20 flex w-full justify-between">
           <Image
             alt="TCE-AM logo"
             src={tceam}
