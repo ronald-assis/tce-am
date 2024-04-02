@@ -2,21 +2,34 @@ import { FormEvent, useState } from 'react'
 
 import { Button } from '../Button'
 import { Input } from '../Input'
+import { ZodError, z } from 'zod'
 
-interface LoginType {
+type FormType = {
   user: string
-  pass: string | number
+  pass: string
 }
 
+const loginSchema = z.object({
+  user: z.string({ required_error: 'Este campo é obrigatório' }).min(3),
+  pass: z.string({ required_error: 'Este campo é obrigatório' }).min(3),
+})
+
 export function Form() {
-  const loginForm = { user: '', pass: '' }
+  const [form, setForm] = useState<FormType>({ user: '', pass: '' })
+  const [errors, setErrors] = useState<ZodError | null>(null)
 
-  const [form, setForm] = useState<LoginType>(loginForm)
-
-  const handleLogin = (event: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    console.log(form)
+    try {
+      loginSchema.safeParse(form)
+      console.log(form)
+    } catch (error) {
+      if (error instanceof ZodError) {
+        setErrors(error)
+        console.log(errors, 'error')
+      }
+    }
   }
 
   return (
@@ -57,9 +70,11 @@ export function Form() {
           className="h-11 w-52 max-w-52 bg-blue_warm-50 font-ald text-base uppercase transition duration-300 hover:-translate-x-1 hover:scale-100 hover:bg-blue_warm-60"
           nameButton="entrar"
         />
+
         <Button
           type="button"
-          nameButton="cancelar"
+          nameButton="limpar"
+          onClick={() => setForm({ user: '', pass: '' })}
           className="h-11 w-48 max-w-52 bg-blue_warm-50 font-ald text-base uppercase transition duration-300 hover:-translate-x-1 hover:scale-100 hover:bg-blue_warm-60"
         />
       </div>
