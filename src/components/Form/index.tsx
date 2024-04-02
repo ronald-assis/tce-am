@@ -27,7 +27,7 @@ export function Form() {
       <span className="mb-10 font-ald text-2xl text-gray-100">
         Painel de Trabalho de Auditor
       </span>
-      <div className="m-auto flex w-full flex-col items-center">
+      <div className="m-auto flex w-full flex-col items-center gap-3">
         <Input
           id="user"
           name="user"
@@ -54,7 +54,7 @@ export function Form() {
       <div className="flex w-full items-center justify-around px-10">
         <Button
           type="submit"
-          className="h-11 w-48 max-w-52 bg-blue_warm-50 font-ald text-base uppercase transition duration-300 hover:-translate-x-1 hover:scale-100 hover:bg-blue_warm-60"
+          className="h-11 w-52 max-w-52 bg-blue_warm-50 font-ald text-base uppercase transition duration-300 hover:-translate-x-1 hover:scale-100 hover:bg-blue_warm-60"
           nameButton="entrar"
         />
         <Button

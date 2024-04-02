@@ -35,7 +35,7 @@ export const Input: React.FC<InputProps> = ({
         <input
           {...rest}
           type={rest.icon === 'eye' && viewPass ? 'text' : rest.type}
-          className="h-12 w-full rounded-lg border border-zinc-200 px-3 py-2 shadow-sm"
+          className="h-12 w-full rounded-lg border border-gray-300 px-3 py-2"
         />
         {rest.icon && (
           <button

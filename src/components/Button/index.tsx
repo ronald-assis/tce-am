@@ -10,11 +10,10 @@ export const Button: React.FC<ButtonProp> = ({
   nameButton = 'button',
   ...rest
 }) => {
-  const buttonBase =
-    'bg-blue_warm-60 w-[121px] h-7 text-white rounded rounded-3xl text-center text-lg'
+  const buttonBase = 'text-white rounded rounded-3xl text-center text-lg'
 
   return (
-    <button className={`${buttonBase} ${className}`} {...rest}>
+    <button className={`${className} ${buttonBase}`} {...rest}>
       {nameButton}
     </button>
   )

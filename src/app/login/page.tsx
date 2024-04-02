@@ -15,6 +15,7 @@ export default function Login() {
             src={tceam}
             width={300}
             height={50}
+            priority
             className="ml-2 mt-2 rounded-lg"
           />
           <Image
@@ -22,6 +23,7 @@ export default function Login() {
             src={reddata}
             width={100}
             height={50}
+            priority
             className="mr-2 mt-2 rounded-lg"
           />
         </div>
