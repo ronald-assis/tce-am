@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
 
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -14,6 +15,7 @@ const loginSchema = z.object({
 type FormData = z.infer<typeof loginSchema>
 
 export function Form() {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -25,6 +27,9 @@ export function Form() {
 
   const handleLogin = async (data: FormData) => {
     console.log(data, 'novo login')
+    if (data) {
+      router.push('/')
+    }
   }
 
   return (

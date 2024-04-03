@@ -2,8 +2,8 @@
 
 import Image from 'next/image'
 import { Form } from '@/components/Form'
-import reddata from '@/assets/reddata.png'
-import tceam from '@/assets/logo.png'
+import reddata from '../../../public/assets/reddata.png'
+import tceam from '../../../public/assets/logo.png'
 
 export default function Login() {
   return (

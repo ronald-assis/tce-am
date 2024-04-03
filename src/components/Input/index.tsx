@@ -24,6 +24,8 @@ export const Input: React.FC<InputProps> = ({
   register,
   classNameInput,
   name,
+  classNameLabel,
+  iconLabel,
   ...rest
 }) => {
   const [viewPass, setViewPass] = useState(false)
@@ -40,16 +42,12 @@ export const Input: React.FC<InputProps> = ({
     <div className={className}>
       <label
         htmlFor={rest.id}
-        className={`${rest.classNameLabel} flex justify-center rounded-md px-1 text-center `}
+        className={`${classNameLabel} flex justify-center rounded-md px-1 text-center `}
       >
         {rest.label && (
           <span className="flex items-center">
-            {rest.iconLabel && (
-              <Icon
-                name={rest.iconLabel}
-                className="mr-1 w-4"
-                strokeWidth={3}
-              />
+            {iconLabel && (
+              <Icon name={iconLabel} className="mr-1 w-4" strokeWidth={3} />
             )}
             <span className="font-ald ">{rest.label}</span>
           </span>

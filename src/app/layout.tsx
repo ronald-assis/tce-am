@@ -4,6 +4,7 @@ import {
   Bai_Jamjuree as BaiJamjuree,
 } from 'next/font/google'
 import './globals.css'
+import { Header } from '@/components/Header'
 
 const roboto = RobotoFlex({ subsets: ['latin'], variable: '--font-roboto' })
 const baiJamjuree = BaiJamjuree({
@@ -28,6 +29,7 @@ export default function RootLayout({
         suppressHydrationWarning={true}
         className={`@${roboto.variable} ${baiJamjuree.variable} font-sans`}
       >
+        <Header />
         {children}
       </body>
     </html>
