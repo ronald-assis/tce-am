@@ -3,17 +3,27 @@
 import React, { InputHTMLAttributes, useState } from 'react'
 import { Icon } from '../Icon'
 import dynamicIconImports from 'lucide-react/dynamicIconImports'
+import { UseFormRegister } from 'react-hook-form'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   className?: string
   label?: string
   icon?: keyof typeof dynamicIconImports
+  iconLabel?: keyof typeof dynamicIconImports
   onIconClick?: boolean
+  classNameInput?: string
+  classNameLabel?: string
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  register?: UseFormRegister<any>
 }
 
 export const Input: React.FC<InputProps> = ({
   className,
   onIconClick,
+  register,
+  classNameInput,
+  name,
   ...rest
 }) => {
   const [viewPass, setViewPass] = useState(false)
@@ -21,21 +31,36 @@ export const Input: React.FC<InputProps> = ({
 
   const handleIconClick = () => {
     if (onIconClick) {
-      setViewPass(!viewPass) // Inverta o estado viewPass ao clicar no ícone
+      setViewPass(!viewPass)
       setView(viewPass ? 'eye' : 'eye-off')
     }
   }
 
   return (
     <div className={className}>
-      <label htmlFor={rest.id} className="ml-2">
-        {rest.label && <span>{rest.label}</span>}
+      <label
+        htmlFor={rest.id}
+        className={`${rest.classNameLabel} flex justify-center rounded-md px-1 text-center `}
+      >
+        {rest.label && (
+          <span className="flex items-center">
+            {rest.iconLabel && (
+              <Icon
+                name={rest.iconLabel}
+                className="mr-1 w-4"
+                strokeWidth={3}
+              />
+            )}
+            <span className="font-ald ">{rest.label}</span>
+          </span>
+        )}
       </label>
       <div className="relative">
         <input
           {...rest}
+          {...(register && name ? { ...register(name) } : {})}
           type={rest.icon === 'eye' && viewPass ? 'text' : rest.type}
-          className="h-12 w-full rounded-lg border border-gray-300 px-3 py-2"
+          className={`${classNameInput} h-12 w-full rounded-lg  px-3 py-2`}
         />
         {rest.icon && (
           <button
