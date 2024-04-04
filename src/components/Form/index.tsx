@@ -73,7 +73,7 @@ export function Form() {
       <div className="flex w-full items-center justify-around px-10">
         <Button
           type="submit"
-          className="h-11 w-52 max-w-52 bg-blue_warm-50 font-ald text-base uppercase transition duration-300 hover:-translate-x-1 hover:scale-100 hover:bg-blue_warm-60"
+          className="h-11 w-52 max-w-52 bg-blue_warm-50 font-ald text-base uppercase transition duration-300 hover:-translate-y-1 hover:scale-100 hover:bg-blue_warm-60"
           nameButton="entrar"
         />
 
@@ -81,7 +81,7 @@ export function Form() {
           type="button"
           nameButton="limpar"
           onClick={() => reset()}
-          className="h-11 w-48 max-w-52 bg-blue_warm-50 font-ald text-base uppercase transition duration-300 hover:-translate-x-1 hover:scale-100 hover:bg-blue_warm-60"
+          className="h-11 w-48 max-w-52 bg-blue_warm-50 font-ald text-base uppercase transition duration-300 hover:-translate-y-1 hover:scale-100 hover:bg-blue_warm-60"
         />
       </div>
     </form>
