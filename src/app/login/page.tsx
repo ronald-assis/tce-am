@@ -10,7 +10,7 @@ export default function Login() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue_warm-80 to-blue_warm-30">
       <div className="flex h-[644px] w-4/5 max-w-[960px] items-center justify-between rounded-lg bg-white shadow-2xl">
-        <div className="h-full w-2/4 rounded-l-lg shadow-2xl">
+        <div className="h-full rounded-l-lg shadow-2xl">
           <Image
             alt="Imagem de fundo"
             src={bgImage}
