@@ -8,6 +8,7 @@ import dynamicIconImports from 'lucide-react/dynamicIconImports'
 import { Card } from '@/components/Card'
 import { Header } from '@/components/Header'
 import { useState } from 'react'
+import { Footer } from '@/components/Footer'
 
 type PropToCardType = {
   title: string
@@ -34,7 +35,7 @@ export default function Home() {
       title: 'Tipologia de Fraudes em Licitações e Contratos',
       icon: 'graduation-cap',
       sizeIcon: 88,
-      to: '/licitacoes_e_contrato',
+      to: '/tipologia_de_fraudes_em_licitacoes_e_contrato',
     },
     {
       title: 'Predições',
@@ -122,7 +123,7 @@ export default function Home() {
 
   return (
     <>
-      <Header />
+      <Header title="PAINEL DE TRABALHO DO AUDITOR" />
       <main className="relative flex min-h-screen flex-col items-center justify-center  bg-gray-200">
         <div
           className={`${showCards ? 'mt-48' : ''} flex w-3/4 items-center justify-center gap-6`}
@@ -166,7 +167,7 @@ export default function Home() {
         )}
 
         {showShortages && (
-          <div className="mt-8 flex gap-3">
+          <div className="mb-44 mt-8 flex gap-3">
             {shortages.map((s, i) => (
               <Card
                 key={i}
@@ -180,7 +181,7 @@ export default function Home() {
         )}
 
         {showNaturalEnvironment && (
-          <div className="mt-8 flex gap-3">
+          <div className="mb-44 mt-8 flex gap-3">
             {naturalEnvironment.map((s, i) => (
               <Card
                 key={i}
@@ -193,6 +194,7 @@ export default function Home() {
           </div>
         )}
       </main>
+      <Footer />
     </>
   )
 }
