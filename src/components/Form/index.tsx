@@ -37,7 +37,7 @@ export function Form() {
       onSubmit={handleSubmit(handleLogin)}
       className="flex h-72 w-full flex-col items-center justify-center gap-10"
     >
-      <span className="mb-10 font-ald text-2xl text-gray-100">
+      <span className="mb-6 font-ald text-2xl text-gray-100">
         Painel de Trabalho de Auditor
       </span>
       <div className="m-auto flex w-full flex-col items-center gap-3">
@@ -70,19 +70,21 @@ export function Form() {
         />
       </div>
 
-      <div className="flex w-full items-center justify-around px-10">
+      <div className="flex w-full items-center justify-around gap-3 px-10">
         <Button
           type="submit"
-          className="h-11 w-52 max-w-52 bg-blue_warm-50 font-ald text-base uppercase transition duration-300 hover:-translate-x-1 hover:scale-100 hover:bg-blue_warm-60"
-          nameButton="entrar"
-        />
+          className="h-11 w-48 max-w-52 rounded-3xl border-2 border-blue_warm-60 bg-blue_warm-50 text-center font-ald text-base uppercase text-white transition duration-300 hover:-translate-y-1 hover:scale-100 hover:bg-blue_warm-60"
+        >
+          entrar
+        </Button>
 
         <Button
           type="button"
-          nameButton="limpar"
           onClick={() => reset()}
-          className="h-11 w-48 max-w-52 bg-blue_warm-50 font-ald text-base uppercase transition duration-300 hover:-translate-x-1 hover:scale-100 hover:bg-blue_warm-60"
-        />
+          className="h-11 w-48 max-w-52 rounded-3xl border-2 border-blue_warm-60 bg-blue_warm-50 text-center font-ald text-base uppercase text-white transition duration-300 hover:-translate-y-1 hover:scale-100 hover:bg-blue_warm-60"
+        >
+          limpar
+        </Button>
       </div>
     </form>
   )

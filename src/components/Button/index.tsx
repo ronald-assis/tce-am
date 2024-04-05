@@ -1,20 +1,18 @@
-import React, { ButtonHTMLAttributes } from 'react'
+import React, { ButtonHTMLAttributes, ReactNode } from 'react'
 
 interface ButtonProp extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string
-  nameButton?: string
+  children?: ReactNode
 }
 
 export const Button: React.FC<ButtonProp> = ({
   className,
-  nameButton = 'button',
+  children = 'button',
   ...rest
 }) => {
-  const buttonBase = 'text-white rounded rounded-3xl text-center text-lg'
-
   return (
-    <button className={`${className} ${buttonBase}`} {...rest}>
-      {nameButton}
+    <button className={className} {...rest}>
+      {children}
     </button>
   )
 }
