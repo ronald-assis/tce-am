@@ -1,4 +1,6 @@
+import { MouseEventHandler } from 'react'
 import dynamicIconImports from 'lucide-react/dynamicIconImports'
+
 import { Icon } from '../Icon'
 import { Button } from '../Button'
 
@@ -7,7 +9,7 @@ type CardType = {
   sizeIcon: number
   className?: string
   icon: keyof typeof dynamicIconImports
-  onClick?: () => void
+  onClick?: MouseEventHandler<HTMLButtonElement>
 }
 
 export function Card({ title, sizeIcon, icon, className, onClick }: CardType) {

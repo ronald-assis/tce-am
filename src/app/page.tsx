@@ -14,11 +14,20 @@ type PropToCardType = {
   icon: keyof typeof dynamicIconImports
   sizeIcon: number
   to?: string
+  sub_category?: string
 }
 
 export default function Home() {
   const [showCards, setShowCards] = useState(false)
+  const [showNaturalEnvironment, setNaturalEnvironment] = useState(false)
+  const [showShortages, setShortages] = useState(false)
   const pathName = usePathname()
+
+  const handleShowCardCategory = () => {
+    setShowCards(!showCards)
+    setNaturalEnvironment(false)
+    setShortages(false)
+  }
 
   const titles: PropToCardType[] = [
     {
@@ -45,23 +54,88 @@ export default function Home() {
       title: 'Desabastecimento',
       icon: 'pc-case',
       sizeIcon: 88,
+      sub_category: 'desabastecimento',
     },
     {
       title: 'Meio Ambiente',
       icon: 'wheat',
       sizeIcon: 88,
+      sub_category: 'meio_ambiente',
     },
   ]
+
+  const shortages: PropToCardType[] = [
+    {
+      title: 'Medicação',
+      icon: 'pc-case',
+      sizeIcon: 88,
+      sub_category: 'desabastecimento',
+    },
+    {
+      title: 'Merenda escolar',
+      icon: 'wheat',
+      sizeIcon: 88,
+      sub_category: 'meio_ambiente',
+    },
+  ]
+
+  const naturalEnvironment: PropToCardType[] = [
+    {
+      title: 'Qualidade do Ar',
+      icon: 'pc-case',
+      sizeIcon: 88,
+      sub_category: 'desabastecimento',
+    },
+    {
+      title: 'Desmatamento',
+      icon: 'wheat',
+      sizeIcon: 88,
+      sub_category: 'meio_ambiente',
+    },
+  ]
+  const showSubCategories = (params?: string) => {
+    return () => {
+      if (params === 'desabastecimento') {
+        console.log('des')
+        setNaturalEnvironment(false)
+        return setShortages(!showShortages)
+      }
+
+      if (params === 'meio_ambiente') {
+        console.log('meio')
+        setShortages(false)
+        return setNaturalEnvironment(!showNaturalEnvironment)
+      }
+    }
+  }
+
+  const changeClassName = (params?: string) => {
+    if (params === 'desabastecimento' && showShortages) {
+      return '-translate-y-2  scale-105 bg-blue_warm-80'
+    }
+
+    if (params === 'meio_ambiente' && showNaturalEnvironment) {
+      return '-translate-y-2  scale-105 bg-blue_warm-80'
+    }
+    return ''
+  }
 
   return (
     <>
       <Header />
       <main className="relative flex min-h-screen flex-col items-center justify-center  bg-gray-200">
-        <div className="flex w-3/4 items-center justify-center gap-6">
+        <div
+          className={`${showCards ? 'mt-48' : ''} flex w-3/4 items-center justify-center gap-6`}
+        >
           {titles.map((t, i) =>
             t.to ? (
               <Link href={`/${pathName}${t.to}`} key={i}>
-                <Card title={t.title} sizeIcon={t.sizeIcon} icon={t.icon} />
+                <Card
+                  title={t.title}
+                  sizeIcon={t.sizeIcon}
+                  className="w-96"
+                  icon={t.icon}
+                />
               </Link>
             ) : (
               <Card
@@ -70,14 +144,44 @@ export default function Home() {
                 sizeIcon={t.sizeIcon}
                 className={`${showCards ? '-translate-y-2  scale-105 bg-blue_warm-80' : ''} w-96`}
                 icon={t.icon}
-                onClick={() => setShowCards(!showCards)}
+                onClick={handleShowCardCategory}
               />
             ),
           )}
         </div>
+
         {showCards && (
           <div className="mt-8 flex gap-3">
             {subCategories.map((s, i) => (
+              <Card
+                key={i}
+                title={s.title}
+                sizeIcon={s.sizeIcon}
+                icon={s.icon}
+                className={`${changeClassName(s.sub_category)} w-72`}
+                onClick={showSubCategories(s.sub_category)}
+              />
+            ))}
+          </div>
+        )}
+
+        {showShortages && (
+          <div className="mt-8 flex gap-3">
+            {shortages.map((s, i) => (
+              <Card
+                key={i}
+                title={s.title}
+                sizeIcon={s.sizeIcon}
+                icon={s.icon}
+                className="w-72"
+              />
+            ))}
+          </div>
+        )}
+
+        {showNaturalEnvironment && (
+          <div className="mt-8 flex gap-3">
+            {naturalEnvironment.map((s, i) => (
               <Card
                 key={i}
                 title={s.title}
