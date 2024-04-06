@@ -1,14 +1,13 @@
 import { MouseEventHandler } from 'react'
-import dynamicIconImports from 'lucide-react/dynamicIconImports'
 
-import { Icon } from '../Icon'
 import { Button } from '../Button'
+import { Icons, NameIcons } from '../Icons'
 
 type CardType = {
   title: string
   sizeIcon: number
   className?: string
-  icon: keyof typeof dynamicIconImports
+  icon: NameIcons
   onClick?: MouseEventHandler<HTMLButtonElement>
 }
 
@@ -19,7 +18,7 @@ export function Card({ title, sizeIcon, icon, className, onClick }: CardType) {
       onClick={onClick}
     >
       <div className="flex flex-col items-center justify-between py-5 text-center text-3xl">
-        <Icon name={icon} className="mb-5" strokeWidth={2} size={sizeIcon} />
+        <Icons name={icon} size={sizeIcon} />
         <p>{title}</p>
       </div>
     </Button>

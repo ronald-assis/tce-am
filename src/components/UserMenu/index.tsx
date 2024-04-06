@@ -1,9 +1,14 @@
+import { Button } from '../Button'
+import { Icon } from '../Icon'
+
 export function UserMenu() {
   return (
-    <ul>
-      <li>
-        <a href="#"></a>
-      </li>
-    </ul>
+    <Button>
+      <div className=" rounded-full bg-gray-500 text-white">
+        <Icon name="user" />
+      </div>
+      <span>Olá, NOME</span>
+      <Icon name="a-arrow-down" />
+    </Button>
   )
 }

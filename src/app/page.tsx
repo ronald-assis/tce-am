@@ -3,16 +3,15 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import dynamicIconImports from 'lucide-react/dynamicIconImports'
-
 import { Card } from '@/components/Card'
 import { Header } from '@/components/Header'
 import { useState } from 'react'
 import { Footer } from '@/components/Footer'
+import { NameIcons } from '@/components/Icons'
 
 type PropToCardType = {
   title: string
-  icon: keyof typeof dynamicIconImports
+  icon: NameIcons
   sizeIcon: number
   to?: string
   sub_category?: string
@@ -33,18 +32,18 @@ export default function Home() {
   const titles: PropToCardType[] = [
     {
       title: 'Tipologia de Fraudes em Licitações e Contratos',
-      icon: 'graduation-cap',
+      icon: 'user',
       sizeIcon: 88,
       to: '/tipologia_de_fraudes_em_licitacoes_e_contrato',
     },
     {
       title: 'Predições',
-      icon: 'graduation-cap',
+      icon: 'user',
       sizeIcon: 88,
     },
     {
       title: 'Indicadores de Políticas Publicas',
-      icon: 'graduation-cap',
+      icon: 'user',
       sizeIcon: 88,
       to: '/indicadores_de_politicas_publicas',
     },
@@ -53,7 +52,7 @@ export default function Home() {
   const subCategories: PropToCardType[] = [
     {
       title: 'Desabastecimento',
-      icon: 'pc-case',
+      icon: 'graduationCap',
       sizeIcon: 88,
       sub_category: 'desabastecimento',
     },
@@ -68,7 +67,7 @@ export default function Home() {
   const shortages: PropToCardType[] = [
     {
       title: 'Medicação',
-      icon: 'pc-case',
+      icon: 'graduationCap',
       sizeIcon: 88,
       sub_category: 'desabastecimento',
     },
@@ -83,7 +82,7 @@ export default function Home() {
   const naturalEnvironment: PropToCardType[] = [
     {
       title: 'Qualidade do Ar',
-      icon: 'pc-case',
+      icon: 'graduationCap',
       sizeIcon: 88,
       sub_category: 'desabastecimento',
     },
