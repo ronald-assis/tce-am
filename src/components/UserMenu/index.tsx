@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Button } from '../Button'
 import { Icons } from '../Icons'
+import Link from 'next/link'
 
 export function UserMenu() {
   const [showMenu, setShowMenu] = useState(false)
@@ -63,8 +64,8 @@ export function UserMenu() {
         </div>
 
         <div className="flex justify-end">
-          <Button className="w-1/3  rounded-full border-2 border-blue_warm-50 text-blue_warm-70 hover:bg-gray-300">
-            sair
+          <Button className="w-2/5 rounded-full border-2 border-blue_warm-50 px-2 text-blue_warm-70 hover:bg-gray-300">
+            <Link href="/login">sair da conta</Link>
           </Button>
         </div>
       </div>
