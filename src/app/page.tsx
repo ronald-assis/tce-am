@@ -122,7 +122,7 @@ export default function Home() {
 
   return (
     <>
-      <Header title="PAINEL DE TRABALHO DO AUDITOR" />
+      <Header homePage title="PAINEL DE TRABALHO DO AUDITOR" />
       <main className="relative flex min-h-screen flex-col items-center justify-center  bg-gray-200">
         <div
           className={`${showCards ? 'mt-48' : ''} flex w-3/4 items-center justify-center gap-6`}

@@ -4,7 +4,8 @@ import { AiOutlineUser, AiOutlinePicLeft } from 'react-icons/ai'
 import { BiBook } from 'react-icons/bi'
 import { FaPlateWheat } from 'react-icons/fa6'
 import { PiGraduationCapBold } from 'react-icons/pi'
-import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
+import { IoIosArrowDown, IoIosArrowUp, IoIosArrowForward } from 'react-icons/io'
+import { TiHome } from 'react-icons/ti'
 
 export type NameIcons =
   | 'user'
@@ -14,6 +15,8 @@ export type NameIcons =
   | 'graduationCap'
   | 'ioArrowDown'
   | 'ioArrowUp'
+  | 'ioArrowRight'
+  | 'tiHome'
 
 interface DynamicIconProp {
   name: NameIcons
@@ -29,6 +32,8 @@ const icons: Record<NameIcons, IconType> = {
   graduationCap: PiGraduationCapBold,
   ioArrowDown: IoIosArrowDown,
   ioArrowUp: IoIosArrowUp,
+  tiHome: TiHome,
+  ioArrowRight: IoIosArrowForward,
 }
 
 export const Icons: React.FC<DynamicIconProp> = ({

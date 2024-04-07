@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
+
 import { Button } from '../Button'
 import { Icons } from '../Icons'
-import Link from 'next/link'
 
 export function UserMenu() {
   const [showMenu, setShowMenu] = useState(false)
@@ -42,10 +43,12 @@ export function UserMenu() {
             <p className="h-8 border-b-2 border-gray-500">Minha Conta</p>
             <ul className="flex flex-col justify-center gap-1 text-lg ">
               <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                <span>Dados pessoais</span>
+                <Link href="/perfil">
+                  <span>Dados pessoais</span>
+                </Link>
               </li>
               <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                <span>Dados pessoais</span>
+                <span>Controle de acesso</span>
               </li>
             </ul>
           </div>
