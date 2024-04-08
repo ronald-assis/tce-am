@@ -32,18 +32,18 @@ export default function Home() {
   const titles: PropToCardType[] = [
     {
       title: 'Tipologia de Fraudes em Licitações e Contratos',
-      icon: 'user',
+      icon: 'liaFileContractSolid',
       sizeIcon: 88,
       to: '/tipologia_de_fraudes_em_licitacoes_e_contrato',
     },
     {
       title: 'Predições',
-      icon: 'user',
+      icon: 'liaFileContractSolid',
       sizeIcon: 88,
     },
     {
       title: 'Indicadores de Políticas Publicas',
-      icon: 'user',
+      icon: 'liaFileContractSolid',
       sizeIcon: 88,
       to: '/indicadores_de_politicas_publicas',
     },
@@ -96,13 +96,22 @@ export default function Home() {
   const showSubCategories = (params?: string) => {
     return () => {
       if (params === 'desabastecimento') {
-        console.log('des')
         setNaturalEnvironment(false)
+        if (showShortages) {
+          window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: 'instant',
+          })
+        }
+
         return setShortages(!showShortages)
       }
 
       if (params === 'meio_ambiente') {
-        console.log('meio')
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: 'instant',
+        })
         setShortages(false)
         return setNaturalEnvironment(!showNaturalEnvironment)
       }
@@ -133,25 +142,29 @@ export default function Home() {
                 <Card
                   title={t.title}
                   sizeIcon={t.sizeIcon}
-                  className="w-96"
+                  className="h-72 w-80 xl:w-96"
                   icon={t.icon}
                 />
               </Link>
             ) : (
-              <Card
-                key={i}
-                title={t.title}
-                sizeIcon={t.sizeIcon}
-                className={`${showCards ? '-translate-y-2  scale-105 bg-blue_warm-80' : ''} w-96`}
-                icon={t.icon}
-                onClick={handleShowCardCategory}
-              />
+              <div key={i}>
+                <Card
+                  key={i}
+                  title={t.title}
+                  sizeIcon={t.sizeIcon}
+                  className={`${showCards ? '-translate-y-2  scale-105 bg-blue_warm-80' : ''} h-72 w-80 xl:w-96`}
+                  icon={t.icon}
+                  onClick={handleShowCardCategory}
+                />
+              </div>
             ),
           )}
         </div>
 
         {showCards && (
-          <div className="mt-8 flex gap-3">
+          <div
+            className={`${showShortages || showNaturalEnvironment ? 'mb-0' : 'mb-40'} mt-8 flex gap-5`}
+          >
             {subCategories.map((s, i) => (
               <Card
                 key={i}
@@ -173,7 +186,7 @@ export default function Home() {
                 title={s.title}
                 sizeIcon={s.sizeIcon}
                 icon={s.icon}
-                className="w-72"
+                className="h-40 w-72"
               />
             ))}
           </div>
@@ -187,7 +200,7 @@ export default function Home() {
                 title={s.title}
                 sizeIcon={s.sizeIcon}
                 icon={s.icon}
-                className="w-72"
+                className="h-40 w-72"
               />
             ))}
           </div>

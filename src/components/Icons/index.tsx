@@ -2,10 +2,18 @@ import React from 'react'
 import { IconType } from 'react-icons'
 import { AiOutlineUser, AiOutlinePicLeft } from 'react-icons/ai'
 import { BiBook } from 'react-icons/bi'
-import { FaPlateWheat } from 'react-icons/fa6'
+import {
+  FaPlateWheat,
+  FaRegAddressCard,
+  FaUserLarge,
+  FaRegEnvelope,
+  FaLock,
+} from 'react-icons/fa6'
 import { PiGraduationCapBold } from 'react-icons/pi'
 import { IoIosArrowDown, IoIosArrowUp, IoIosArrowForward } from 'react-icons/io'
 import { TiHome } from 'react-icons/ti'
+import { LiaFileContractSolid } from 'react-icons/lia'
+import { FaRegEdit } from 'react-icons/fa'
 
 export type NameIcons =
   | 'user'
@@ -17,6 +25,12 @@ export type NameIcons =
   | 'ioArrowUp'
   | 'ioArrowRight'
   | 'tiHome'
+  | 'faRegAddressCard'
+  | 'faUserLarge'
+  | 'faRegEnvelop'
+  | 'liaFileContractSolid'
+  | 'faLock'
+  | 'faRegEdit'
 
 interface DynamicIconProp {
   name: NameIcons
@@ -34,6 +48,12 @@ const icons: Record<NameIcons, IconType> = {
   ioArrowUp: IoIosArrowUp,
   tiHome: TiHome,
   ioArrowRight: IoIosArrowForward,
+  faRegAddressCard: FaRegAddressCard,
+  faUserLarge: FaUserLarge,
+  faRegEnvelop: FaRegEnvelope,
+  liaFileContractSolid: LiaFileContractSolid,
+  faLock: FaLock,
+  faRegEdit: FaRegEdit,
 }
 
 export const Icons: React.FC<DynamicIconProp> = ({
