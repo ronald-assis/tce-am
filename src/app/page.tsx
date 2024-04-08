@@ -97,12 +97,10 @@ export default function Home() {
     return () => {
       if (params === 'desabastecimento') {
         setNaturalEnvironment(false)
-        if (showShortages) {
-          window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: 'instant',
-          })
-        }
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: 'instant',
+        })
 
         return setShortages(!showShortages)
       }
@@ -134,7 +132,7 @@ export default function Home() {
       <Header homePage title="PAINEL DE TRABALHO DO AUDITOR" />
       <main className="relative flex min-h-screen flex-col items-center justify-center  bg-gray-200">
         <div
-          className={`${showCards ? 'mt-48' : ''} flex w-3/4 items-center justify-center gap-6`}
+          className={`${showCards ? 'mt-40' : ''} flex w-3/4 items-center justify-center gap-6`}
         >
           {titles.map((t, i) =>
             t.to ? (
@@ -163,7 +161,7 @@ export default function Home() {
 
         {showCards && (
           <div
-            className={`${showShortages || showNaturalEnvironment ? 'mb-0' : 'mb-40'} mt-8 flex gap-5`}
+            className={`${showShortages || showNaturalEnvironment ? 'mb-0' : 'mb-28'} mt-8 flex gap-5`}
           >
             {subCategories.map((s, i) => (
               <Card
