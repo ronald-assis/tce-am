@@ -43,7 +43,7 @@ export function UserMenu() {
             <p className="h-8 border-b-2 border-gray-500">Minha Conta</p>
             <ul className="flex flex-col justify-center gap-1 text-lg ">
               <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                <Link href="/perfil">
+                <Link href="/perfil" className="w-full">
                   <span>Dados pessoais</span>
                 </Link>
               </li>
@@ -66,11 +66,11 @@ export function UserMenu() {
           </div>
         </div>
 
-        <div className="flex justify-end">
-          <Button className="w-2/5 rounded-full border-2 border-blue_warm-50 px-2 text-blue_warm-70 hover:bg-gray-300">
-            <Link href="/login">sair da conta</Link>
+        <Link href="/login" className="flex justify-end">
+          <Button className="w-2/5 rounded-full border-2 border-blue_warm-50  text-blue_warm-70 hover:bg-gray-300">
+            <span className="w-full px-2">sair da conta</span>
           </Button>
-        </div>
+        </Link>
       </div>
     </div>
   )
