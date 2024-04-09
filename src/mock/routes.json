@@ -1,0 +1,107 @@
+http://localhost:3300/api/login
+
+    {
+        "id_usuario": "44273e47-0910-4822-a0ed-cc7e3a0d1015",
+        "token": "difjslaikjfbnialujdv nkaljsvklja",
+    }
+
+    // MUDAR PARA "USUARIO-CATEGORIA"
+http://localhost:3000/api/v1/usuario-permissoes/44273e47-0910-4822-a0ed-cc7e3a0d1015
+
+// IMPLEMENTAR O CAMPO "ITENS CATEGORIAS"
+[
+    {
+        "id_categoria": "2c692215-5b49-4fb7-b1d5-7363117d9147",
+        "categoria": {
+            "nome_categoria": "predições",
+            "itens_categoria": ["desabastecimento_desmedicação", "desabastecimento_merenda_escolar"], // acrescentar esse campo
+        }
+    },
+    {
+        "id_categoria": "9c692215-5b49-4fb7-b1d5-7363117d9147",
+        "categoria": {
+            "nome_categoria": "incadores de polica publicas",
+            "desc_categoria": "",
+            "itens_categoria": [], // acrescentar esse campo
+        }
+    },
+]
+
+// QUANDO FOR SEM O ITEM ESTAMOS FAZENDO UMA REQUISIÇÃO APENAS PELA CATEGORIA
+http://localhost:3000/api/v1/usuarios-categrias/retorno-url?id=fdksadl?item=medicacao
+
+
+{
+  "url_dashboard_simples": "www.dashboard-gastos-publicos-tce.am.gov",
+  "url_dashboard_completa": "www.dashboard-gastos-publicos-tce.am.gov"
+}
+
+
+http://localhost:3000/api/v1/usuarios/d7d0ce69-3e80-4d70-9582-d8d3cf13ece9
+
+// REMOVER CAMPO SENHA
+{
+    "id_usuario": "d7d0ce69-3e80-4d70-9582-d8d3cf13ece9",
+    "nome_usuario": "Maria da Paz",
+    "cpf_usuario": "77891309272",
+    "email": "mariapaz@gmail.com",
+    "senha": "$2b$12$oSFUw/hlmfZKF5f8N5ZjM..oAzSyNJQ/K./AHfKNfUg/1OmDaB6f.",
+    "ativo": 1,
+    "admin": 1,
+    "created_at": "2024-04-04T19:52:00.572Z",
+    "updated_at": "2024-04-05T15:49:20.945Z"
+}
+
+
+
+
+http://localhost:3000/api/v1/usuarios
+
+// REMOVER O CAMPO SENHA
+{
+    "paginaAtual": 1,
+    "registrosPorPagina": 10,
+    "conteudo": [
+        {
+            "id_usuario": "d7d0ce69-3e80-4d70-9582-d8d3cf13ece9",
+            "nome_usuario": "Maria da Paz",
+            "cpf_usuario": "77891309272",
+            "email": "mariapaz@gmail.com",
+            "senha": "$2b$12$oSFUw/hlmfZKF5f8N5ZjM..oAzSyNJQ/K./AHfKNfUg/1OmDaB6f.",
+            "ativo": 1,
+            "admin": 1,
+            "created_at": "2024-04-04T19:52:00.572Z",
+            "updated_at": "2024-04-05T15:49:20.945Z"
+        },
+        {
+            "id_usuario": "44273e47-0910-4822-a0ed-cc7e3a0d1015",
+            "nome_usuario": "Rodrigo Souza",
+            "cpf_usuario": "92834922268",
+            "email": "rdsouza.c@gmail.com",
+            "senha": "$2b$12$Yb/IbY6FqLuVaSKkm4sjquiSC8qoqQwNnzvlv02BCE6opVfL1vBgq",
+            "ativo": 1,
+            "admin": 1,
+            "created_at": "2024-04-04T19:40:08.079Z",
+            "updated_at": "2024-04-04T19:40:08.079Z"
+        }
+    ]
+}
+
+
+http://localhost:3000/api/v1/usuarios/update/d7d0ce69-3e80-4d70-9582-d8d3cf13ece9
+
+{
+  "nome_usuario": "Maria da Paz",
+  "cpf_usuario": "77891309272",
+  "email": "mariapaz@gmail.com",
+  "senha": "123456",
+  "admin": 1
+}
+
+
+http://localhost:3000/api/v1/auth/update/d7d0ce69-3e80-4d70-9582-d8d3cf13ece9
+
+// ADICIONAR CAMPO DE EMAIL
+{
+    "senha": "654321",
+}

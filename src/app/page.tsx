@@ -3,16 +3,15 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import dynamicIconImports from 'lucide-react/dynamicIconImports'
-
 import { Card } from '@/components/Card'
 import { Header } from '@/components/Header'
 import { useState } from 'react'
 import { Footer } from '@/components/Footer'
+import { NameIcons } from '@/components/Icons'
 
 type PropToCardType = {
   title: string
-  icon: keyof typeof dynamicIconImports
+  icon: NameIcons
   sizeIcon: number
   to?: string
   sub_category?: string
@@ -33,18 +32,18 @@ export default function Home() {
   const titles: PropToCardType[] = [
     {
       title: 'Tipologia de Fraudes em Licitações e Contratos',
-      icon: 'graduation-cap',
+      icon: 'liaFileContractSolid',
       sizeIcon: 88,
       to: '/tipologia_de_fraudes_em_licitacoes_e_contrato',
     },
     {
       title: 'Predições',
-      icon: 'graduation-cap',
+      icon: 'liaFileContractSolid',
       sizeIcon: 88,
     },
     {
       title: 'Indicadores de Políticas Publicas',
-      icon: 'graduation-cap',
+      icon: 'liaFileContractSolid',
       sizeIcon: 88,
       to: '/indicadores_de_politicas_publicas',
     },
@@ -53,7 +52,7 @@ export default function Home() {
   const subCategories: PropToCardType[] = [
     {
       title: 'Desabastecimento',
-      icon: 'pc-case',
+      icon: 'graduationCap',
       sizeIcon: 88,
       sub_category: 'desabastecimento',
     },
@@ -68,7 +67,7 @@ export default function Home() {
   const shortages: PropToCardType[] = [
     {
       title: 'Medicação',
-      icon: 'pc-case',
+      icon: 'graduationCap',
       sizeIcon: 88,
       sub_category: 'desabastecimento',
     },
@@ -83,7 +82,7 @@ export default function Home() {
   const naturalEnvironment: PropToCardType[] = [
     {
       title: 'Qualidade do Ar',
-      icon: 'pc-case',
+      icon: 'graduationCap',
       sizeIcon: 88,
       sub_category: 'desabastecimento',
     },
@@ -97,13 +96,20 @@ export default function Home() {
   const showSubCategories = (params?: string) => {
     return () => {
       if (params === 'desabastecimento') {
-        console.log('des')
         setNaturalEnvironment(false)
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: 'instant',
+        })
+
         return setShortages(!showShortages)
       }
 
       if (params === 'meio_ambiente') {
-        console.log('meio')
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: 'instant',
+        })
         setShortages(false)
         return setNaturalEnvironment(!showNaturalEnvironment)
       }
@@ -123,10 +129,10 @@ export default function Home() {
 
   return (
     <>
-      <Header title="PAINEL DE TRABALHO DO AUDITOR" />
+      <Header homePage title="PAINEL DE TRABALHO DO AUDITOR" />
       <main className="relative flex min-h-screen flex-col items-center justify-center  bg-gray-200">
         <div
-          className={`${showCards ? 'mt-48' : ''} flex w-3/4 items-center justify-center gap-6`}
+          className={`${showCards ? 'mt-40' : ''} flex w-3/4 items-center justify-center gap-6`}
         >
           {titles.map((t, i) =>
             t.to ? (
@@ -134,25 +140,29 @@ export default function Home() {
                 <Card
                   title={t.title}
                   sizeIcon={t.sizeIcon}
-                  className="w-96"
+                  className="h-72 w-80 xl:w-96"
                   icon={t.icon}
                 />
               </Link>
             ) : (
-              <Card
-                key={i}
-                title={t.title}
-                sizeIcon={t.sizeIcon}
-                className={`${showCards ? '-translate-y-2  scale-105 bg-blue_warm-80' : ''} w-96`}
-                icon={t.icon}
-                onClick={handleShowCardCategory}
-              />
+              <div key={i}>
+                <Card
+                  key={i}
+                  title={t.title}
+                  sizeIcon={t.sizeIcon}
+                  className={`${showCards ? '-translate-y-2  scale-105 bg-blue_warm-80' : ''} h-72 w-80 xl:w-96`}
+                  icon={t.icon}
+                  onClick={handleShowCardCategory}
+                />
+              </div>
             ),
           )}
         </div>
 
         {showCards && (
-          <div className="mt-8 flex gap-3">
+          <div
+            className={`${showShortages || showNaturalEnvironment ? 'mb-0' : 'mb-28'} mt-8 flex gap-5`}
+          >
             {subCategories.map((s, i) => (
               <Card
                 key={i}
@@ -174,7 +184,7 @@ export default function Home() {
                 title={s.title}
                 sizeIcon={s.sizeIcon}
                 icon={s.icon}
-                className="w-72"
+                className="h-40 w-72"
               />
             ))}
           </div>
@@ -188,7 +198,7 @@ export default function Home() {
                 title={s.title}
                 sizeIcon={s.sizeIcon}
                 icon={s.icon}
-                className="w-72"
+                className="h-40 w-72"
               />
             ))}
           </div>

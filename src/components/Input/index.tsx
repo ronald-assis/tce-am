@@ -58,7 +58,7 @@ export const Input: React.FC<InputProps> = ({
           {...rest}
           {...(register && name ? { ...register(name) } : {})}
           type={rest.icon === 'eye' && viewPass ? 'text' : rest.type}
-          className={`${classNameInput} h-12 w-full rounded-lg px-3 py-2 focus:outline-0`}
+          className={`${classNameInput} h-12 w-full rounded-lg px-3 py-2 `}
         />
         {rest.icon && (
           <button
