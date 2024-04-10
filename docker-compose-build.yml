@@ -7,11 +7,7 @@ services:
     network_mode: bridge
     working_dir: /app
     command: sh -c 'yarn install && yarn build'
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=development
     volumes:
-      - .:/app
+      - ./:/app
       - '/etc/timezone:/etc/timezone:ro'
       - '/etc/localtime:/etc/localtime:ro'
