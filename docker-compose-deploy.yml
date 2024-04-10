@@ -8,7 +8,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - '/home/vm121/tceam_frontend/.next:/usr/share/nginx/html'
+      - '/home/vm121/tceam_frontend:/usr/share/nginx/html'
       - '/etc/timezone:/etc/timezone:ro'
       - '/etc/localtime:/etc/localtime:ro'
     network_mode: bridge
