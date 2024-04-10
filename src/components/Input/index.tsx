@@ -7,11 +7,14 @@ import { Icons, NameIcons } from '../Icons'
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   className?: string
   label?: string
+  errorMessage?: string
   icon?: NameIcons
   iconLabel?: NameIcons
   onIconClick?: boolean
   classNameInput?: string
+  classNameInputDiv?: string
   classNameLabel?: string
+  classNameError?: string
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   register?: UseFormRegister<any>
@@ -50,12 +53,12 @@ export const Input: React.FC<InputProps> = ({
           </span>
         )}
       </label>
-      <div className="relative">
+      <div className={`${rest.classNameInputDiv} relative`}>
         <input
           {...rest}
           {...(register && name ? { ...register(name) } : {})}
           type={rest.icon === 'bsEye' && viewPass ? 'text' : rest.type}
-          className={`${classNameInput} h-12 w-full rounded-lg px-3 py-2 `}
+          className={`${classNameInput} h-12 w-full px-3 py-2 `}
         />
         {rest.icon && (
           <button
@@ -70,6 +73,12 @@ export const Input: React.FC<InputProps> = ({
           </button>
         )}
       </div>
+      {rest.errorMessage && (
+        <span className={`${rest.classNameError} flex items-center`}>
+          {iconLabel && <Icons name={iconLabel} className="mr-1 w-4" />}
+          <span className="font-ald ">{rest.errorMessage}</span>
+        </span>
+      )}
     </div>
   )
 }
