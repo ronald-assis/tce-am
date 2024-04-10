@@ -28,6 +28,9 @@ export const Input: React.FC<InputProps> = ({
   name,
   classNameLabel,
   iconLabel,
+  errorMessage,
+  classNameError,
+  classNameInputDiv,
   ...rest
 }) => {
   const [viewPass, setViewPass] = useState(false)
@@ -53,7 +56,7 @@ export const Input: React.FC<InputProps> = ({
           </span>
         )}
       </label>
-      <div className={`${rest.classNameInputDiv} relative`}>
+      <div className={`${classNameInputDiv} relative`}>
         <input
           {...rest}
           {...(register && name ? { ...register(name) } : {})}
@@ -73,10 +76,10 @@ export const Input: React.FC<InputProps> = ({
           </button>
         )}
       </div>
-      {rest.errorMessage && (
-        <span className={`${rest.classNameError} flex items-center`}>
+      {errorMessage && (
+        <span className={`${classNameError} flex items-center`}>
           {iconLabel && <Icons name={iconLabel} className="mr-1 w-4" />}
-          <span className="font-ald ">{rest.errorMessage}</span>
+          <span className="font-ald ">{errorMessage}</span>
         </span>
       )}
     </div>

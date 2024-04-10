@@ -27,6 +27,8 @@ export function Header({ title, homePage }: HeaderPropType) {
               height={70}
               src={tceam}
               className="rounded-lg"
+              priority
+              placeholder="empty"
             />
           </a>
           <UserMenu />

@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Modal from 'react-modal'
 
@@ -12,17 +12,20 @@ import { Header } from '@/components/Header'
 import { Icons } from '@/components/Icons'
 import { Input } from '@/components/Input'
 
+Modal.setAppElement('body')
+
 const dataSchema = z.object({
   nome_usuario: z.string().min(3, { message: 'Este campo é obrigatório!' }),
   cpf_usuario: z.string().min(3, { message: 'Este campo é obrigatório!' }),
-  email: z.string().min(1, { message: 'Este campo é obrigatório!' }),
-  ativo: z.boolean({ description: 'Este campo é obrigatorio' }),
-  admin: z.boolean({ description: 'Este campo é obrigatorio' }),
+  email: z.string().email().min(1, { message: 'Este campo é obrigatório!' }),
+  senha: z.string().min(3, { message: 'Este campo é obrigatório!' }).optional(),
+  ativo: z.number({ description: 'Este campo é obrigatorio' }).optional(),
+  admin: z.number({ description: 'Este campo é obrigatorio' }).optional(),
 })
 
 type FormData = z.infer<typeof dataSchema>
 
-type UsersType = {
+type UsersResponseType = {
   id_usuario: string
   nome_usuario: string
   cpf_usuario: string
@@ -36,7 +39,7 @@ type UsersType = {
 }
 
 type UserToRegister = Omit<
-  UsersType,
+  UsersResponseType,
   'created_at' | 'updated_at' | 'id_usuario'
 >
 
@@ -56,9 +59,10 @@ export default function AccessControl() {
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(dataSchema),
+    defaultValues: selectedUser,
   })
 
-  const users: UsersType[] = [
+  const users: UsersResponseType[] = [
     {
       id_usuario: 'd7d0ce69-3e80-4d70-9582-d8d3cf13ece9',
       nome_usuario: 'Maria da Paz',
@@ -81,6 +85,9 @@ export default function AccessControl() {
     },
   ]
 
+  useEffect(() => {
+    reset(selectedUser)
+  }, [selectedUser, reset])
   const handleRegiterOrUpdate = async (data: FormData) => {
     console.log(data, modalIsOpenOrClose)
   }
@@ -90,7 +97,7 @@ export default function AccessControl() {
     reset()
   }
 
-  const openModal = (info: UsersType) => {
+  const openModal = (info: UsersResponseType) => {
     console.log('click')
     setModalIsOpenOrClose(true)
     setSelectedUser(info)
@@ -208,7 +215,7 @@ export default function AccessControl() {
                     label="NOME:"
                     disabled
                     register={register}
-                    value={selectedUser.nome_usuario}
+                    defaultValue={selectedUser.nome_usuario}
                   />
                   <Input
                     className="flex h-20 w-1/3 flex-col items-start"
@@ -220,20 +227,26 @@ export default function AccessControl() {
                     }
                     label="CPF:"
                     disabled
+                    defaultValue={selectedUser.cpf_usuario}
                     register={register}
-                    value={selectedUser.cpf_usuario}
                   />
                 </div>
 
                 <div className="flex w-full justify-between gap-2">
                   <Input
                     className="flex h-20 w-2/3 flex-col items-start"
-                    classNameInput="rounded-lg w-full text-lg h-10 uppercase"
+                    classNameInput="rounded-lg w-full text-lg h-10"
                     classNameInputDiv="w-full"
                     classNameLabel="text-blue_warm-70"
                     label="E-MAIL:"
-                    value={selectedUser.email}
+                    defaultValue={selectedUser.email}
                     errorMessage={errors.email && errors.email?.message}
+                    onChange={(e) =>
+                      setSelectedUser({
+                        ...selectedUser,
+                        email: e.target.value,
+                      })
+                    }
                   />
 
                   <div className="flex h-16 w-1/3 gap-2">
@@ -247,7 +260,13 @@ export default function AccessControl() {
                       type="checkbox"
                       label="ATIVO:"
                       register={register}
-                      checked={selectedUser.ativo === 1}
+                      defaultChecked={selectedUser.ativo === 1}
+                      onChange={(e) =>
+                        setSelectedUser({
+                          ...selectedUser,
+                          ativo: e.target.checked ? 1 : 0,
+                        })
+                      }
                     />
                     <Input
                       className="flex w-2/4 flex-col items-start"
@@ -258,10 +277,37 @@ export default function AccessControl() {
                       id="admin"
                       type="checkbox"
                       label="ADMIN:"
+                      defaultChecked={selectedUser.admin === 1}
                       register={register}
-                      checked={selectedUser.admin === 1}
+                      onChange={(e) =>
+                        setSelectedUser({
+                          ...selectedUser,
+                          admin: e.target.checked ? 1 : 0,
+                        })
+                      }
                     />
                   </div>
+                </div>
+
+                <div className="flex w-2/4 justify-between gap-2">
+                  <Input
+                    className="flex h-20 w-2/3 flex-col items-start"
+                    classNameInput="rounded-lg w-full text-lg h-10"
+                    classNameInputDiv="w-full"
+                    classNameLabel="text-blue_warm-70"
+                    type="password"
+                    onIconClick
+                    icon="bsEye"
+                    label="SENHA"
+                    defaultValue={selectedUser.senha}
+                    errorMessage={errors.email && errors.email?.message}
+                    onChange={(e) =>
+                      setSelectedUser({
+                        ...selectedUser,
+                        senha: e.target.value,
+                      })
+                    }
+                  />
                 </div>
 
                 <div className="w-full">
