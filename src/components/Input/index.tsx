@@ -1,15 +1,14 @@
 'use client'
 
 import React, { InputHTMLAttributes, useState } from 'react'
-import { Icon } from '../Icon'
-import dynamicIconImports from 'lucide-react/dynamicIconImports'
 import { UseFormRegister } from 'react-hook-form'
+import { Icons, NameIcons } from '../Icons'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   className?: string
   label?: string
-  icon?: keyof typeof dynamicIconImports
-  iconLabel?: keyof typeof dynamicIconImports
+  icon?: NameIcons
+  iconLabel?: NameIcons
   onIconClick?: boolean
   classNameInput?: string
   classNameLabel?: string
@@ -29,12 +28,12 @@ export const Input: React.FC<InputProps> = ({
   ...rest
 }) => {
   const [viewPass, setViewPass] = useState(false)
-  const [view, setView] = useState<keyof typeof dynamicIconImports>('eye')
+  const [view, setView] = useState<NameIcons>('bsEye')
 
   const handleIconClick = () => {
     if (onIconClick) {
       setViewPass(!viewPass)
-      setView(viewPass ? 'eye' : 'eye-off')
+      setView(viewPass ? 'bsEye' : 'bsEyeClose')
     }
   }
 
@@ -46,9 +45,7 @@ export const Input: React.FC<InputProps> = ({
       >
         {rest.label && (
           <span className="flex items-center">
-            {iconLabel && (
-              <Icon name={iconLabel} className="mr-1 w-4" strokeWidth={3} />
-            )}
+            {iconLabel && <Icons name={iconLabel} className="mr-1 w-4" />}
             <span className="font-ald ">{rest.label}</span>
           </span>
         )}
@@ -57,7 +54,7 @@ export const Input: React.FC<InputProps> = ({
         <input
           {...rest}
           {...(register && name ? { ...register(name) } : {})}
-          type={rest.icon === 'eye' && viewPass ? 'text' : rest.type}
+          type={rest.icon === 'bsEye' && viewPass ? 'text' : rest.type}
           className={`${classNameInput} h-12 w-full rounded-lg px-3 py-2 `}
         />
         {rest.icon && (
@@ -67,7 +64,7 @@ export const Input: React.FC<InputProps> = ({
             disabled={rest.type !== 'password'}
             onClick={handleIconClick}
           >
-            <Icon
+            <Icons
               name={onIconClick && rest.type === 'password' ? view : rest.icon}
             />
           </button>
