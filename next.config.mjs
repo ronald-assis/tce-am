@@ -1,11 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: '/tceam-dashboard',
+  basePath: '/tceam-dashboards',
   async redirects() {
     return [
       {
         source: '/',
-        destination: '/tceam-dashboard',
+        destination: '/tceam-dashboards',
         basePath: false,
         permanent: false,
       },
