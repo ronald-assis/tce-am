@@ -136,7 +136,7 @@ export default function Home() {
         >
           {titles.map((t, i) =>
             t.to ? (
-              <Link href={`/${pathName}${t.to}`} key={i}>
+              <Link href={`/categoria/${pathName}${t.to}`} key={i}>
                 <Card
                   title={t.title}
                   sizeIcon={t.sizeIcon}
