@@ -6,7 +6,7 @@ build-dev:
   stage: build-dev
   script:
     - docker-compose -f docker-compose-build.yml up
-    - cp -R .next /opt/tceam_frontend
+    - cp -R .next /home/vm121/tceam_frontend
   tags:
     - vm121_tceam_front
   only:
