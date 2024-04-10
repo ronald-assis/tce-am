@@ -8,6 +8,12 @@ First, run the development server:
 yarn dev
 ```
 
+Commend docker-compose
+
+```bash
+sudo docker-compose -f docker-compose-build.yml up -d --force-recreate
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.

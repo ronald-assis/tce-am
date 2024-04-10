@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  tceam_frontend:
+    image: nginx:latest
+    container_name: tceam_frontend
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - '/opt/tceam_frontend/.next:/usr/share/nginx/html'
+      - '/etc/timezone:/etc/timezone:ro'
+      - '/etc/localtime:/etc/localtime:ro'
+    network_mode: bridge
