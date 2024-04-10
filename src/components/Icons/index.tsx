@@ -10,10 +10,17 @@ import {
   FaLock,
 } from 'react-icons/fa6'
 import { PiGraduationCapBold } from 'react-icons/pi'
-import { IoIosArrowDown, IoIosArrowUp, IoIosArrowForward } from 'react-icons/io'
+import {
+  IoIosArrowDown,
+  IoIosArrowUp,
+  IoIosArrowForward,
+  IoIosCheckbox,
+  IoMdCloseCircleOutline,
+} from 'react-icons/io'
 import { TiHome } from 'react-icons/ti'
 import { LiaFileContractSolid } from 'react-icons/lia'
-import { FaRegEdit } from 'react-icons/fa'
+import { FaRegEdit, FaTrashAlt, FaWindowClose } from 'react-icons/fa'
+import { BsEye, BsEyeSlash } from 'react-icons/bs'
 
 export type NameIcons =
   | 'user'
@@ -31,11 +38,18 @@ export type NameIcons =
   | 'liaFileContractSolid'
   | 'faLock'
   | 'faRegEdit'
+  | 'checkbox'
+  | 'trash'
+  | 'faClose'
+  | 'bsEye'
+  | 'bsEyeClose'
+  | 'circleX'
 
 interface DynamicIconProp {
   name: NameIcons
   size?: string | number
   color?: string
+  className?: string
 }
 
 const icons: Record<NameIcons, IconType> = {
@@ -54,12 +68,19 @@ const icons: Record<NameIcons, IconType> = {
   liaFileContractSolid: LiaFileContractSolid,
   faLock: FaLock,
   faRegEdit: FaRegEdit,
+  trash: FaTrashAlt,
+  checkbox: IoIosCheckbox,
+  faClose: FaWindowClose,
+  bsEye: BsEye,
+  bsEyeClose: BsEyeSlash,
+  circleX: IoMdCloseCircleOutline,
 }
 
 export const Icons: React.FC<DynamicIconProp> = ({
   name,
   size = 24,
   color = 'currentColor',
+  className,
 }: DynamicIconProp) => {
   const IconComponent = icons[name]
 
@@ -68,5 +89,5 @@ export const Icons: React.FC<DynamicIconProp> = ({
     return null
   }
 
-  return <IconComponent size={size} color={color} />
+  return <IconComponent className={className} size={size} color={color} />
 }

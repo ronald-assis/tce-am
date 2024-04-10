@@ -48,7 +48,9 @@ export function UserMenu() {
                 </Link>
               </li>
               <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                <span>Controle de acesso</span>
+                <Link href="/controle_de_acesso" className="w-full">
+                  <span>Controle de Acesso</span>
+                </Link>
               </li>
             </ul>
           </div>

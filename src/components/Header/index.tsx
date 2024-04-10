@@ -16,12 +16,21 @@ export function Header({ title, homePage }: HeaderPropType) {
     <div className=" fixed left-0 right-0 top-0 z-50 flex flex-col ">
       <header className="flex w-full items-center justify-center bg-gradient-to-tl from-blue_warm-80 to-blue_warm-20 py-2 shadow-lg">
         <nav className="flex w-2/3 items-center justify-between">
-          <Image
-            alt="Logo TCE-AM"
-            height={70}
-            src={tceam}
-            className="rounded-lg"
-          />
+          <a
+            href="https://www2.tce.am.gov.br"
+            target="_blank"
+            className="cursor-pointer"
+            rel="noreferrer"
+          >
+            <Image
+              alt="Logo TCE-AM"
+              height={70}
+              src={tceam}
+              className="rounded-lg"
+              priority
+              placeholder="empty"
+            />
+          </a>
           <UserMenu />
         </nav>
       </header>

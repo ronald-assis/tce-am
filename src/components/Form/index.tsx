@@ -49,7 +49,7 @@ export function Form() {
           name="user"
           label={errors.user && errors.user?.message}
           classNameLabel="bg-red-600 text-[11px]  text-white w-44"
-          iconLabel="circle-x"
+          iconLabel="circleX"
           placeholder="Usuário"
           register={register}
         />
@@ -57,13 +57,13 @@ export function Form() {
         <Input
           id="pass"
           type="password"
-          icon="eye"
+          icon="bsEye"
           placeholder="Senha"
           className="mb-2 flex w-4/5 flex-col-reverse gap-1 text-2xl text-gray-500"
           onIconClick
           classNameInput={`${errors.pass ? 'border-2 border-red-600' : ''} focus:outline-0`}
           label={errors.pass && errors.pass?.message}
-          iconLabel="circle-x"
+          iconLabel="circleX"
           classNameLabel="bg-red-600 text-[11px]  text-white w-44"
           name="pass"
           register={register}
