@@ -1,25 +1,25 @@
 stages:
   - build-dev
-  - deploy-dev
+  # - deploy-dev
 
 build-dev:
   stage: build-dev
   script:
-    - docker-compose -f docker-compose-build.yml up
-    - cp -R .next /home/vm121/tceam_frontend
+    - docker-compose -f docker-compose-build.yml up -d --force-recreate
+#    - cp -R .next /home/vm121/tceam_frontend
   tags:
     - vm121_tceam_front
   only:
     - develop
 
-deploy-dev:
-  stage: deploy-dev
-  script:
-    - docker-compose -f docker-compose-deploy.yml up -d --force-recreate
-  tags:
-    - vm121_tceam_front
-  only:
-    - develop
-  dependencies:
-    - build-dev
+# deploy-dev:
+#   stage: deploy-dev
+#   script:
+#     - docker-compose -f docker-compose-deploy.yml up -d --force-recreate
+#   tags:
+#     - vm121_tceam_front
+#   only:
+#     - develop
+#   dependencies:
+#     - build-dev
 
