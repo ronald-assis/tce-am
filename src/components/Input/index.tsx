@@ -47,7 +47,7 @@ export const Input: React.FC<InputProps> = ({
     <div className={className}>
       <label
         htmlFor={rest.id}
-        className={`${classNameLabel} flex justify-center rounded-md px-1 text-center `}
+        className={`${classNameLabel} flex rounded-md px-1`}
       >
         {rest.label && (
           <span className="flex items-center">
