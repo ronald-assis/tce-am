@@ -49,10 +49,11 @@ export default function Perfil() {
                     className="flex gap-2"
                     label="E-MAIL"
                     value="emailtotest@gmail.com"
-                    classNameInput="border focus:outline-0 text-gray-600"
+                    classNameInput="border focus:outline-0 text-gray-600 disabled:bg-gray-200"
                     disabled={disabledEmailOrPass.email}
                   />
                   <Button
+                    type="button"
                     onClick={() =>
                       setDisabledEmailOrPass({
                         ...disabledEmailOrPass,
@@ -68,11 +69,12 @@ export default function Perfil() {
                   <Input
                     className="flex gap-2"
                     label="SENHA"
-                    classNameInput="border focus:outline-0 text-gray-600"
+                    classNameInput="border focus:outline-0 text-gray-600 disabled:bg-gray-200"
                     type="password"
                     disabled={disabledEmailOrPass.pass}
                   />
                   <Button
+                    type="button"
                     onClick={() =>
                       setDisabledEmailOrPass({
                         ...disabledEmailOrPass,
@@ -95,7 +97,7 @@ export default function Perfil() {
             <p className="mb-5 w-2/3 border-b-2 border-gray-300">
               <b>Permissões</b>
             </p>
-            <div className="flex h-52 w-4/5 rounded-lg bg-gray-200 p-5">
+            <div className="flex h-52 w-4/5 rounded-lg border border-gray-200 bg-gray-100 p-5 shadow-md">
               <p className="flex h-7 w-1/4 items-center justify-center rounded-full bg-blue_warm-50 text-center text-white">
                 <span>
                   <b>ADMIN</b>

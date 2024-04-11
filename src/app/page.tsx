@@ -52,13 +52,13 @@ export default function Home() {
   const subCategories: PropToCardType[] = [
     {
       title: 'Desabastecimento',
-      icon: 'graduationCap',
+      icon: 'siSpond',
       sizeIcon: 88,
       sub_category: 'desabastecimento',
     },
     {
       title: 'Meio Ambiente',
-      icon: 'wheat',
+      icon: 'faEnvira',
       sizeIcon: 88,
       sub_category: 'meio_ambiente',
     },
@@ -67,13 +67,13 @@ export default function Home() {
   const shortages: PropToCardType[] = [
     {
       title: 'Medicação',
-      icon: 'graduationCap',
+      icon: 'giMedicines',
       sizeIcon: 88,
       sub_category: 'desabastecimento',
     },
     {
       title: 'Merenda escolar',
-      icon: 'wheat',
+      icon: 'giMeal',
       sizeIcon: 88,
       sub_category: 'meio_ambiente',
     },
@@ -82,13 +82,13 @@ export default function Home() {
   const naturalEnvironment: PropToCardType[] = [
     {
       title: 'Qualidade do Ar',
-      icon: 'graduationCap',
+      icon: 'siAirFlow',
       sizeIcon: 88,
       sub_category: 'desabastecimento',
     },
     {
       title: 'Desmatamento',
-      icon: 'wheat',
+      icon: 'giBurningTree',
       sizeIcon: 88,
       sub_category: 'meio_ambiente',
     },
