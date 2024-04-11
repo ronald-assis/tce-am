@@ -6,13 +6,23 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '../Button'
 import { Input } from '../Input'
+import { api } from '@/lib/api'
 
 const loginSchema = z.object({
-  user: z.string().min(3, { message: 'Este campo é obrigatório!' }),
+  user: z.string({ required_error: 'CPF é obrigatório.' }).refine((doc) => {
+    const replacedDoc = doc.replace(/\D/g, '')
+    return !!Number(replacedDoc)
+  }, 'CPF deve conter apenas números.'),
   pass: z.string().min(1, { message: 'Este campo é obrigatório!' }),
 })
 
 type FormData = z.infer<typeof loginSchema>
+
+interface LoginResponse {
+  acknowledge: boolean
+  token: string
+  user_id: string
+}
 
 export function Form() {
   const router = useRouter()
@@ -27,7 +37,12 @@ export function Form() {
 
   const handleLogin = async (data: FormData) => {
     console.log(data, 'novo login')
-    if (data) {
+    const login: LoginResponse = await api.post('/auth', {
+      cpf_usuario: data.user,
+      senha_usuario: data.pass,
+    })
+
+    if (login.token) {
       router.push('/')
     }
   }
@@ -48,7 +63,7 @@ export function Form() {
           icon="user"
           name="user"
           label={errors.user && errors.user?.message}
-          classNameLabel="bg-red-600 text-[11px]  text-white w-44"
+          classNameLabel="bg-red-600 w-11/12 flex justify-start pl-2 text-start text-[11px]  text-white w-44"
           iconLabel="circleX"
           placeholder="Usuário"
           register={register}
@@ -64,7 +79,7 @@ export function Form() {
           classNameInput={`${errors.pass ? 'border-2 border-red-600' : ''} focus:outline-0`}
           label={errors.pass && errors.pass?.message}
           iconLabel="circleX"
-          classNameLabel="bg-red-600 text-[11px]  text-white w-44"
+          classNameLabel="bg-red-600 text-[11px] justify-center text-white w-44"
           name="pass"
           register={register}
         />
