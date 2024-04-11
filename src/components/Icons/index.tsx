@@ -19,10 +19,24 @@ import {
 } from 'react-icons/io'
 import { TiHome } from 'react-icons/ti'
 import { LiaFileContractSolid } from 'react-icons/lia'
-import { FaRegEdit, FaTrashAlt, FaWindowClose } from 'react-icons/fa'
+import {
+  FaRegEdit,
+  FaTrashAlt,
+  FaWindowClose,
+  FaLinkedin,
+  FaInstagram,
+  FaTwitter,
+  FaEnvira,
+} from 'react-icons/fa'
 import { BsEye, BsEyeSlash } from 'react-icons/bs'
+import { SiSpond, SiApacheairflow } from 'react-icons/si'
+import { GiBurningTree, GiMedicines, GiMeal } from 'react-icons/gi'
 
 export type NameIcons =
+  | 'siAirFlow'
+  | 'giBurningTree'
+  | 'giMedicines'
+  | 'giMeal'
   | 'user'
   | 'picLeft'
   | 'book'
@@ -44,6 +58,11 @@ export type NameIcons =
   | 'bsEye'
   | 'bsEyeClose'
   | 'circleX'
+  | 'faLinkedin'
+  | 'faInstagram'
+  | 'faTwitter'
+  | 'siSpond'
+  | 'faEnvira'
 
 interface DynamicIconProp {
   name: NameIcons
@@ -54,6 +73,15 @@ interface DynamicIconProp {
 
 const icons: Record<NameIcons, IconType> = {
   user: AiOutlineUser,
+  giMeal: GiMeal,
+  giMedicines: GiMedicines,
+  giBurningTree: GiBurningTree,
+  siAirFlow: SiApacheairflow,
+  siSpond: SiSpond,
+  faEnvira: FaEnvira,
+  faInstagram: FaInstagram,
+  faLinkedin: FaLinkedin,
+  faTwitter: FaTwitter,
   picLeft: AiOutlinePicLeft,
   book: BiBook,
   wheat: FaPlateWheat,
