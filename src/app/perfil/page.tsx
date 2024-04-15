@@ -7,6 +7,7 @@ import { Input } from '@/components/Input'
 import { useState } from 'react'
 
 export default function Perfil() {
+  // const [infoUser, setInfoUser] = useState()
   const [disabledEmailOrPass, setDisabledEmailOrPass] = useState({
     email: true,
     pass: true,

@@ -6,8 +6,8 @@ import { usePathname } from 'next/navigation'
 import { Card } from '@/components/Card'
 import { Header } from '@/components/Header'
 import { useState } from 'react'
-import { Footer } from '@/components/Footer'
 import { NameIcons } from '@/components/Icons'
+import { Button } from '@/components/Button'
 
 type PropToCardType = {
   title: string
@@ -15,6 +15,7 @@ type PropToCardType = {
   sizeIcon: number
   to?: string
   sub_category?: string
+  admin?: number
 }
 
 export default function Home() {
@@ -35,17 +36,20 @@ export default function Home() {
       icon: 'liaFileContractSolid',
       sizeIcon: 88,
       to: '/tipologia_de_fraudes_em_licitacoes_e_contrato',
+      admin: 1,
     },
     {
       title: 'Predições',
       icon: 'liaFileContractSolid',
       sizeIcon: 88,
+      admin: 1,
     },
     {
       title: 'Indicadores de Políticas Publicas',
       icon: 'liaFileContractSolid',
       sizeIcon: 88,
       to: '/indicadores_de_politicas_publicas',
+      admin: 1,
     },
   ]
 
@@ -53,14 +57,16 @@ export default function Home() {
     {
       title: 'Desabastecimento',
       icon: 'siSpond',
-      sizeIcon: 88,
+      sizeIcon: 64,
       sub_category: 'desabastecimento',
+      admin: 1,
     },
     {
       title: 'Meio Ambiente',
       icon: 'faEnvira',
-      sizeIcon: 88,
+      sizeIcon: 64,
       sub_category: 'meio_ambiente',
+      admin: 1,
     },
   ]
 
@@ -68,14 +74,16 @@ export default function Home() {
     {
       title: 'Medicação',
       icon: 'giMedicines',
-      sizeIcon: 88,
+      sizeIcon: 44,
       sub_category: 'desabastecimento',
+      admin: 1,
     },
     {
       title: 'Merenda escolar',
       icon: 'giMeal',
-      sizeIcon: 88,
+      sizeIcon: 44,
       sub_category: 'meio_ambiente',
+      admin: 1,
     },
   ]
 
@@ -83,14 +91,16 @@ export default function Home() {
     {
       title: 'Qualidade do Ar',
       icon: 'siAirFlow',
-      sizeIcon: 88,
+      sizeIcon: 44,
       sub_category: 'desabastecimento',
+      admin: 1,
     },
     {
       title: 'Desmatamento',
       icon: 'giBurningTree',
-      sizeIcon: 88,
+      sizeIcon: 44,
       sub_category: 'meio_ambiente',
+      admin: 1,
     },
   ]
   const showSubCategories = (params?: string) => {
@@ -136,25 +146,33 @@ export default function Home() {
         >
           {titles.map((t, i) =>
             t.to ? (
-              <Link href={`/categoria/${pathName}${t.to}`} key={i}>
-                <Card
-                  title={t.title}
-                  sizeIcon={t.sizeIcon}
-                  className="h-72 w-80 xl:w-96"
-                  icon={t.icon}
-                />
-              </Link>
+              <Button
+                className={`${t.admin === 1 ? 'cursor-not-allowed' : 'cursor-pointer'} h-64 w-72 cursor-not-allowed xl:w-80`}
+                key={i}
+                disabled
+              >
+                <Link
+                  href={t.admin !== 1 ? '' : `/categoria/${pathName}${t.to}`}
+                  className={`${t.admin !== 1 ? 'cursor-not-allowed' : 'cursor-pointer'} h-full w-full`}
+                >
+                  <Card
+                    title={t.title}
+                    sizeIcon={t.sizeIcon}
+                    className={`${t.admin === 1 ? 'cursor-not-allowed' : 'cursor-pointer'}  disabled:hover:-translate-none motion-reduce:translate-none w-full disabled:bg-blue_warm-20`}
+                    icon={t.icon}
+                    disabled
+                  />
+                </Link>
+              </Button>
             ) : (
-              <div key={i}>
-                <Card
-                  key={i}
-                  title={t.title}
-                  sizeIcon={t.sizeIcon}
-                  className={`${showCards ? '-translate-y-2  scale-105 bg-blue_warm-80' : ''} h-72 w-80 xl:w-96`}
-                  icon={t.icon}
-                  onClick={handleShowCardCategory}
-                />
-              </div>
+              <Card
+                key={i}
+                title={t.title}
+                sizeIcon={t.sizeIcon}
+                className={`${showCards ? '-translate-y-2  scale-105 bg-blue_warm-80' : ''} h-56 w-64 xl:w-80`}
+                icon={t.icon}
+                onClick={handleShowCardCategory}
+              />
             ),
           )}
         </div>
@@ -184,7 +202,7 @@ export default function Home() {
                 title={s.title}
                 sizeIcon={s.sizeIcon}
                 icon={s.icon}
-                className="h-40 w-72"
+                className="h-24 w-60"
               />
             ))}
           </div>
@@ -198,13 +216,12 @@ export default function Home() {
                 title={s.title}
                 sizeIcon={s.sizeIcon}
                 icon={s.icon}
-                className="h-40 w-72"
+                className="h-24 w-60"
               />
             ))}
           </div>
         )}
       </main>
-      <Footer />
     </>
   )
 }

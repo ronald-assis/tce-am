@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '../Button'
 import { Input } from '../Input'
-import { api } from '@/lib/api'
+import { signIn } from '@/lib/auth'
 
 const loginSchema = z.object({
   user: z.string({ required_error: 'CPF é obrigatório.' }).refine((doc) => {
@@ -17,12 +17,6 @@ const loginSchema = z.object({
 })
 
 type FormData = z.infer<typeof loginSchema>
-
-interface LoginResponse {
-  acknowledge: boolean
-  token: string
-  user_id: string
-}
 
 export function Form() {
   const router = useRouter()
@@ -37,12 +31,10 @@ export function Form() {
 
   const handleLogin = async (data: FormData) => {
     console.log(data, 'novo login')
-    const login: LoginResponse = await api.post('/auth', {
-      cpf_usuario: data.user,
-      senha_usuario: data.pass,
-    })
+    const result = await signIn(data)
+    console.log(result)
 
-    if (login.token) {
+    if (!result.data?.error) {
       router.push('/')
     }
   }

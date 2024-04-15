@@ -11,51 +11,74 @@ import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
 import { Icons } from '@/components/Icons'
 import { Input } from '@/components/Input'
+import { api } from '@/lib/api'
 
 Modal.setAppElement('body')
 
 const dataSchema = z.object({
   nome_usuario: z.string().min(3, { message: 'Este campo é obrigatório!' }),
   cpf_usuario: z.string().min(3, { message: 'Este campo é obrigatório!' }),
-  email: z.string().email().min(1, { message: 'Este campo é obrigatório!' }),
+  email: z.string().min(1, { message: 'Este campo é obrigatório!' }).email(),
   senha: z.string().min(3, { message: 'Este campo é obrigatório!' }).optional(),
-  ativo: z.number({ description: 'Este campo é obrigatorio' }).optional(),
-  admin: z.number({ description: 'Este campo é obrigatorio' }).optional(),
+  ativo: z.boolean().optional(),
+  admin: z.boolean().optional(),
 })
 
 type FormData = z.infer<typeof dataSchema>
 
-type UsersResponseType = {
-  id_usuario: string
+type UserInfoType = {
   nome_usuario: string
   cpf_usuario: string
   email: string
   ativo: number
   admin: number
-  created_at: string
-  updated_at: string
+  id_usuario?: string
   senha?: string
+}
+
+type CategoryType = {
+  id_categoria: string
+  nome_categoria: string
+  desc_categoria: string
+  itens_categoria: string
+  url_dashboard_simples: string
+  url_dashboard_completa: string
+}
+
+interface UserToCreateOrUpdate extends UserInfoType {
   id_categorias?: string[]
 }
 
-type UserToRegister = Omit<
-  UsersResponseType,
-  'created_at' | 'updated_at' | 'id_usuario'
->
+interface ResponseType<T> {
+  data: {
+    conteudo: T[]
+    paginaAtual: number
+    registrosPorPagina: number
+  }
+}
+
+// interface SelectedUserType {
+//   categorias?: CategoryType[]
+// }
 
 export default function AccessControl() {
   const [modalIsOpenOrClose, setModalIsOpenOrClose] = useState(false)
+  const [perfis, setPerfis] = useState<UserInfoType[] | []>([])
+  const [categories, setCategories] = useState<CategoryType[] | []>([])
+  const [selectedCategories, setSelectedCategories] = useState<
+    CategoryType[] | []
+  >([])
   const [modalIsOpenOrCloseExclude, setModalIsOpenOrCloseExclude] =
     useState(false)
   const [modalTitle, setModalTitle] = useState<
     'Cadastrar' | 'Editar' | 'Excluir'
   >('Cadastrar')
-  const [selectedUser, setSelectedUser] = useState<UserToRegister>({
+  const [selectedUser, setSelectedUser] = useState<UserInfoType>({
     admin: 0,
     ativo: 1,
-    cpf_usuario: '38238938938',
-    email: 'ronaldassis02@gmia.com',
-    nome_usuario: 'ronald assis sales da silva',
+    cpf_usuario: '',
+    email: '',
+    nome_usuario: '',
   })
   const {
     register,
@@ -67,35 +90,39 @@ export default function AccessControl() {
     defaultValues: selectedUser,
   })
 
-  const users: UsersResponseType[] = [
-    {
-      id_usuario: 'd7d0ce69-3e80-4d70-9582-d8d3cf13ece9',
-      nome_usuario: 'Maria da Paz',
-      cpf_usuario: '73891309272',
-      email: 'mariapaz@gmail.com',
-      ativo: 1,
-      admin: 0,
-      created_at: '2024-04-04T19:52:00.572Z',
-      updated_at: '2024-04-05T15:49:20.945Z',
-    },
-    {
-      id_usuario: 'd7d0ce69-3e80-4d70-9582-d8d3cf13ece9',
-      nome_usuario: 'Maria da Paz',
-      cpf_usuario: '77391309272',
-      email: 'mariapaz@gmail.com',
-      ativo: 1,
-      admin: 1,
-      created_at: '2024-04-04T19:52:00.572Z',
-      updated_at: '2024-04-05T15:49:20.945Z',
-    },
-  ]
-
   useEffect(() => {
     reset(selectedUser)
-  }, [selectedUser, reset])
+    api
+      .get('/usuarios')
+      .then(({ data }: ResponseType<UserInfoType>) => {
+        console.log(data)
+        setPerfis(data.conteudo)
+      })
+      .catch((e) => {
+        console.error(e)
+      })
+
+    api
+      .get('/categorias')
+      .then(({ data }: ResponseType<CategoryType>) => {
+        console.log(data)
+
+        const set = new Set()
+        const filterToCategory = data.conteudo.filter((c) => {
+          const duplicated = set.has(c.nome_categoria)
+          set.add(c.nome_categoria)
+          return !duplicated
+        })
+
+        setCategories(filterToCategory)
+      })
+      .catch((e) => {
+        console.error(e)
+      })
+  }, [reset])
 
   const handleRegiterOrUpdate = async (data: FormData) => {
-    console.log(data, modalIsOpenOrClose)
+    console.log(data, modalIsOpenOrClose, categories, selectedUser)
     setModalIsOpenOrClose(false)
     reset()
   }
@@ -105,7 +132,7 @@ export default function AccessControl() {
     reset()
   }
 
-  const openModalExclude = (profile: UsersResponseType) => {
+  const openModalExclude = (profile: UserInfoType) => {
     setModalIsOpenOrCloseExclude(true)
     setModalTitle('Excluir')
     console.log(profile)
@@ -116,7 +143,7 @@ export default function AccessControl() {
   }
 
   const openModalNewProfile = () => {
-    const newProfile: UserToRegister = {
+    const newProfile: UserToCreateOrUpdate = {
       nome_usuario: '',
       admin: 0,
       ativo: 0,
@@ -130,7 +157,7 @@ export default function AccessControl() {
     setModalTitle('Cadastrar')
   }
 
-  const openModal = (info: UsersResponseType) => {
+  const openModal = (info: UserToCreateOrUpdate) => {
     setModalIsOpenOrClose(true)
     setSelectedUser(info)
     setModalTitle('Editar')
@@ -173,7 +200,7 @@ export default function AccessControl() {
                 </tr>
               </thead>
               <tbody className="mt-5">
-                {users.map((u, i) => (
+                {perfis.map((u, i) => (
                   <tr
                     key={u.cpf_usuario}
                     className={
@@ -320,7 +347,7 @@ export default function AccessControl() {
                       label="ATIVO:"
                       register={register}
                       disabled
-                      defaultChecked={selectedUser.ativo === 1}
+                      defaultValue={selectedUser.email}
                       onChange={(e) =>
                         setSelectedUser({
                           ...selectedUser,
@@ -328,6 +355,8 @@ export default function AccessControl() {
                         })
                       }
                     />
+
+                    <div></div>
                     <Input
                       className="flex w-2/4 flex-col items-start"
                       classNameInput="rounded-sm disabled:bg-gray-200 text-lg"
@@ -338,7 +367,6 @@ export default function AccessControl() {
                       type="checkbox"
                       label="ADMIN:"
                       disabled
-                      defaultChecked={selectedUser.admin === 1}
                       register={register}
                       onChange={(e) =>
                         setSelectedUser({
@@ -374,111 +402,154 @@ export default function AccessControl() {
             onRequestClose={() => setModalIsOpenOrClose(false)}
             className="fixed bottom-0 left-0 right-0 top-28 flex flex-col items-center justify-center bg-black bg-opacity-25 backdrop-blur-sm"
           >
-            <div className="relative flex h-[28rem] w-2/3 max-w-[720px] flex-col overflow-auto rounded-lg bg-gray-100 p-4">
+            <div className="relative flex h-[28rem] w-2/3 max-w-[760px] flex-col overflow-auto rounded-lg bg-gray-100 p-4">
               <span className="mb-5 border-b-2 border-gray-300 font-serif text-lg text-blue_warm-70">
                 {`${modalTitle} Perfil`}
               </span>
               <form
                 onSubmit={handleSubmit(handleRegiterOrUpdate)}
-                className={`verflow-auto flex h-80 w-full flex-col gap-3 rounded-lg border bg-blue_warm-5 p-2`}
+                className={`verflow-auto mb-10 flex max-h-screen w-full flex-col gap-3 overflow-auto rounded-lg border bg-blue_warm-5 p-2`}
               >
                 <div className="flex w-full justify-between gap-2">
-                  <Input
-                    className="flex h-20 w-2/3  flex-col items-start"
-                    classNameInput="disabled:bg-gray-200 rounded-lg w-full text-lg h-10 uppercase"
-                    classNameInputDiv="w-full"
-                    classNameLabel="text-blue_warm-70"
-                    classNameError="bg-red-600 px-2 text-white rounded-lg ml-3 mt-1"
-                    errorMessage={
-                      errors.nome_usuario && errors.nome_usuario?.message
-                    }
-                    label="NOME:"
-                    disabled={modalTitle === 'Editar' && true}
-                    defaultValue={selectedUser.nome_usuario}
-                    onChange={(e) =>
-                      setSelectedUser({
-                        ...selectedUser,
-                        nome_usuario: e.target.value,
-                      })
-                    }
-                  />
-                  <Input
-                    className="flex h-20 w-1/3 flex-col items-start"
-                    classNameInput="rounded-lg disabled:bg-gray-200 rounded-lg w-full text-lg h-10 uppercase"
-                    classNameInputDiv="w-full"
-                    classNameLabel="text-blue_warm-70"
-                    classNameError="bg-red-600 px-2 text-xs flex text-white rounded-lg ml-3 mt-1"
-                    errorMessage={
-                      errors.cpf_usuario && errors.cpf_usuario?.message
-                    }
-                    label="CPF:"
-                    disabled={modalTitle === 'Editar' && true}
-                    defaultValue={selectedUser.cpf_usuario}
-                    onChange={(e) =>
-                      setSelectedUser({
-                        ...selectedUser,
-                        cpf_usuario: e.target.value,
-                      })
-                    }
-                  />
+                  <div className="flex h-20 w-2/3  flex-col items-start">
+                    <label
+                      htmlFor="nome_usuario"
+                      className={`flex rounded-md px-1 text-blue_warm-70`}
+                    >
+                      <span className="flex items-center">
+                        <span className="font-ald ">NOME:</span>
+                      </span>
+                    </label>
+                    <input
+                      {...register('nome_usuario')}
+                      id="nome_usuario"
+                      className={`h-10 w-full rounded-lg px-3 py-2 text-lg uppercase disabled:bg-gray-200 `}
+                    />
+
+                    {errors.nome_usuario && (
+                      <span
+                        className={`ml-3 mt-1 flex items-center rounded-lg bg-red-600 px-2 text-white`}
+                      >
+                        <Icons name="circleX" className="mr-1 w-4" />
+                        <span className="font-ald ">
+                          {errors.nome_usuario?.message}
+                        </span>
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex h-20 w-2/3  flex-col items-start">
+                    <label
+                      htmlFor="cpf_usuario"
+                      className={`flex rounded-md px-1 text-blue_warm-70`}
+                    >
+                      <span className="flex items-center">
+                        <span className="font-ald ">CPF:</span>
+                      </span>
+                    </label>
+                    <input
+                      {...register('cpf_usuario')}
+                      id="cpf_usuario"
+                      className={`h-10 w-full rounded-lg px-3 py-2 text-lg uppercase disabled:bg-gray-200 `}
+                    />
+
+                    {errors.cpf_usuario && (
+                      <span
+                        className={`ml-3 mt-1 flex items-center rounded-lg bg-red-600 px-2 text-white`}
+                      >
+                        <Icons name="circleX" className="mr-1 w-4" />
+                        <span className="font-ald ">
+                          {errors.cpf_usuario?.message}
+                        </span>
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex w-full justify-between gap-2">
-                  <Input
-                    className="flex h-20 w-2/3 flex-col items-start"
-                    classNameInput="rounded-lg w-full text-lg h-10"
-                    classNameInputDiv="w-full"
-                    classNameLabel="text-blue_warm-70"
-                    classNameError="bg-red-600 px-2 text-white rounded-lg ml-3 mt-1"
-                    label="E-MAIL:"
-                    defaultValue={selectedUser.email}
-                    errorMessage={errors.email && errors.email?.message}
-                    onChange={(e) =>
-                      setSelectedUser({
-                        ...selectedUser,
-                        email: e.target.value,
-                      })
-                    }
-                  />
+                  <div className="flex h-20 w-2/3  flex-col items-start">
+                    <label
+                      htmlFor="email"
+                      className={`flex rounded-md px-1 text-blue_warm-70`}
+                    >
+                      <span className="flex items-center">
+                        <span className="font-ald ">E-MAIL:</span>
+                      </span>
+                    </label>
+                    <input
+                      {...register('email')}
+                      id="email"
+                      className={`h-10 w-full rounded-lg px-3 py-2 text-lg uppercase disabled:bg-gray-200 `}
+                    />
+
+                    {errors.email && (
+                      <span
+                        className={`ml-3 mt-1 flex items-center rounded-lg bg-red-600 px-2 text-white`}
+                      >
+                        <Icons name="circleX" className="mr-1 w-4" />
+                        <span className="font-ald ">
+                          {errors.email?.message}
+                        </span>
+                      </span>
+                    )}
+                  </div>
 
                   <div className="flex h-16 w-1/3 gap-2">
-                    <Input
-                      className="flex w-2/4 flex-col items-start"
-                      classNameInput="rounded-sm w-full text-lg"
-                      classNameInputDiv="w-8 pl-2"
-                      classNameLabel="text-blue_warm-70"
-                      classNameError="bg-red-600 px-2 text-white rounded-lg ml-3 mt-1"
-                      errorMessage={errors.ativo && errors.ativo?.message}
-                      id="ativo"
-                      type="checkbox"
-                      label="ATIVO:"
-                      register={register}
-                      defaultChecked={selectedUser.ativo === 1}
-                      onChange={(e) =>
-                        setSelectedUser({
-                          ...selectedUser,
-                          ativo: e.target.checked ? 1 : 0,
-                        })
-                      }
-                    />
-                    <Input
-                      className="flex w-2/4 flex-col items-start"
-                      classNameInput="rounded-sm text-lg"
-                      classNameInputDiv="w-8 pl-2"
-                      classNameLabel="text-blue_warm-70"
-                      errorMessage={errors.admin && errors.admin?.message}
-                      id="admin"
-                      type="checkbox"
-                      label="ADMIN:"
-                      defaultChecked={selectedUser.admin === 1}
-                      register={register}
-                      onChange={(e) =>
-                        setSelectedUser({
-                          ...selectedUser,
-                          admin: e.target.checked ? 1 : 0,
-                        })
-                      }
-                    />
+                    <div className="flex w-full justify-between gap-2">
+                      <div className="flex h-20 w-2/3  flex-col items-start">
+                        <label
+                          htmlFor="ativo"
+                          className={`flex rounded-md px-1 text-blue_warm-70`}
+                        >
+                          <span className="flex items-center">
+                            <span className="font-ald ">ATIVO:</span>
+                          </span>
+                        </label>
+                        <input
+                          {...register('ativo')}
+                          type="checkbox"
+                          id="ativo"
+                          className={`h-10 w-full rounded-sm px-3 py-2 text-lg uppercase `}
+                        />
+
+                        {errors.ativo && (
+                          <span
+                            className={`ml-3 mt-1 flex items-center rounded-lg bg-red-600 px-2 text-white`}
+                          >
+                            <Icons name="circleX" className="mr-1 w-4" />
+                            <span className="font-ald ">
+                              {errors.ativo?.message}
+                            </span>
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex h-20 w-2/3  flex-col items-start">
+                        <label
+                          htmlFor="admin"
+                          className={`flex rounded-md px-1 text-blue_warm-70`}
+                        >
+                          <span className="flex items-center">
+                            <span className="font-ald ">ADMIN:</span>
+                          </span>
+                        </label>
+                        <input
+                          {...register('admin')}
+                          id="admin"
+                          type="checkbox"
+                          className={`h-10 w-full rounded-sm px-3 py-2 text-lg uppercase `}
+                        />
+
+                        {errors.admin && (
+                          <span
+                            className={`ml-3 mt-1 flex items-center rounded-lg bg-red-600 px-2 text-white`}
+                          >
+                            <Icons name="circleX" className="mr-1 w-4" />
+                            <span className="font-ald ">
+                              {errors.admin?.message}
+                            </span>
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -504,13 +575,43 @@ export default function AccessControl() {
                   />
                 </div>
 
-                <div className="w-full">
+                <div className="flex w-full flex-col">
                   <span className="mb-5 w-full border-b-2 border-gray-300 font-serif text-blue_warm-70">
-                    Dashboards
+                    Dashboards!
                   </span>
+                  <ul>
+                    {categories.map((c, i) => (
+                      <li key={i}>
+                        <span>
+                          <Input
+                            className="flex w-2/4 flex-col items-start"
+                            classNameInput="rounded-sm w-full text-lg"
+                            classNameInputDiv="w-8 pl-2"
+                            classNameLabel="text-blue_warm-70"
+                            classNameError="bg-red-600 px-2 text-white rounded-lg ml-3 mt-1"
+                            id={`${i}_category`}
+                            type="checkbox"
+                            label={c.nome_categoria}
+                            register={register}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                const newCategory = [...selectedCategories, c]
+                                setSelectedCategories(newCategory)
+                              } else {
+                                const removeCategory =
+                                  selectedCategories.filter(
+                                    (sc) => sc.id_categoria !== c.id_categoria,
+                                  )
+                                setSelectedCategories(removeCategory)
+                              }
+                            }}
+                          />
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-
-                <div className="absolute bottom-4 flex w-4/5 items-center justify-around gap-3 px-2">
+                <div className="absolute bottom-1 flex w-2/4 items-center justify-center gap-3 bg-gray-100 px-2">
                   <Button
                     type="submit"
                     className="h-11 w-48 max-w-52 rounded-3xl border-2 border-blue_warm-60 bg-blue_warm-40 text-center font-ald text-base uppercase text-white transition duration-300 hover:-translate-y-1 hover:scale-100 hover:bg-blue_warm-60"
