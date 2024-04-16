@@ -6,7 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '../Button'
 import { Input } from '../Input'
-import { api } from '@/lib/api'
+import { signIn } from '@/lib/auth'
+import { useState } from 'react'
 
 const loginSchema = z.object({
   user: z.string({ required_error: 'CPF é obrigatório.' }).refine((doc) => {
@@ -16,16 +17,21 @@ const loginSchema = z.object({
   pass: z.string().min(1, { message: 'Este campo é obrigatório!' }),
 })
 
+interface ErrorServerType {
+  error: boolean
+  message: string | undefined
+}
+
 type FormData = z.infer<typeof loginSchema>
 
-interface LoginResponse {
-  acknowledge: boolean
-  token: string
-  user_id: string
+const errorState: ErrorServerType = {
+  error: false,
+  message: '',
 }
 
 export function Form() {
   const router = useRouter()
+  const [errorServer, setErrorServer] = useState(errorState)
   const {
     register,
     handleSubmit,
@@ -36,15 +42,14 @@ export function Form() {
   })
 
   const handleLogin = async (data: FormData) => {
-    console.log(data, 'novo login')
-    const login: LoginResponse = await api.post('/auth', {
-      cpf_usuario: data.user,
-      senha_usuario: data.pass,
-    })
+    const result = await signIn(data)
 
-    if (login.token) {
-      router.push('/')
+    if (!result?.data?.error) {
+      setErrorServer({ error: false, message: '' })
+      return router.push('/')
     }
+
+    setErrorServer({ error: true, message: result?.data?.message })
   }
 
   return (
@@ -55,7 +60,13 @@ export function Form() {
       <span className="mb-6 font-ald text-2xl text-gray-100">
         Painel de Trabalho de Auditor
       </span>
+
       <div className="m-auto flex w-full flex-col items-center gap-3">
+        {errorServer.error && (
+          <span className="w-4/5 rounded-md bg-red-600 px-2 text-lg text-white opacity-75">
+            {errorServer.message}
+          </span>
+        )}
         <Input
           id="user"
           className="mb-2 flex w-4/5 flex-col-reverse gap-1 text-2xl text-gray-500"
@@ -63,7 +74,7 @@ export function Form() {
           icon="user"
           name="user"
           label={errors.user && errors.user?.message}
-          classNameLabel="bg-red-600 w-11/12 flex justify-start pl-2 text-start text-[11px]  text-white w-44"
+          classNameLabel="bg-red-600 w-56 flex justify-start pl-2 text-start text-[11px]  text-white"
           iconLabel="circleX"
           placeholder="Usuário"
           register={register}

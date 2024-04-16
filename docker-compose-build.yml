@@ -5,7 +5,7 @@ services:
     image: node:20.11.1-alpine
     container_name: tceam_front
     working_dir: /app
-    command: sh -c 'yarn install && yarn dev'
+    command: sh -c 'yarn install && yarn build && yarn start'
     ports:
       - 3000:3000
     volumes:

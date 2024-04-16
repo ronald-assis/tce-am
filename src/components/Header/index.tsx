@@ -5,6 +5,7 @@ import tceam from '../../../public/assets/logo.png'
 import { UserMenu } from '../UserMenu'
 import { Button } from '../Button'
 import { Icons } from '../Icons'
+import { getUser } from '@/lib/user'
 
 type HeaderPropType = {
   title: string
@@ -12,6 +13,8 @@ type HeaderPropType = {
 }
 
 export function Header({ title, homePage }: HeaderPropType) {
+  const user = getUser()
+
   return (
     <div className=" fixed left-0 right-0 top-0 z-50 flex flex-col ">
       <header className="flex w-full items-center justify-center bg-gradient-to-tl from-blue_warm-80 to-blue_warm-20 py-2 shadow-lg">
@@ -31,7 +34,7 @@ export function Header({ title, homePage }: HeaderPropType) {
               placeholder="empty"
             />
           </a>
-          <UserMenu />
+          <UserMenu {...user} />
         </nav>
       </header>
       {!homePage && (

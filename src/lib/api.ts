@@ -1,38 +1,12 @@
-import * as https from 'https'
+import Cookies from 'js-cookie'
 import axios from 'axios'
 
-const agent = new https.Agent({
-  rejectUnauthorized: false,
-})
+const token = Cookies.get('token')
 
 export const api = axios.create({
   baseURL: 'https://reddata.com.br/tceam-api/api/v1/',
+  withCredentials: false,
   headers: {
-    'Access-Control-Allow-Origin': '*',
-    'Content-Type': 'application/json',
+    Authorization: token ? `Bearer ${token}` : 'Bearer',
   },
-  withCredentials: true,
 })
-
-axios.defaults.httpsAgent = agent
-// api
-//   .post('/auth', {
-//     cpf_usuario: '12345678900',
-//     senha_usuario: 'redmaxx22',
-//   })
-//   .then((data) => console.log('teste =>', data))
-
-// axios
-//   .post(
-//     'http://reddata.com.br/tceam-api/api/v1/auth',
-//     {
-//       cpf_usuario: '12345678900',
-//       senha_usuario: 'redmaxx22',
-//     },
-//     {
-//       httpAgent: new https.Agent({
-//         rejectUnauthorized: false,
-//       }),
-//     },
-//   )
-//   .then((data) => console.log(data))

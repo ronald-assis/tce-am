@@ -6,7 +6,13 @@ import Link from 'next/link'
 import { Button } from '../Button'
 import { Icons } from '../Icons'
 
-export function UserMenu() {
+type UserProp = {
+  id_usuario: string
+  nome_usuario: string
+  admin: number
+}
+
+export function UserMenu(props: UserProp) {
   const [showMenu, setShowMenu] = useState(false)
 
   return (
@@ -20,7 +26,7 @@ export function UserMenu() {
         </div>
         <div className="flex items-center gap-1 text-center">
           <span className="text-gray-700">
-            Olá, <b>RONALD</b>
+            Olá, <b>{props.nome_usuario && props.nome_usuario.split(' ')[0]}</b>
           </span>
           <div className="text-blue_warm-80">
             <Icons
@@ -34,8 +40,8 @@ export function UserMenu() {
       <div
         className={`${showMenu ? 'flex' : 'hidden'} absolute right-0 top-[70px] w-72 cursor-default flex-col gap-4 rounded-lg bg-slate-100 p-4 text-start text-gray-600 shadow-lg`}
       >
-        <p>
-          Olá, <b>RONALD ASSIS</b>
+        <p className="uppercase">
+          Olá, <b>{props.nome_usuario}</b>
         </p>
 
         <div className="flex flex-col gap-3">
@@ -47,11 +53,13 @@ export function UserMenu() {
                   <span>Dados pessoais</span>
                 </Link>
               </li>
-              <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                <Link href="/controle_de_acesso" className="w-full">
-                  <span>Controle de Acesso</span>
-                </Link>
-              </li>
+              {props.admin === 1 && (
+                <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
+                  <Link href="/controle_de_acesso" className="w-full">
+                    <span>Controle de Acesso</span>
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
 
@@ -68,7 +76,7 @@ export function UserMenu() {
           </div>
         </div>
 
-        <Link href="/login" className="flex justify-end">
+        <Link href="/api/auth/logout" className="flex justify-end">
           <Button className="w-2/5 rounded-full border-2 border-blue_warm-50  text-blue_warm-70 hover:bg-gray-300">
             <span className="w-full px-2">sair da conta</span>
           </Button>
