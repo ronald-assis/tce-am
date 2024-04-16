@@ -1,35 +1,27 @@
 import Cookies from 'js-cookie'
-import { LoginResponse, ErrorLogin, FormData } from './schema'
+import { LoginResponse, FormData, ErrorLogin } from './schema'
 import { api } from './api'
+import { AxiosError } from 'axios'
 
-export async function signIn(
-  data: FormData,
-): Promise<ErrorLogin | LoginResponse> {
+export async function signIn(data: FormData): Promise<ErrorLogin | undefined> {
   try {
     const login: LoginResponse = await api.post('/auth', {
       cpf_usuario: data.user,
       senha_usuario: data.pass,
     })
 
-    if (!login.data.token) {
-      return {
-        data: {
-          error: true,
-          message: 'Erro na credencial.',
-        },
-      }
-    }
-
     Cookies.set('token', login.data.token)
-
-    return login
-  } catch (error) {
-    console.error('Erro durante o login:', error)
-    return {
-      data: {
-        error: true,
-        message: 'Erro durante o login.',
-      },
+  } catch (e) {
+    const error = e as AxiosError | Error
+    if (error instanceof AxiosError) {
+      if (error.response) {
+        return {
+          data: {
+            error: true,
+            message: error.response.data.message || 'Unknown error',
+          },
+        }
+      }
     }
   }
 }

@@ -5,23 +5,51 @@ import { usePathname } from 'next/navigation'
 
 import { Card } from '@/components/Card'
 import { Header } from '@/components/Header'
-import { useState } from 'react'
-import { NameIcons } from '@/components/Icons'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/Button'
+import { api } from '@/lib/api'
+import { getUser } from '@/lib/user'
 
-type PropToCardType = {
-  title: string
-  icon: NameIcons
-  sizeIcon: number
-  to?: string
-  sub_category?: string
-  admin?: number
+type CategoriesType = {
+  nome_categoria: string
+  desc_categoria: string
+  itens_categoria: string
+  url_simples: string
+  url_completa: string
+}
+
+interface UserPermissionResponseType {
+  data: [
+    {
+      id_categoria: string
+      categorias: CategoriesType
+    },
+  ]
+}
+
+interface PermissionTitle {
+  nome_categoria: string[]
+}
+
+interface PermissionSubTitle {
+  desc_categoria: string[]
+}
+
+interface PermissionItenSubTitle {
+  itens_categoria: string[]
 }
 
 export default function Home() {
   const [showCards, setShowCards] = useState(false)
   const [showNaturalEnvironment, setNaturalEnvironment] = useState(false)
   const [showShortages, setShortages] = useState(false)
+  const [title, setTitle] = useState<PermissionTitle>({ nome_categoria: [] })
+  const [subTitle, setSubTitle] = useState<PermissionSubTitle>({
+    desc_categoria: [],
+  })
+  const [itenSubTitle, setItenSubTitle] = useState<PermissionItenSubTitle>({
+    itens_categoria: [],
+  })
   const pathName = usePathname()
 
   const handleShowCardCategory = () => {
@@ -30,79 +58,37 @@ export default function Home() {
     setShortages(false)
   }
 
-  const titles: PropToCardType[] = [
-    {
-      title: 'Tipologia de Fraudes em Licitações e Contratos',
-      icon: 'liaFileContractSolid',
-      sizeIcon: 88,
-      to: '/tipologia_de_fraudes_em_licitacoes_e_contrato',
-      admin: 1,
-    },
-    {
-      title: 'Predições',
-      icon: 'liaFileContractSolid',
-      sizeIcon: 88,
-      admin: 1,
-    },
-    {
-      title: 'Indicadores de Políticas Publicas',
-      icon: 'liaFileContractSolid',
-      sizeIcon: 88,
-      to: '/indicadores_de_politicas_publicas',
-      admin: 1,
-    },
-  ]
+  useEffect(() => {
+    const idUser = getUser().id_usuario
+    api
+      .get(`/usuarios-permissao/${idUser}`)
+      .then(({ data }: UserPermissionResponseType) => {
+        const set = new Set()
+        const response = data.filter((c) => {
+          const duplicated = set.has(c.categorias.nome_categoria)
+          set.add(c.categorias.nome_categoria)
+          return !duplicated
+        })
 
-  const subCategories: PropToCardType[] = [
-    {
-      title: 'Desabastecimento',
-      icon: 'siSpond',
-      sizeIcon: 64,
-      sub_category: 'desabastecimento',
-      admin: 1,
-    },
-    {
-      title: 'Meio Ambiente',
-      icon: 'faEnvira',
-      sizeIcon: 64,
-      sub_category: 'meio_ambiente',
-      admin: 1,
-    },
-  ]
+        const nameCategories: string[] = []
+        const descCategories: string[] = []
+        const itemCategories: string[] = []
 
-  const shortages: PropToCardType[] = [
-    {
-      title: 'Medicação',
-      icon: 'giMedicines',
-      sizeIcon: 44,
-      sub_category: 'desabastecimento',
-      admin: 1,
-    },
-    {
-      title: 'Merenda escolar',
-      icon: 'giMeal',
-      sizeIcon: 44,
-      sub_category: 'meio_ambiente',
-      admin: 1,
-    },
-  ]
+        response.forEach((category) => {
+          nameCategories.push(category.categorias.nome_categoria)
+          descCategories.push(category.categorias.desc_categoria)
+          itemCategories.push(category.categorias.itens_categoria)
+        })
 
-  const naturalEnvironment: PropToCardType[] = [
-    {
-      title: 'Qualidade do Ar',
-      icon: 'siAirFlow',
-      sizeIcon: 44,
-      sub_category: 'desabastecimento',
-      admin: 1,
-    },
-    {
-      title: 'Desmatamento',
-      icon: 'giBurningTree',
-      sizeIcon: 44,
-      sub_category: 'meio_ambiente',
-      admin: 1,
-    },
-  ]
+        setTitle({ nome_categoria: nameCategories })
+        setSubTitle({ desc_categoria: descCategories })
+        setItenSubTitle({ itens_categoria: itemCategories })
+      })
+      .catch((error) => {
+        console.error(error.response)
+      })
+  }, [])
+
   const showSubCategories = (params?: string) => {
     return () => {
       if (params === 'desabastecimento') {
@@ -144,81 +130,148 @@ export default function Home() {
         <div
           className={`${showCards ? 'mt-40' : ''} flex w-3/4 items-center justify-center gap-6`}
         >
-          {titles.map((t, i) =>
-            t.to ? (
-              <Button
-                className={`${t.admin === 1 ? 'cursor-not-allowed' : 'cursor-pointer'} h-64 w-72 cursor-not-allowed xl:w-80`}
-                key={i}
-                disabled
-              >
-                <Link
-                  href={t.admin !== 1 ? '' : `/categoria/${pathName}${t.to}`}
-                  className={`${t.admin !== 1 ? 'cursor-not-allowed' : 'cursor-pointer'} h-full w-full`}
-                >
-                  <Card
-                    title={t.title}
-                    sizeIcon={t.sizeIcon}
-                    className={`${t.admin === 1 ? 'cursor-not-allowed' : 'cursor-pointer'}  disabled:hover:-translate-none motion-reduce:translate-none w-full disabled:bg-blue_warm-20`}
-                    icon={t.icon}
-                    disabled
-                  />
-                </Link>
-              </Button>
-            ) : (
+          <Button className={`h-64 w-72 cursor-not-allowed xl:w-80`}>
+            <Link
+              href={`/categoria/${pathName}/tipologia_de_fraudes_em_licitacoes_e_contrato`}
+              className={`h-full w-full cursor-not-allowed`}
+            >
               <Card
-                key={i}
-                title={t.title}
-                sizeIcon={t.sizeIcon}
-                className={`${showCards ? '-translate-y-2  scale-105 bg-blue_warm-80' : ''} h-56 w-64 xl:w-80`}
-                icon={t.icon}
-                onClick={handleShowCardCategory}
+                title={'Tipologia de Fraudes em Licitações e Contratos'}
+                sizeIcon={88}
+                className={`disabled:hover:-translate-none motion-reduce:translate-none w-full cursor-not-allowed disabled:bg-blue_warm-20`}
+                icon={'liaFileContractSolid'}
+                disabled={
+                  getUser().admin !== 1 ||
+                  title.nome_categoria.some((t) =>
+                    t.includes(
+                      'Tipologia de Fraudes em Licitações e Contratos',
+                    ),
+                  )
+                }
               />
-            ),
-          )}
+            </Link>
+          </Button>
+
+          <Card
+            title={'Predições'}
+            sizeIcon={88}
+            className={`${showCards ? '-translate-y-2  scale-105 bg-blue_warm-80' : ''} h-56 w-64 xl:w-80`}
+            icon={'liaFileContractSolid'}
+            onClick={handleShowCardCategory}
+            disabled={
+              getUser().admin !== 1 ||
+              title.nome_categoria.some((t) => t.includes('Predições'))
+            }
+          />
+
+          <Button className={`h-64 w-72 cursor-not-allowed xl:w-80`}>
+            <Link
+              href={`/categoria/${pathName}/indicadores_de_politicas_publicas`}
+              className={`h-full w-full cursor-not-allowed`}
+            >
+              <Card
+                title={'Indicadores de Políticas Publicas'}
+                sizeIcon={88}
+                className={`disabled:hover:-translate-none motion-reduce:translate-none w-full cursor-not-allowed disabled:bg-blue_warm-20`}
+                icon={'liaFileContractSolid'}
+                disabled={
+                  getUser().admin !== 1 ||
+                  title.nome_categoria.some((t) =>
+                    t.includes('Indicadores de Políticas Publicas'),
+                  )
+                }
+              />
+            </Link>
+          </Button>
         </div>
 
         {showCards && (
           <div
             className={`${showShortages || showNaturalEnvironment ? 'mb-0' : 'mb-28'} mt-8 flex gap-5`}
           >
-            {subCategories.map((s, i) => (
-              <Card
-                key={i}
-                title={s.title}
-                sizeIcon={s.sizeIcon}
-                icon={s.icon}
-                className={`${changeClassName(s.sub_category)} w-72`}
-                onClick={showSubCategories(s.sub_category)}
-              />
-            ))}
+            <Card
+              title={'Desabastecimento'}
+              sizeIcon={64}
+              icon={'siSpond'}
+              className={`${changeClassName('desabastecimento')} w-72`}
+              onClick={showSubCategories('desabastecimento')}
+              disabled={
+                getUser().admin !== 1 ||
+                subTitle.desc_categoria.some((t) => t.includes('Desmatamento'))
+              }
+            />
+
+            <Card
+              title={'Meio Ambiente'}
+              sizeIcon={64}
+              icon={'faEnvira'}
+              className={`${changeClassName('meio_ambiente')} w-72`}
+              onClick={showSubCategories('meio_ambiente')}
+              disabled={
+                getUser().admin !== 1 ||
+                subTitle.desc_categoria.some((t) => t.includes('Meio Ambiente'))
+              }
+            />
           </div>
         )}
 
         {showShortages && (
           <div className="mb-44 mt-8 flex gap-3">
-            {shortages.map((s, i) => (
-              <Card
-                key={i}
-                title={s.title}
-                sizeIcon={s.sizeIcon}
-                icon={s.icon}
-                className="h-24 w-60"
-              />
-            ))}
+            <Card
+              title={'Medicação'}
+              sizeIcon={44}
+              icon={'giMedicines'}
+              className="h-24 w-60"
+              disabled={
+                getUser().admin !== 1 ||
+                itenSubTitle.itens_categoria.some((t) =>
+                  t.includes('Medicação'),
+                )
+              }
+            />
+
+            <Card
+              title={'Merenda Escolar'}
+              sizeIcon={44}
+              icon={'giMeal'}
+              className="h-24 w-60"
+              disabled={
+                getUser().admin !== 1 ||
+                itenSubTitle.itens_categoria.some((t) =>
+                  t.includes('Merenda Escolar'),
+                )
+              }
+            />
           </div>
         )}
 
         {showNaturalEnvironment && (
           <div className="mb-44 mt-8 flex gap-3">
-            {naturalEnvironment.map((s, i) => (
-              <Card
-                key={i}
-                title={s.title}
-                sizeIcon={s.sizeIcon}
-                icon={s.icon}
-                className="h-24 w-60"
-              />
-            ))}
+            <Card
+              title={'Qualidade do Ar'}
+              sizeIcon={44}
+              icon={'siAirFlow'}
+              className="h-24 w-60"
+              disabled={
+                getUser().admin !== 1 ||
+                itenSubTitle.itens_categoria.some((t) =>
+                  t.includes('Qualidade do Ar'),
+                )
+              }
+            />
+
+            <Card
+              title={'Desmatamento'}
+              sizeIcon={44}
+              icon={'giBurningTree'}
+              className="h-24 w-60"
+              disabled={
+                getUser().admin !== 1 ||
+                itenSubTitle.itens_categoria.some((t) =>
+                  t.includes('Desmatamento'),
+                )
+              }
+            />
           </div>
         )}
       </main>

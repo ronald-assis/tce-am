@@ -17,5 +17,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: '/tceam-bi/login',
+  matcher: '/tceam-bi',
 }
