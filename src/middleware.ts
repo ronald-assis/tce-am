@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getUser } from './lib/user'
 import { api } from './lib/api'
-import { AxiosError } from 'axios'
+import axios, { AxiosError } from 'axios'
 
 export async function middleware(request: NextRequest) {
   const redirectURL = new URL('/tceam-bi/login', request.url)
 
   const token = request.cookies.get('token')?.value
+
+  axios.defaults.headers.common.Authorization = token ? `Bearer ${token}` : ''
 
   const user = getUser().id_usuario
 
@@ -29,7 +31,7 @@ export async function middleware(request: NextRequest) {
       console.error(error.response)
       return NextResponse.redirect(redirectURL, {
         headers: {
-          'Set-Cookie': `token=; Path=/; max-age=20; httpOnly;`,
+          'Set-Cookie': `token=; Path=/; max-age=0`,
         },
       })
     }
