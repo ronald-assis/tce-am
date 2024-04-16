@@ -74,7 +74,7 @@ export function Form() {
           icon="user"
           name="user"
           label={errors.user && errors.user?.message}
-          classNameLabel="bg-red-600 w-11/12 flex justify-start pl-2 text-start text-[11px]  text-white w-44"
+          classNameLabel="bg-red-600 w-56 flex justify-start pl-2 text-start text-[11px]  text-white"
           iconLabel="circleX"
           placeholder="Usuário"
           register={register}

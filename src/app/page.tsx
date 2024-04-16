@@ -130,15 +130,22 @@ export default function Home() {
         <div
           className={`${showCards ? 'mt-40' : ''} flex w-3/4 items-center justify-center gap-6`}
         >
-          <Button className={`h-64 w-72 cursor-not-allowed xl:w-80`}>
+          <Button className={`h-56 w-72 xl:w-80`}>
             <Link
-              href={`/categoria/${pathName}/tipologia_de_fraudes_em_licitacoes_e_contrato`}
+              href={
+                getUser().admin !== 1 ||
+                title.nome_categoria.some((t) =>
+                  t.includes('Tipologia de Fraudes em Licitações e Contratos'),
+                )
+                  ? ''
+                  : `/categoria/${pathName}/tipologia_de_fraudes_em_licitacoes_e_contrato`
+              }
               className={`h-full w-full cursor-not-allowed`}
             >
               <Card
                 title={'Tipologia de Fraudes em Licitações e Contratos'}
                 sizeIcon={88}
-                className={`disabled:hover:-translate-none motion-reduce:translate-none w-full cursor-not-allowed disabled:bg-blue_warm-20`}
+                className={`disabled:hover:-translate-none motion-reduce:translate-none h-full w-full cursor-not-allowed disabled:bg-blue_warm-20`}
                 icon={'liaFileContractSolid'}
                 disabled={
                   getUser().admin !== 1 ||
@@ -155,7 +162,7 @@ export default function Home() {
           <Card
             title={'Predições'}
             sizeIcon={88}
-            className={`${showCards ? '-translate-y-2  scale-105 bg-blue_warm-80' : ''} h-56 w-64 xl:w-80`}
+            className={`${showCards ? '-translate-y-2  scale-105 bg-blue_warm-80' : ''} disabled:hover:-translate-none h-56 w-64 cursor-not-allowed disabled:bg-blue_warm-20 xl:w-80`}
             icon={'liaFileContractSolid'}
             onClick={handleShowCardCategory}
             disabled={
@@ -164,15 +171,22 @@ export default function Home() {
             }
           />
 
-          <Button className={`h-64 w-72 cursor-not-allowed xl:w-80`}>
+          <Button className={`h-56 w-72 xl:w-80`}>
             <Link
-              href={`/categoria/${pathName}/indicadores_de_politicas_publicas`}
+              href={
+                getUser().admin !== 1 ||
+                title.nome_categoria.some((t) =>
+                  t.includes('Tipologia de Fraudes em Licitações e Contratos'),
+                )
+                  ? ''
+                  : `/categoria/${pathName}/indicadores_de_politicas_publicas`
+              }
               className={`h-full w-full cursor-not-allowed`}
             >
               <Card
                 title={'Indicadores de Políticas Publicas'}
                 sizeIcon={88}
-                className={`disabled:hover:-translate-none motion-reduce:translate-none w-full cursor-not-allowed disabled:bg-blue_warm-20`}
+                className={`disabled:hover:-translate-none motion-reduce:translate-none h-full w-full cursor-not-allowed disabled:bg-blue_warm-20`}
                 icon={'liaFileContractSolid'}
                 disabled={
                   getUser().admin !== 1 ||

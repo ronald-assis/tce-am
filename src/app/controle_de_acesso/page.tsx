@@ -9,9 +9,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/Button'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
-import { Icons } from '@/components/Icons'
+import { Icons, NameIcons } from '@/components/Icons'
 import { Input } from '@/components/Input'
 import { api } from '@/lib/api'
+import { AxiosError } from 'axios'
 
 Modal.setAppElement('body')
 
@@ -19,19 +20,19 @@ const dataSchema = z.object({
   nome_usuario: z.string().min(3, { message: 'Este campo é obrigatório!' }),
   cpf_usuario: z.string().min(3, { message: 'Este campo é obrigatório!' }),
   email: z.string().min(1, { message: 'Este campo é obrigatório!' }).email(),
-  senha: z.string().min(3, { message: 'Este campo é obrigatório!' }).optional(),
-  ativo: z.number().optional(),
-  admin: z.number().optional(),
+  senha: z.string().optional(),
+  ativo: z.boolean().optional(),
+  admin: z.boolean().optional(),
 })
 
 type FormData = z.infer<typeof dataSchema>
 
-type UserInfoType = {
+type UserInfoType<T> = {
   nome_usuario: string
   cpf_usuario: string
   email: string
-  ativo: number
-  admin: number
+  ativo: T
+  admin: T
   id_usuario?: string
   senha?: string
 }
@@ -45,10 +46,6 @@ type CategoryType = {
   url_dashboard_completa: string
 }
 
-interface UserToCreateOrUpdate extends UserInfoType {
-  id_categorias?: string[]
-}
-
 interface ResponseType<T> {
   data: {
     conteudo: T[]
@@ -57,13 +54,20 @@ interface ResponseType<T> {
   }
 }
 
-// interface SelectedUserType {
-//   categorias?: CategoryType[]
-// }
+const selectedUserState: UserInfoType<boolean> = {
+  admin: false,
+  ativo: true,
+  cpf_usuario: '',
+  email: '',
+  nome_usuario: '',
+  senha: '',
+}
 
 export default function AccessControl() {
   const [modalIsOpenOrClose, setModalIsOpenOrClose] = useState(false)
-  const [perfis, setPerfis] = useState<UserInfoType[] | []>([])
+  const [viewPass, setViewPass] = useState(false)
+  const [view, setView] = useState<NameIcons>('bsEye')
+  const [perfis, setPerfis] = useState<UserInfoType<number>[] | []>([])
   const [categories, setCategories] = useState<CategoryType[] | []>([])
   const [selectedCategories, setSelectedCategories] = useState<
     CategoryType[] | []
@@ -73,13 +77,7 @@ export default function AccessControl() {
   const [modalTitle, setModalTitle] = useState<
     'Cadastrar' | 'Editar' | 'Excluir'
   >('Cadastrar')
-  const [selectedUser, setSelectedUser] = useState<UserInfoType>({
-    admin: 0,
-    ativo: 1,
-    cpf_usuario: '',
-    email: '',
-    nome_usuario: '',
-  })
+  const [selectedUser, setSelectedUser] = useState(selectedUserState)
   const {
     register,
     handleSubmit,
@@ -94,7 +92,7 @@ export default function AccessControl() {
     reset(selectedUser)
     api
       .get('/usuarios')
-      .then(({ data }: ResponseType<UserInfoType>) => {
+      .then(({ data }: ResponseType<UserInfoType<number>>) => {
         console.log(data)
         setPerfis(data.conteudo)
       })
@@ -119,12 +117,60 @@ export default function AccessControl() {
       .catch((e) => {
         console.error(e)
       })
-  }, [reset])
+  }, [reset, selectedUser])
 
   const handleRegiterOrUpdate = async (data: FormData) => {
     console.log(data, modalIsOpenOrClose, categories, selectedUser)
-    setModalIsOpenOrClose(false)
-    reset()
+    const bodyRequest: UserInfoType<number> = Object.assign(data, {
+      ativo: data.ativo ? 1 : 0,
+      admin: data.admin ? 1 : 0,
+    })
+
+    if (bodyRequest.senha === '') {
+      delete bodyRequest.senha
+    }
+
+    if (modalTitle === 'Cadastrar') {
+      try {
+        const response = await api.post('/usuarios', bodyRequest)
+        console.log(response)
+        if (response.statusText === 'OK') {
+          const users = await api.get('/usuarios')
+
+          reset()
+          setPerfis(users.data?.conteudo)
+          setModalIsOpenOrClose(false)
+        }
+      } catch (e) {
+        const error = e as AxiosError | Error
+        if (error instanceof AxiosError) {
+          console.error(error.response)
+        }
+      }
+    }
+
+    if (modalTitle === 'Editar') {
+      try {
+        const response = await api.patch(
+          `/usuarios/update/${selectedUser.id_usuario}`,
+          bodyRequest,
+        )
+
+        if (response.statusText === 'OK') {
+          const users = await api.get('/usuarios')
+
+          reset()
+          setPerfis(users.data?.conteudo)
+          setModalIsOpenOrClose(false)
+        }
+        console.log(response)
+      } catch (e) {
+        const error = e as AxiosError | Error
+        if (error instanceof AxiosError) {
+          console.error(error.response)
+        }
+      }
+    }
   }
 
   const closeModal = () => {
@@ -132,7 +178,7 @@ export default function AccessControl() {
     reset()
   }
 
-  const openModalExclude = (profile: UserInfoType) => {
+  const openModalExclude = (profile: UserInfoType<number>) => {
     setModalIsOpenOrCloseExclude(true)
     setModalTitle('Excluir')
     console.log(profile)
@@ -143,24 +189,24 @@ export default function AccessControl() {
   }
 
   const openModalNewProfile = () => {
-    const newProfile: UserToCreateOrUpdate = {
-      nome_usuario: '',
-      admin: 0,
-      ativo: 0,
-      cpf_usuario: '',
-      email: '',
-      senha: '',
-    }
-
     setModalIsOpenOrClose(true)
-    setSelectedUser(newProfile)
+    setSelectedUser(selectedUserState)
     setModalTitle('Cadastrar')
   }
 
-  const openModal = (info: UserToCreateOrUpdate) => {
+  const openModal = (info: UserInfoType<number>) => {
+    const infoToSelected: UserInfoType<boolean> = Object.assign(info, {
+      ativo: info.ativo === 1,
+      admin: info.admin === 1,
+    })
     setModalIsOpenOrClose(true)
-    setSelectedUser(info)
+    setSelectedUser(infoToSelected)
     setModalTitle('Editar')
+  }
+
+  const handleIconClick = () => {
+    setViewPass(!viewPass)
+    setView(viewPass ? 'bsEye' : 'bsEyeClose')
   }
 
   return (
@@ -207,7 +253,7 @@ export default function AccessControl() {
                       i % 2 === 1 ? 'bg-blue_warm-5' : 'bg-blue_warm-10'
                     }
                   >
-                    <td className="text-md border border-solid border-gray-300 px-6 py-3">
+                    <td className="text-md border border-solid border-gray-300 px-6 py-3 uppercase">
                       <span>{u.nome_usuario}</span>
                     </td>
 
@@ -221,7 +267,7 @@ export default function AccessControl() {
 
                     <td className="text-md border border-solid border-gray-300 px-6 py-3">
                       <span className="flex justify-center">
-                        {u.ativo === 1 ? (
+                        {u.ativo ? (
                           <Icons name="checkbox" />
                         ) : (
                           <Icons name="faClose" />
@@ -231,7 +277,7 @@ export default function AccessControl() {
 
                     <td className="text-md border border-solid border-gray-300 px-6 py-3">
                       <span className="flex justify-center">
-                        {u.admin === 1 ? (
+                        {u.admin ? (
                           <Icons name="checkbox" />
                         ) : (
                           <Icons name="faClose" size={20} />
@@ -351,7 +397,7 @@ export default function AccessControl() {
                       onChange={(e) =>
                         setSelectedUser({
                           ...selectedUser,
-                          ativo: e.target.checked ? 1 : 0,
+                          ativo: e.target.checked,
                         })
                       }
                     />
@@ -371,7 +417,7 @@ export default function AccessControl() {
                       onChange={(e) =>
                         setSelectedUser({
                           ...selectedUser,
-                          admin: e.target.checked ? 1 : 0,
+                          admin: e.target.checked,
                         })
                       }
                     />
@@ -421,16 +467,10 @@ export default function AccessControl() {
                       </span>
                     </label>
                     <input
-                      {...register('nome_usuario')}
                       id="nome_usuario"
-                      defaultValue={selectedUser.nome_usuario}
+                      {...register('nome_usuario')}
+                      disabled
                       className={`h-10 w-full rounded-lg px-3 py-2 text-lg uppercase disabled:bg-gray-200 `}
-                      onChange={(e) =>
-                        setSelectedUser({
-                          ...selectedUser,
-                          nome_usuario: e.target.value,
-                        })
-                      }
                     />
 
                     {errors.nome_usuario && (
@@ -455,15 +495,9 @@ export default function AccessControl() {
                       </span>
                     </label>
                     <input
-                      {...register('cpf_usuario')}
                       id="cpf_usuario"
-                      defaultValue={selectedUser.cpf_usuario}
-                      onChange={(e) =>
-                        setSelectedUser({
-                          ...selectedUser,
-                          cpf_usuario: e.target.value,
-                        })
-                      }
+                      disabled
+                      {...register('cpf_usuario')}
                       className={`h-10 w-full rounded-lg px-3 py-2 text-lg uppercase disabled:bg-gray-200 `}
                     />
 
@@ -493,14 +527,7 @@ export default function AccessControl() {
                     <input
                       {...register('email')}
                       id="email"
-                      value={selectedUser.email}
-                      onChange={(e) =>
-                        setSelectedUser({
-                          ...selectedUser,
-                          email: e.target.value,
-                        })
-                      }
-                      className={`h-10 w-full rounded-lg px-3 py-2 text-lg uppercase disabled:bg-gray-200 `}
+                      className={`h-10 w-full rounded-lg px-3 py-2 text-lg disabled:bg-gray-200 `}
                     />
 
                     {errors.email && (
@@ -530,13 +557,6 @@ export default function AccessControl() {
                           {...register('ativo')}
                           type="checkbox"
                           id="ativo"
-                          defaultValue={selectedUser.ativo}
-                          onChange={(e) =>
-                            setSelectedUser({
-                              ...selectedUser,
-                              admin: e.target.checked ? 1 : 0,
-                            })
-                          }
                           className={`h-10 w-full rounded-sm px-3 py-2 text-lg uppercase `}
                         />
 
@@ -564,13 +584,6 @@ export default function AccessControl() {
                           {...register('admin')}
                           id="admin"
                           type="checkbox"
-                          defaultValue={selectedUser.admin}
-                          onChange={(e) =>
-                            setSelectedUser({
-                              ...selectedUser,
-                              admin: e.target.checked ? 1 : 0,
-                            })
-                          }
                           className={`h-10 w-full rounded-sm px-3 py-2 text-lg uppercase `}
                         />
 
@@ -590,25 +603,44 @@ export default function AccessControl() {
                 </div>
 
                 <div className="flex w-2/4 justify-between gap-2">
-                  <Input
-                    className="flex h-20 w-2/3 flex-col items-start"
-                    classNameInput="rounded-lg w-full text-lg h-10"
-                    classNameInputDiv="w-full"
-                    classNameLabel="text-blue_warm-70"
-                    classNameError="bg-red-600 px-2 text-white rounded-lg ml-3 mt-1"
-                    type="password"
-                    onIconClick
-                    icon="bsEye"
-                    label="SENHA"
-                    defaultValue={selectedUser.senha}
-                    errorMessage={errors.email && errors.email?.message}
-                    onChange={(e) =>
-                      setSelectedUser({
-                        ...selectedUser,
-                        senha: e.target.value,
-                      })
-                    }
-                  />
+                  <div className="flex h-20 w-2/3  flex-col items-start">
+                    <label
+                      htmlFor="senha"
+                      className={`flex rounded-md px-1 text-blue_warm-70`}
+                    >
+                      <span className="flex items-center">
+                        <span className="font-ald ">SENHA:</span>
+                      </span>
+                    </label>
+                    <div className="relative w-full">
+                      <input
+                        {...register('senha')}
+                        id="senha"
+                        type={
+                          view === 'bsEye' && !viewPass ? 'password' : 'text'
+                        }
+                        className={`h-10 w-full rounded-lg px-3 py-2 text-lg disabled:bg-gray-200 `}
+                      />
+                      <button
+                        type="button"
+                        className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400"
+                        onClick={handleIconClick}
+                      >
+                        <Icons name={view} />
+                      </button>
+                    </div>
+
+                    {errors.senha && (
+                      <span
+                        className={`ml-3 mt-1 flex items-center rounded-lg bg-red-600 px-2 text-white`}
+                      >
+                        <Icons name="circleX" className="mr-1 w-4" />
+                        <span className="font-ald ">
+                          {errors.senha?.message}
+                        </span>
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex w-full flex-col">

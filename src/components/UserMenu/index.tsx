@@ -76,7 +76,7 @@ export function UserMenu(props: UserProp) {
           </div>
         </div>
 
-        <Link href="/login" className="flex justify-end">
+        <Link href="/api/auth/logout" className="flex justify-end">
           <Button className="w-2/5 rounded-full border-2 border-blue_warm-50  text-blue_warm-70 hover:bg-gray-300">
             <span className="w-full px-2">sair da conta</span>
           </Button>
