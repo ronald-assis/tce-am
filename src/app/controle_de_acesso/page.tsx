@@ -20,8 +20,8 @@ const dataSchema = z.object({
   cpf_usuario: z.string().min(3, { message: 'Este campo é obrigatório!' }),
   email: z.string().min(1, { message: 'Este campo é obrigatório!' }).email(),
   senha: z.string().min(3, { message: 'Este campo é obrigatório!' }).optional(),
-  ativo: z.boolean().optional(),
-  admin: z.boolean().optional(),
+  ativo: z.number().optional(),
+  admin: z.number().optional(),
 })
 
 type FormData = z.infer<typeof dataSchema>
@@ -423,7 +423,14 @@ export default function AccessControl() {
                     <input
                       {...register('nome_usuario')}
                       id="nome_usuario"
+                      defaultValue={selectedUser.nome_usuario}
                       className={`h-10 w-full rounded-lg px-3 py-2 text-lg uppercase disabled:bg-gray-200 `}
+                      onChange={(e) =>
+                        setSelectedUser({
+                          ...selectedUser,
+                          nome_usuario: e.target.value,
+                        })
+                      }
                     />
 
                     {errors.nome_usuario && (
@@ -437,6 +444,7 @@ export default function AccessControl() {
                       </span>
                     )}
                   </div>
+
                   <div className="flex h-20 w-2/3  flex-col items-start">
                     <label
                       htmlFor="cpf_usuario"
@@ -449,6 +457,13 @@ export default function AccessControl() {
                     <input
                       {...register('cpf_usuario')}
                       id="cpf_usuario"
+                      defaultValue={selectedUser.cpf_usuario}
+                      onChange={(e) =>
+                        setSelectedUser({
+                          ...selectedUser,
+                          cpf_usuario: e.target.value,
+                        })
+                      }
                       className={`h-10 w-full rounded-lg px-3 py-2 text-lg uppercase disabled:bg-gray-200 `}
                     />
 
@@ -478,6 +493,13 @@ export default function AccessControl() {
                     <input
                       {...register('email')}
                       id="email"
+                      value={selectedUser.email}
+                      onChange={(e) =>
+                        setSelectedUser({
+                          ...selectedUser,
+                          email: e.target.value,
+                        })
+                      }
                       className={`h-10 w-full rounded-lg px-3 py-2 text-lg uppercase disabled:bg-gray-200 `}
                     />
 
@@ -508,6 +530,13 @@ export default function AccessControl() {
                           {...register('ativo')}
                           type="checkbox"
                           id="ativo"
+                          defaultValue={selectedUser.ativo}
+                          onChange={(e) =>
+                            setSelectedUser({
+                              ...selectedUser,
+                              admin: e.target.checked ? 1 : 0,
+                            })
+                          }
                           className={`h-10 w-full rounded-sm px-3 py-2 text-lg uppercase `}
                         />
 
@@ -535,6 +564,13 @@ export default function AccessControl() {
                           {...register('admin')}
                           id="admin"
                           type="checkbox"
+                          defaultValue={selectedUser.admin}
+                          onChange={(e) =>
+                            setSelectedUser({
+                              ...selectedUser,
+                              admin: e.target.checked ? 1 : 0,
+                            })
+                          }
                           className={`h-10 w-full rounded-sm px-3 py-2 text-lg uppercase `}
                         />
 

@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie'
 import { jwtDecode } from 'jwt-decode'
+import { redirect } from 'next/navigation'
 
 export interface User {
   id_usuario: string
@@ -11,7 +12,7 @@ export function getUser(): User {
   const token = Cookies.get('token')
 
   if (!token) {
-    throw new Error('Unauthenticated')
+    return redirect('/login')
   }
 
   const user: User = jwtDecode(token)
