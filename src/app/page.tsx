@@ -85,7 +85,7 @@ export default function Home() {
         setItenSubTitle({ itens_categoria: itemCategories })
       })
       .catch((error) => {
-        console.error(error.response)
+        console.error(error.response, 'catch')
       })
   }, [])
 
