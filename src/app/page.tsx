@@ -22,7 +22,7 @@ interface UserPermissionResponseType {
   data: [
     {
       id_categoria: string
-      categorias: CategoriesType
+      categoria: CategoriesType
     },
   ]
 }
@@ -63,10 +63,11 @@ export default function Home() {
     api
       .get(`/usuarios-permissao/${idUser}`)
       .then(({ data }: UserPermissionResponseType) => {
+        console.log(data)
         const set = new Set()
         const response = data.filter((c) => {
-          const duplicated = set.has(c.categorias.nome_categoria)
-          set.add(c.categorias.nome_categoria)
+          const duplicated = set.has(c.categoria.nome_categoria)
+          set.add(c.categoria.nome_categoria)
           return !duplicated
         })
 
@@ -75,17 +76,14 @@ export default function Home() {
         const itemCategories: string[] = []
 
         response.forEach((category) => {
-          nameCategories.push(category.categorias.nome_categoria)
-          descCategories.push(category.categorias.desc_categoria)
-          itemCategories.push(category.categorias.itens_categoria)
+          nameCategories.push(category.categoria.nome_categoria)
+          descCategories.push(category.categoria.desc_categoria)
+          itemCategories.push(category.categoria.itens_categoria)
         })
 
         setTitle({ nome_categoria: nameCategories })
         setSubTitle({ desc_categoria: descCategories })
         setItenSubTitle({ itens_categoria: itemCategories })
-      })
-      .catch((error) => {
-        console.error(error.response, 'catch')
       })
   }, [])
 
@@ -137,8 +135,8 @@ export default function Home() {
                 title.nome_categoria.some((t) =>
                   t.includes('Tipologia de Fraudes em Licitações e Contratos'),
                 )
-                  ? ''
-                  : `/categoria/${pathName}/tipologia_de_fraudes_em_licitacoes_e_contrato`
+                  ? `/categoria/${pathName}/tipologia_de_fraudes_em_licitacoes_e_contrato`
+                  : ''
               }
               className={`h-full w-full cursor-not-allowed`}
             >
@@ -148,12 +146,13 @@ export default function Home() {
                 className={`disabled:hover:-translate-none motion-reduce:translate-none h-full w-full cursor-not-allowed disabled:bg-blue_warm-20`}
                 icon={'liaFileContractSolid'}
                 disabled={
-                  getUser().admin !== 1 ||
-                  title.nome_categoria.some((t) =>
-                    t.includes(
-                      'Tipologia de Fraudes em Licitações e Contratos',
-                    ),
-                  )
+                  getUser().admin !== 1
+                    ? !title.nome_categoria.some((t) =>
+                        t.includes(
+                          'Tipologia de Fraudes em Licitações e Contratos',
+                        ),
+                      )
+                    : false
                 }
               />
             </Link>
@@ -166,8 +165,9 @@ export default function Home() {
             icon={'liaFileContractSolid'}
             onClick={handleShowCardCategory}
             disabled={
-              getUser().admin !== 1 ||
-              title.nome_categoria.some((t) => t.includes('Predições'))
+              getUser().admin !== 1
+                ? !title.nome_categoria.some((t) => t.includes('Predições'))
+                : false
             }
           />
 
@@ -176,7 +176,7 @@ export default function Home() {
               href={
                 getUser().admin !== 1 ||
                 title.nome_categoria.some((t) =>
-                  t.includes('Tipologia de Fraudes em Licitações e Contratos'),
+                  t.includes('Indicadores de Políticas Publicas'),
                 )
                   ? ''
                   : `/categoria/${pathName}/indicadores_de_politicas_publicas`
@@ -189,10 +189,11 @@ export default function Home() {
                 className={`disabled:hover:-translate-none motion-reduce:translate-none h-full w-full cursor-not-allowed disabled:bg-blue_warm-20`}
                 icon={'liaFileContractSolid'}
                 disabled={
-                  getUser().admin !== 1 ||
-                  title.nome_categoria.some((t) =>
-                    t.includes('Indicadores de Políticas Publicas'),
-                  )
+                  getUser().admin !== 1
+                    ? !title.nome_categoria.some((t) =>
+                        t.includes('Indicadores de Políticas Publicas'),
+                      )
+                    : false
                 }
               />
             </Link>
@@ -207,11 +208,14 @@ export default function Home() {
               title={'Desabastecimento'}
               sizeIcon={64}
               icon={'siSpond'}
-              className={`${changeClassName('desabastecimento')} w-72`}
+              className={`${changeClassName('desabastecimento')} w-72 disabled:bg-blue_warm-20`}
               onClick={showSubCategories('desabastecimento')}
               disabled={
-                getUser().admin !== 1 ||
-                subTitle.desc_categoria.some((t) => t.includes('Desmatamento'))
+                getUser().admin !== 1
+                  ? !subTitle.desc_categoria.some((t) =>
+                      t.includes('Desmatamento'),
+                    )
+                  : false
               }
             />
 
@@ -219,11 +223,14 @@ export default function Home() {
               title={'Meio Ambiente'}
               sizeIcon={64}
               icon={'faEnvira'}
-              className={`${changeClassName('meio_ambiente')} w-72`}
+              className={`${changeClassName('meio_ambiente')} w-72 disabled:bg-blue_warm-20`}
               onClick={showSubCategories('meio_ambiente')}
               disabled={
-                getUser().admin !== 1 ||
-                subTitle.desc_categoria.some((t) => t.includes('Meio Ambiente'))
+                getUser().admin !== 1
+                  ? !subTitle.desc_categoria.some((t) =>
+                      t.includes('Meio Ambiente'),
+                    )
+                  : false
               }
             />
           </div>
@@ -235,12 +242,13 @@ export default function Home() {
               title={'Medicação'}
               sizeIcon={44}
               icon={'giMedicines'}
-              className="h-24 w-60"
+              className="h-24 w-60 disabled:bg-blue_warm-20"
               disabled={
-                getUser().admin !== 1 ||
-                itenSubTitle.itens_categoria.some((t) =>
-                  t.includes('Medicação'),
-                )
+                getUser().admin !== 1
+                  ? !itenSubTitle.itens_categoria.some((t) =>
+                      t.includes('Medicação'),
+                    )
+                  : false
               }
             />
 
@@ -248,12 +256,13 @@ export default function Home() {
               title={'Merenda Escolar'}
               sizeIcon={44}
               icon={'giMeal'}
-              className="h-24 w-60"
+              className="h-24 w-60 disabled:bg-blue_warm-20"
               disabled={
-                getUser().admin !== 1 ||
-                itenSubTitle.itens_categoria.some((t) =>
-                  t.includes('Merenda Escolar'),
-                )
+                getUser().admin !== 1
+                  ? !itenSubTitle.itens_categoria.some((t) =>
+                      t.includes('Merenda Escolar'),
+                    )
+                  : false
               }
             />
           </div>
@@ -265,12 +274,13 @@ export default function Home() {
               title={'Qualidade do Ar'}
               sizeIcon={44}
               icon={'siAirFlow'}
-              className="h-24 w-60"
+              className="h-24 w-60 disabled:bg-blue_warm-20"
               disabled={
-                getUser().admin !== 1 ||
-                itenSubTitle.itens_categoria.some((t) =>
-                  t.includes('Qualidade do Ar'),
-                )
+                getUser().admin !== 1
+                  ? !itenSubTitle.itens_categoria.some((t) =>
+                      t.includes('Qualidade do Ar'),
+                    )
+                  : false
               }
             />
 
@@ -278,12 +288,13 @@ export default function Home() {
               title={'Desmatamento'}
               sizeIcon={44}
               icon={'giBurningTree'}
-              className="h-24 w-60"
+              className="h-24 w-60 disabled:bg-blue_warm-20"
               disabled={
-                getUser().admin !== 1 ||
-                itenSubTitle.itens_categoria.some((t) =>
-                  t.includes('Desmatamento'),
-                )
+                getUser().admin !== 1
+                  ? !itenSubTitle.itens_categoria.some((t) =>
+                      t.includes('Desmatamento'),
+                    )
+                  : false
               }
             />
           </div>
