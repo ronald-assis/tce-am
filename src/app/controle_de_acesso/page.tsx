@@ -13,6 +13,7 @@ import { Icons, NameIcons } from '@/components/Icons'
 import { Input } from '@/components/Input'
 import { api } from '@/lib/api'
 import { AxiosError } from 'axios'
+import { getUser } from '@/lib/user'
 
 Modal.setAppElement('body')
 
@@ -27,6 +28,15 @@ const dataSchema = z.object({
 
 type FormData = z.infer<typeof dataSchema>
 
+type CategoryType = {
+  id_categoria: string
+  nome_categoria: string
+  desc_categoria: string
+  itens_categoria: string
+  url_dashboard_simples: string
+  url_dashboard_completa: string
+}
+
 type UserInfoType<T> = {
   nome_usuario: string
   cpf_usuario: string
@@ -35,15 +45,17 @@ type UserInfoType<T> = {
   admin: T
   id_usuario?: string
   senha?: string
+  id_categoria?: string[]
+  categories?: CategoryType[]
 }
 
-type CategoryType = {
+type UserCategory = {
   id_categoria: string
-  nome_categoria: string
-  desc_categoria: string
-  itens_categoria: string
-  url_dashboard_simples: string
-  url_dashboard_completa: string
+  categoria: CategoryType
+}
+
+interface ResponseUserCategory {
+  data: UserCategory[]
 }
 
 interface ResponseType<T> {
@@ -69,6 +81,7 @@ export default function AccessControl() {
   const [view, setView] = useState<NameIcons>('bsEye')
   const [perfis, setPerfis] = useState<UserInfoType<number>[] | []>([])
   const [categories, setCategories] = useState<CategoryType[] | []>([])
+  const [userCategories, setUserCategories] = useState<UserCategory[] | []>([])
   const [selectedCategories, setSelectedCategories] = useState<
     CategoryType[] | []
   >([])
@@ -126,6 +139,12 @@ export default function AccessControl() {
       admin: data.admin ? 1 : 0,
     })
 
+    if (selectedCategories.length > 1) {
+      Object.assign(bodyRequest, {
+        id_categoria: selectedCategories.map((sc) => sc.id_categoria),
+      })
+    }
+
     if (bodyRequest.senha === '') {
       delete bodyRequest.senha
     }
@@ -134,7 +153,7 @@ export default function AccessControl() {
       try {
         const response = await api.post('/usuarios', bodyRequest)
         console.log(response)
-        if (response.statusText === 'OK') {
+        if (response.statusText === 'Created') {
           const users = await api.get('/usuarios')
 
           reset()
@@ -178,10 +197,28 @@ export default function AccessControl() {
     reset()
   }
 
+  const nameCategori = (c: string) => {
+    if (userCategories !== undefined) {
+      const exist = userCategories.some((uc) =>
+        uc.categoria.nome_categoria.includes(c),
+      )
+      if (exist) {
+        return true
+      } else if (!exist) {
+        return false
+      }
+    }
+  }
+
   const openModalExclude = (profile: UserInfoType<number>) => {
+    const infoToSelected: UserInfoType<boolean> = Object.assign(profile, {
+      ativo: profile.ativo === 1,
+      admin: profile.admin === 1,
+    })
+
     setModalIsOpenOrCloseExclude(true)
     setModalTitle('Excluir')
-    console.log(profile)
+    setSelectedUser(infoToSelected)
   }
 
   const closeModalExclude = () => {
@@ -190,7 +227,9 @@ export default function AccessControl() {
 
   const openModalNewProfile = () => {
     setModalIsOpenOrClose(true)
+    setUserCategories([])
     setSelectedUser(selectedUserState)
+    setSelectedCategories([])
     setModalTitle('Cadastrar')
   }
 
@@ -199,14 +238,45 @@ export default function AccessControl() {
       ativo: info.ativo === 1,
       admin: info.admin === 1,
     })
-    setModalIsOpenOrClose(true)
-    setSelectedUser(infoToSelected)
-    setModalTitle('Editar')
+
+    api
+      .get(`/usuarios-permissao/${infoToSelected.id_usuario}`)
+      .then(({ data }: ResponseUserCategory) => {
+        console.log(data, getUser().id_usuario)
+        setUserCategories(data)
+        setSelectedUser(infoToSelected)
+        setModalIsOpenOrClose(true)
+        setModalTitle('Editar')
+      })
+      .catch((e) => {
+        console.error(e)
+      })
   }
 
   const handleIconClick = () => {
     setViewPass(!viewPass)
     setView(viewPass ? 'bsEye' : 'bsEyeClose')
+  }
+
+  const sendExcludePerfil = async () => {
+    try {
+      const response = await api.delete(
+        `/usuarios/delete/${selectedUser.id_usuario}`,
+      )
+
+      if (response.statusText === 'OK') {
+        const users = await api.get('/usuarios')
+
+        reset()
+        setPerfis(users.data?.conteudo)
+        setModalIsOpenOrCloseExclude(false)
+      }
+    } catch (e) {
+      const error = e as AxiosError | Error
+      if (error instanceof AxiosError) {
+        console.error(error.response)
+      }
+    }
   }
 
   return (
@@ -426,7 +496,8 @@ export default function AccessControl() {
               </ul>
               <div className="absolute bottom-4 flex w-4/5 items-center justify-around gap-3 px-2">
                 <Button
-                  type="submit"
+                  type="button"
+                  onClick={sendExcludePerfil}
                   className="h-11 w-48 max-w-52 rounded-3xl border-2 border-blue_warm-60 bg-red-400 text-center font-ald text-base uppercase text-white transition duration-300 hover:-translate-y-1 hover:scale-100 hover:bg-red-500"
                 >
                   excluir
@@ -469,7 +540,7 @@ export default function AccessControl() {
                     <input
                       id="nome_usuario"
                       {...register('nome_usuario')}
-                      disabled
+                      disabled={modalTitle === 'Editar'}
                       className={`h-10 w-full rounded-lg px-3 py-2 text-lg uppercase disabled:bg-gray-200 `}
                     />
 
@@ -496,7 +567,7 @@ export default function AccessControl() {
                     </label>
                     <input
                       id="cpf_usuario"
-                      disabled
+                      disabled={modalTitle === 'Editar'}
                       {...register('cpf_usuario')}
                       className={`h-10 w-full rounded-lg px-3 py-2 text-lg uppercase disabled:bg-gray-200 `}
                     />
@@ -642,7 +713,6 @@ export default function AccessControl() {
                     )}
                   </div>
                 </div>
-
                 <div className="flex w-full flex-col">
                   <span className="mb-5 w-full border-b-2 border-gray-300 font-serif text-blue_warm-70">
                     Dashboards!
@@ -661,6 +731,7 @@ export default function AccessControl() {
                             type="checkbox"
                             label={c.nome_categoria}
                             register={register}
+                            defaultChecked={nameCategori(c.nome_categoria)}
                             onChange={(e) => {
                               if (e.target.checked) {
                                 const newCategory = [...selectedCategories, c]
@@ -679,6 +750,7 @@ export default function AccessControl() {
                     ))}
                   </ul>
                 </div>
+
                 <div className="absolute bottom-1 flex w-2/4 items-center justify-center gap-3 bg-gray-100 px-2">
                   <Button
                     type="submit"
