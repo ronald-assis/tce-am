@@ -271,8 +271,11 @@ export default function AccessControl() {
     api
       .get(`/usuarios-permissao/${infoToSelected.id_usuario}`)
       .then(({ data }: ResponseUserCategory) => {
-        console.log(data, getUser().id_usuario)
-        setUserCategories(data)
+        const addingIdUser = data.map((uc) =>
+          Object.assign(uc, { id_usuario: infoToSelected.id_usuario }),
+        )
+        console.log(addingIdUser, getUser().id_usuario)
+        setUserCategories(addingIdUser)
         setSelectedUser(infoToSelected)
         setViewDashboards(infoToSelected.admin)
         setModalIsOpenOrClose(true)
@@ -299,6 +302,7 @@ export default function AccessControl() {
 
         reset()
         setPerfis(users.data?.conteudo)
+        toast.success('Perfil excluido com sucesso!')
         setModalIsOpenOrCloseExclude(false)
       }
     } catch (e) {
@@ -312,6 +316,57 @@ export default function AccessControl() {
             : error.response?.data.message,
         )
       }
+    }
+  }
+
+  const addingPermission = async (idCategoria: string, permitted?: boolean) => {
+    if (permitted) {
+      const category = [idCategoria]
+      try {
+        const response = await api.patch(
+          `/usuarios/update/${selectedUser.id_usuario}`,
+          { id_categoria: category },
+        )
+
+        if (response.statusText === 'OK') {
+          toast.success('Permissão liberada com sucesso!')
+        }
+      } catch (e) {
+        const error = e as AxiosError | Error
+        if (error instanceof AxiosError) {
+          toast.error('Erro ao liberar permissão')
+        }
+      }
+    }
+  }
+
+  const excludePermission = async (idCategory: string, permitted?: boolean) => {
+    if (permitted) {
+      const reponseUserPermission = await api.get(
+        `/usuarios-permissao/${selectedUser.id_usuario}`,
+      )
+
+      reponseUserPermission.data.forEach(async (up: CategoryType) => {
+        if (idCategory === up.id_categoria) {
+          try {
+            const response = await api.delete('/usuarios-permissao/delete', {
+              params: {
+                id_usuario: selectedUser.id_usuario,
+                id_categoria: idCategory,
+              },
+            })
+
+            if (response.statusText === 'OK') {
+              toast.warning('Permissão excluida com sucesso!')
+            }
+          } catch (e) {
+            const error = e as AxiosError | Error
+            if (error instanceof AxiosError) {
+              toast.error('Erro ao excluir permissão')
+            }
+          }
+        }
+      })
     }
   }
 
@@ -778,12 +833,20 @@ export default function AccessControl() {
                                 if (e.target.checked) {
                                   const newCategory = [...selectedCategories, c]
                                   setSelectedCategories(newCategory)
+                                  addingPermission(
+                                    c.id_categoria,
+                                    modalTitle === 'Editar',
+                                  )
                                 } else {
                                   const removeCategory =
                                     selectedCategories.filter(
                                       (sc) =>
                                         sc.id_categoria !== c.id_categoria,
                                     )
+                                  excludePermission(
+                                    c.id_categoria,
+                                    modalTitle === 'Editar',
+                                  )
                                   setSelectedCategories(removeCategory)
                                 }
                               }}
@@ -822,12 +885,21 @@ export default function AccessControl() {
                                       sc,
                                     ]
                                     setSelectedCategories(newCategory)
+                                    modalTitle === 'Editar' &&
+                                      addingPermission(
+                                        sc.id_categoria,
+                                        modalTitle === 'Editar',
+                                      )
                                   } else {
                                     const removeCategory =
                                       selectedCategories.filter(
                                         (usc) =>
                                           usc.id_categoria !== sc.id_categoria,
                                       )
+                                    excludePermission(
+                                      sc.id_categoria,
+                                      modalTitle === 'Editar',
+                                    )
                                     setSelectedCategories(removeCategory)
                                   }
                                 }}
@@ -867,12 +939,20 @@ export default function AccessControl() {
                                       sc,
                                     ]
                                     setSelectedCategories(newCategory)
+                                    addingPermission(
+                                      sc.id_categoria,
+                                      modalTitle === 'Editar',
+                                    )
                                   } else {
                                     const removeCategory =
                                       selectedCategories.filter(
                                         (usc) =>
                                           usc.id_categoria !== sc.id_categoria,
                                       )
+                                    excludePermission(
+                                      sc.id_categoria,
+                                      modalTitle === 'Editar',
+                                    )
                                     setSelectedCategories(removeCategory)
                                   }
                                 }}
@@ -890,7 +970,7 @@ export default function AccessControl() {
                     type="submit"
                     className="h-11 w-48 max-w-52 rounded-3xl border-2 border-blue_warm-60 bg-blue_warm-40 text-center font-ald text-base uppercase text-white transition duration-300 hover:-translate-y-1 hover:scale-100 hover:bg-blue_warm-60"
                   >
-                    editar
+                    {modalTitle}
                   </Button>
 
                   <Button
@@ -898,7 +978,7 @@ export default function AccessControl() {
                     onClick={() => closeModal()}
                     className="h-11 w-48 max-w-52 rounded-3xl border-2 border-blue_warm-60 bg-red-400 text-center font-ald text-base uppercase text-white transition duration-300 hover:-translate-y-1 hover:scale-100 hover:bg-red-500"
                   >
-                    cancelar
+                    voltar
                   </Button>
                 </div>
               </form>

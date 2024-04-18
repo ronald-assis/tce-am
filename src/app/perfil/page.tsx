@@ -308,10 +308,6 @@ export default function Perfil() {
                 </div>
 
                 <h3 className="mb-2 mt-5 w-4/5 border-b-2 border-gray-300 font-ald text-lg text-blue_warm-70">
-                  {'Categorias > Predições'}
-                </h3>
-
-                <h3 className="mb-2 mt-5 w-4/5 border-b-2 border-gray-300 font-ald text-lg text-blue_warm-70">
                   {'Categorias > Predições > Desabastecimento'}
                 </h3>
 
