@@ -6,17 +6,7 @@ import { AxiosError } from 'axios'
 export async function middleware(request: NextRequest) {
   const redirectURL = new URL('/tceam-bi/login', request.url)
 
-  const token = request.cookies.get('token')?.value
-
   const user = getUser().id_usuario
-
-  if (!token) {
-    return NextResponse.redirect(redirectURL, {
-      headers: {
-        'Set-Cookie': `token=; Path=/; max-age=20; httpOnly;`,
-      },
-    })
-  }
 
   try {
     const response = await api.get(`/usuario/${user}`)
@@ -29,7 +19,7 @@ export async function middleware(request: NextRequest) {
       console.error(error.response)
       return NextResponse.redirect(redirectURL, {
         headers: {
-          'Set-Cookie': `token=; Path=/; max-age=0`,
+          'Set-Cookie': `token=; Path=/; max-age=20; httpOnly;`,
         },
       })
     }

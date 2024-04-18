@@ -61,7 +61,7 @@ export const Input: React.FC<InputProps> = ({
           {...rest}
           {...(register && name ? { ...register(name) } : {})}
           type={rest.icon === 'bsEye' && viewPass ? 'text' : rest.type}
-          className={`${classNameInput} h-12 w-full px-3 py-2 `}
+          className={`${classNameInput} h-12 px-3 py-2 `}
         />
         {rest.icon && (
           <button
