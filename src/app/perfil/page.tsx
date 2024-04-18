@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import Modal from 'react-modal'
-import { Toaster, toast } from 'sonner'
 
 import { Button } from '@/components/Button'
 import { Header } from '@/components/Header'
@@ -187,7 +186,6 @@ export default function Perfil() {
 
   return (
     <>
-      <Toaster position="top-right" richColors />
       <Header title="Dados Pessoais" />
       <main className="mt-40 flex justify-center">
         <div className="mt-8 grid  w-2/3 grid-cols-2">
