@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Modal from 'react-modal'
+import { Toaster, toast } from 'sonner'
 
 import { Button } from '@/components/Button'
 import { Header } from '@/components/Header'
@@ -36,16 +37,99 @@ const userState: UserType = {
   cpf_usuario: '',
 }
 
+type CategoriesType = {
+  nome_categoria: string
+  desc_categoria: string
+  itens_categoria: string
+  url_simples: string
+  url_completa: string
+}
+
+interface PermissionTitle {
+  nome_categoria: string[]
+}
+
+interface PermissionSubTitle {
+  desc_categoria: string[]
+}
+
+interface PermissionItenSubTitle {
+  itens_categoria: string[]
+}
+
+interface UserPermissionResponseType {
+  data: [
+    {
+      id_categoria: string
+      categoria: CategoriesType
+    },
+  ]
+}
+
 export default function Perfil() {
   const [infoUser, setInfoUser] = useState(userState)
   const [disabledPass, setDisabledPass] = useState(true)
   const [changePassModal, setChangePassModal] = useState(false)
+  const [title, setTitle] = useState<PermissionTitle>({ nome_categoria: [] })
+  const [subTitle, setSubTitle] = useState<PermissionSubTitle>({
+    desc_categoria: [],
+  })
+  const [itenSubTitle, setItenSubTitle] = useState<PermissionItenSubTitle>({
+    itens_categoria: [],
+  })
 
   useEffect(() => {
     const user = getUser().id_usuario
     api.get(`/usuarios/${user}`).then(({ data }: UserResponse) => {
       setInfoUser(data)
     })
+
+    api
+      .get(`/usuarios-permissao/${user}`)
+      .then(({ data }: UserPermissionResponseType) => {
+        console.log(data)
+        const set = new Set()
+        const responseTitle = data.filter((c) => {
+          const duplicated = set.has(c.categoria.nome_categoria)
+          set.add(c.categoria.nome_categoria)
+          return !duplicated
+        })
+
+        const setPredictions = new Set()
+        const responsePredictions = data.filter((p) => {
+          const duplicated = setPredictions.has(p.categoria.desc_categoria)
+          setPredictions.add(p.categoria.desc_categoria)
+          return !duplicated
+        })
+
+        const setPredictionDeforestation = new Set()
+        const responsePredictionsDeforestation = data.filter((p) => {
+          const duplicated = setPredictionDeforestation.has(
+            p.categoria.itens_categoria,
+          )
+          setPredictionDeforestation.add(p.categoria.itens_categoria)
+          return !duplicated
+        })
+        const nameCategories: string[] = []
+        const descCategories: string[] = []
+        const itemCategories: string[] = []
+
+        responseTitle.forEach((category) => {
+          nameCategories.push(category.categoria.nome_categoria)
+          itemCategories.push(category.categoria.itens_categoria)
+        })
+
+        responsePredictions.forEach((prediction) => {
+          descCategories.push(prediction.categoria.desc_categoria)
+        })
+        responsePredictionsDeforestation.forEach((items) => {
+          itemCategories.push(items.categoria.itens_categoria)
+        })
+
+        setTitle({ nome_categoria: nameCategories })
+        setSubTitle({ desc_categoria: descCategories })
+        setItenSubTitle({ itens_categoria: itemCategories })
+      })
   }, [])
 
   const openModal = () => {
@@ -76,8 +160,34 @@ export default function Perfil() {
     console.log(response)
   }
 
+  const handlePermission = (
+    type: 'title' | 'desc' | 'item',
+    name: string,
+  ): boolean => {
+    if (type === 'title') {
+      if (getUser().admin !== 1) {
+        return title.nome_categoria.some((t) => t.includes(name))
+      }
+    }
+
+    if (type === 'desc') {
+      if (getUser().admin !== 1) {
+        return subTitle.desc_categoria.some((t) => t.includes(name))
+      }
+    }
+
+    if (type === 'item') {
+      if (getUser().admin !== 1) {
+        return itenSubTitle.itens_categoria.some((t) => t.includes(name))
+      }
+    }
+
+    return true
+  }
+
   return (
     <>
+      <Toaster position="top-right" richColors />
       <Header title="Dados Pessoais" />
       <main className="mt-40 flex justify-center">
         <div className="mt-8 grid  w-2/3 grid-cols-2">
@@ -155,68 +265,74 @@ export default function Perfil() {
               <b>Permissões</b>
             </p>
             <div className="flex h-auto w-11/12 flex-col gap-3 overflow-auto rounded-lg border border-gray-200 bg-gray-100 p-5 shadow-md">
-              <p className="flex h-7 w-1/4 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
-                <span>
-                  <b>ADMIN</b>
-                </span>
-              </p>
+              {getUser().admin === 1 && (
+                <p className="flex h-7 w-1/4 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
+                  <span>
+                    <b>ADMIN</b>
+                  </span>
+                </p>
+              )}
               <h3 className="mb-2 mt-5 w-2/3 border-b-2 border-gray-300 font-ald text-lg text-blue_warm-70">
                 Categorias
               </h3>
 
               <div className="flex flex-col gap-3">
-                <p className="flex h-7 w-full items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
-                  <span>
-                    <b>Tipologia de Fraudes em Licitações e Contratos</b>
-                  </span>
-                </p>
+                <div className="flex flex-col gap-3">
+                  {handlePermission(
+                    'title',
+                    'Tipologia de Fraudes em Licitações e Contratos',
+                  ) && (
+                    <p className="flex h-7 w-2/5 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
+                      <span>
+                        <b>T.F.L.C</b>
+                      </span>
+                    </p>
+                  )}
 
-                <p className="flex h-7 w-2/3 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
-                  <span>
-                    <b>Indicadores de Políticas Publicas</b>
-                  </span>
-                </p>
+                  {handlePermission(
+                    'title',
+                    'Indicadores de Políticas Publicas',
+                  ) && (
+                    <p className="flex h-auto w-2/4 items-center justify-center rounded-2xl bg-blue_warm-50 text-center uppercase text-white">
+                      <span>
+                        <b>Indicadores de Políticas Publicas</b>
+                      </span>
+                    </p>
+                  )}
 
-                <p className="flex h-7 w-1/4 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
-                  <span>
-                    <b>Predições</b>
-                  </span>
-                </p>
+                  {handlePermission('title', 'Predições') && (
+                    <p className="flex h-auto w-2/4 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
+                      <span>
+                        <b>Predições</b>
+                      </span>
+                    </p>
+                  )}
+                </div>
 
                 <h3 className="mb-2 mt-5 w-4/5 border-b-2 border-gray-300 font-ald text-lg text-blue_warm-70">
                   {'Categorias > Predições'}
                 </h3>
-
-                <div className="flex gap-3">
-                  <p className="flex h-7 w-2/5 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
-                    <span>
-                      <b>Desabastecimento</b>
-                    </span>
-                  </p>
-
-                  <p className="flex h-7 w-2/5 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
-                    <span>
-                      <b>Meio Ambiente</b>
-                    </span>
-                  </p>
-                </div>
 
                 <h3 className="mb-2 mt-5 w-4/5 border-b-2 border-gray-300 font-ald text-lg text-blue_warm-70">
                   {'Categorias > Predições > Desabastecimento'}
                 </h3>
 
                 <div className="flex gap-3">
-                  <p className="flex h-7 w-1/4 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
-                    <span>
-                      <b>Medicação</b>
-                    </span>
-                  </p>
+                  {handlePermission('item', 'Medicação') && (
+                    <p className="flex h-auto w-1/4 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
+                      <span>
+                        <b>Medicação</b>
+                      </span>
+                    </p>
+                  )}
 
-                  <p className="flex h-7 w-2/5 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
-                    <span>
-                      <b>Merenda Escolar</b>
-                    </span>
-                  </p>
+                  {handlePermission('item', 'Merenda Escolar') && (
+                    <p className="flex h-auto w-2/5 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
+                      <span>
+                        <b>Merenda Escolar</b>
+                      </span>
+                    </p>
+                  )}
                 </div>
 
                 <h3 className="mb-2 mt-5 w-4/5 border-b-2 border-gray-300 font-ald text-lg text-blue_warm-70">
@@ -224,17 +340,21 @@ export default function Perfil() {
                 </h3>
 
                 <div className="flex gap-3">
-                  <p className="flex h-7 w-2/5 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
-                    <span>
-                      <b>Qualidade do Ar</b>
-                    </span>
-                  </p>
+                  {handlePermission('item', 'Qualidade do Ar') && (
+                    <p className="flex h-auto w-2/5 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
+                      <span>
+                        <b>Qualidade do Ar</b>
+                      </span>
+                    </p>
+                  )}
 
-                  <p className="flex h-7 w-2/5 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
-                    <span>
-                      <b>Desmatamento</b>
-                    </span>
-                  </p>
+                  {handlePermission('item', 'Desmatamento') && (
+                    <p className="flex h-auto w-2/5 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
+                      <span>
+                        <b>Desmatamento</b>
+                      </span>
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

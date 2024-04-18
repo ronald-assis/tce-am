@@ -46,7 +46,7 @@ export function Header({ title, homePage }: HeaderPropType) {
               </Link>
             </Button>
             <Icons name="ioArrowRight" size={14} />
-            <span>{title}</span>
+            <span className="font-bold text-blue_warm-70">{title}</span>
           </div>
         </div>
       )}

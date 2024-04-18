@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/Button'
 import { api } from '@/lib/api'
 import { getUser } from '@/lib/user'
+import { Footer } from '@/components/Footer'
 
 type CategoriesType = {
   nome_categoria: string
@@ -63,19 +64,11 @@ export default function Home() {
     api
       .get(`/usuarios-permissao/${idUser}`)
       .then(({ data }: UserPermissionResponseType) => {
-        console.log(data)
-        const set = new Set()
-        const response = data.filter((c) => {
-          const duplicated = set.has(c.categoria.nome_categoria)
-          set.add(c.categoria.nome_categoria)
-          return !duplicated
-        })
-
         const nameCategories: string[] = []
         const descCategories: string[] = []
         const itemCategories: string[] = []
 
-        response.forEach((category) => {
+        data.forEach((category) => {
           nameCategories.push(category.categoria.nome_categoria)
           descCategories.push(category.categoria.desc_categoria)
           itemCategories.push(category.categoria.itens_categoria)
@@ -124,6 +117,7 @@ export default function Home() {
   return (
     <>
       <Header homePage title="PAINEL DE TRABALHO DO AUDITOR" />
+      <Footer />
       <main className="relative flex min-h-screen flex-col items-center justify-center  bg-gray-200">
         <div
           className={`${showCards ? 'mt-40' : ''} flex w-3/4 items-center justify-center gap-6`}
@@ -132,7 +126,7 @@ export default function Home() {
             <Link
               href={
                 getUser().admin !== 1 ||
-                title.nome_categoria.some((t) =>
+                !title.nome_categoria.some((t) =>
                   t.includes('Tipologia de Fraudes em Licitações e Contratos'),
                 )
                   ? `/categoria/${pathName}/tipologia_de_fraudes_em_licitacoes_e_contrato`
@@ -174,12 +168,12 @@ export default function Home() {
           <Button className={`h-56 w-72 xl:w-80`}>
             <Link
               href={
-                getUser().admin !== 1 ||
-                title.nome_categoria.some((t) =>
+                getUser().admin === 1 ||
+                !title.nome_categoria.some((t) =>
                   t.includes('Indicadores de Políticas Publicas'),
                 )
-                  ? ''
-                  : `/categoria/${pathName}/indicadores_de_politicas_publicas`
+                  ? `/categoria/${pathName}/indicadores_de_politicas_publicas`
+                  : ''
               }
               className={`h-full w-full cursor-not-allowed`}
             >
@@ -223,12 +217,12 @@ export default function Home() {
               title={'Meio Ambiente'}
               sizeIcon={64}
               icon={'faEnvira'}
-              className={`${changeClassName('meio_ambiente')} w-72 disabled:bg-blue_warm-20`}
+              className={`${changeClassName('meio_ambiente')} w-72 disabled:cursor-not-allowed disabled:bg-blue_warm-20`}
               onClick={showSubCategories('meio_ambiente')}
               disabled={
                 getUser().admin !== 1
                   ? !subTitle.desc_categoria.some((t) =>
-                      t.includes('Meio Ambiente'),
+                      t.includes('Meio ambiente'),
                     )
                   : false
               }
@@ -238,65 +232,113 @@ export default function Home() {
 
         {showShortages && (
           <div className="mb-44 mt-8 flex gap-3">
-            <Card
-              title={'Medicação'}
-              sizeIcon={44}
-              icon={'giMedicines'}
-              className="h-24 w-60 disabled:bg-blue_warm-20"
-              disabled={
-                getUser().admin !== 1
-                  ? !itenSubTitle.itens_categoria.some((t) =>
-                      t.includes('Medicação'),
-                    )
-                  : false
+            <Link
+              href={
+                getUser().admin === 1 ||
+                itenSubTitle.itens_categoria.some((t) =>
+                  t.includes('Medicação'),
+                )
+                  ? `/predicoes/desabastecimento/medicacao`
+                  : ''
               }
-            />
+              className={`h-full w-full cursor-not-allowed`}
+            >
+              <Card
+                title={'Medicação'}
+                sizeIcon={44}
+                icon={'giMedicines'}
+                className="h-24 w-60 disabled:bg-blue_warm-20"
+                disabled={
+                  getUser().admin !== 1
+                    ? !itenSubTitle.itens_categoria.some((t) =>
+                        t.includes('Medicação'),
+                      )
+                    : false
+                }
+              />
+            </Link>
 
-            <Card
-              title={'Merenda Escolar'}
-              sizeIcon={44}
-              icon={'giMeal'}
-              className="h-24 w-60 disabled:bg-blue_warm-20"
-              disabled={
-                getUser().admin !== 1
-                  ? !itenSubTitle.itens_categoria.some((t) =>
-                      t.includes('Merenda Escolar'),
-                    )
-                  : false
+            <Link
+              href={
+                getUser().admin === 1 ||
+                itenSubTitle.itens_categoria.some((t) =>
+                  t.includes('Merenda escolar'),
+                )
+                  ? `/predicoes/desabastecimento/merenda_escolar`
+                  : ''
               }
-            />
+              className={`h-full w-full cursor-not-allowed`}
+            >
+              <Card
+                title={'Merenda Escolar'}
+                sizeIcon={44}
+                icon={'giMeal'}
+                className="h-24 w-60 disabled:bg-blue_warm-20"
+                disabled={
+                  getUser().admin !== 1
+                    ? !itenSubTitle.itens_categoria.some((t) =>
+                        t.includes('Merenda Escolar'),
+                      )
+                    : false
+                }
+              />
+            </Link>
           </div>
         )}
 
         {showNaturalEnvironment && (
           <div className="mb-44 mt-8 flex gap-3">
-            <Card
-              title={'Qualidade do Ar'}
-              sizeIcon={44}
-              icon={'siAirFlow'}
-              className="h-24 w-60 disabled:bg-blue_warm-20"
-              disabled={
-                getUser().admin !== 1
-                  ? !itenSubTitle.itens_categoria.some((t) =>
-                      t.includes('Qualidade do Ar'),
-                    )
-                  : false
+            <Link
+              href={
+                getUser().admin === 1 ||
+                itenSubTitle.itens_categoria.some((t) =>
+                  t.includes('Qualidade do ar'),
+                )
+                  ? `/predicoes/meio_ambiente/qualidade_do_ar`
+                  : ''
               }
-            />
+              className={`h-full w-full cursor-not-allowed`}
+            >
+              <Card
+                title={'Qualidade do Ar'}
+                sizeIcon={44}
+                icon={'siAirFlow'}
+                className="h-24 w-60 disabled:bg-blue_warm-20"
+                disabled={
+                  getUser().admin !== 1
+                    ? !itenSubTitle.itens_categoria.some((t) =>
+                        t.includes('Qualidade do ar'),
+                      )
+                    : false
+                }
+              />
+            </Link>
 
-            <Card
-              title={'Desmatamento'}
-              sizeIcon={44}
-              icon={'giBurningTree'}
-              className="h-24 w-60 disabled:bg-blue_warm-20"
-              disabled={
-                getUser().admin !== 1
-                  ? !itenSubTitle.itens_categoria.some((t) =>
-                      t.includes('Desmatamento'),
-                    )
-                  : false
+            <Link
+              href={
+                getUser().admin === 1 ||
+                itenSubTitle.itens_categoria.some((t) =>
+                  t.includes('Desmatamento'),
+                )
+                  ? `/predicoes/meio_ambiente/desmatamento`
+                  : ''
               }
-            />
+              className={`h-full w-full cursor-not-allowed`}
+            >
+              <Card
+                title={'Desmatamento'}
+                sizeIcon={44}
+                icon={'giBurningTree'}
+                className="h-24 w-60 disabled:bg-blue_warm-20"
+                disabled={
+                  getUser().admin !== 1
+                    ? !itenSubTitle.itens_categoria.some((t) =>
+                        t.includes('Desmatamento'),
+                      )
+                    : false
+                }
+              />
+            </Link>
           </div>
         )}
       </main>

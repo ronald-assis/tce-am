@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Modal from 'react-modal'
+import { Toaster, toast } from 'sonner'
 
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -19,7 +20,12 @@ Modal.setAppElement('body')
 
 const dataSchema = z.object({
   nome_usuario: z.string().min(3, { message: 'Este campo é obrigatório!' }),
-  cpf_usuario: z.string().min(3, { message: 'Este campo é obrigatório!' }),
+  cpf_usuario: z
+    .string({ required_error: 'CPF é obrigatório!' })
+    .refine((doc) => {
+      const replacedDoc = doc.replace(/\D/g, '')
+      return !!Number(replacedDoc)
+    }, 'CPF deve conter apenas números.'),
   email: z.string().min(1, { message: 'Este campo é obrigatório!' }).email(),
   senha: z.string().optional(),
   ativo: z.boolean().optional(),
@@ -78,9 +84,12 @@ const selectedUserState: UserInfoType<boolean> = {
 export default function AccessControl() {
   const [modalIsOpenOrClose, setModalIsOpenOrClose] = useState(false)
   const [viewPass, setViewPass] = useState(false)
+  const [viewDashboards, setViewDashboards] = useState(false)
   const [view, setView] = useState<NameIcons>('bsEye')
   const [perfis, setPerfis] = useState<UserInfoType<number>[] | []>([])
   const [categories, setCategories] = useState<CategoryType[] | []>([])
+  const [subEnvironment, setSubEnvironment] = useState<CategoryType[] | []>([])
+  const [subShortages, setSubShortages] = useState<CategoryType[] | []>([])
   const [userCategories, setUserCategories] = useState<UserCategory[] | []>([])
   const [selectedCategories, setSelectedCategories] = useState<
     CategoryType[] | []
@@ -118,14 +127,21 @@ export default function AccessControl() {
       .then(({ data }: ResponseType<CategoryType>) => {
         console.log(data)
 
-        const set = new Set()
-        const filterToCategory = data.conteudo.filter((c) => {
-          const duplicated = set.has(c.nome_categoria)
-          set.add(c.nome_categoria)
-          return !duplicated
+        const filterToCategory = data.conteudo.filter(
+          (c) => c.nome_categoria !== 'Predições',
+        )
+
+        const filterToEnviroment = data.conteudo.filter((c) => {
+          return c.desc_categoria === 'Meio ambiente'
         })
 
+        const filterToShortages = data.conteudo.filter(
+          (c) => c.desc_categoria === 'Desabastecimento',
+        )
+
         setCategories(filterToCategory)
+        setSubEnvironment(filterToEnviroment)
+        setSubShortages(filterToShortages)
       })
       .catch((e) => {
         console.error(e)
@@ -157,12 +173,20 @@ export default function AccessControl() {
           const users = await api.get('/usuarios')
 
           reset()
+          toast.success('Perfil cadastrado com sucesso!')
           setPerfis(users.data?.conteudo)
           setModalIsOpenOrClose(false)
         }
       } catch (e) {
         const error = e as AxiosError | Error
         if (error instanceof AxiosError) {
+          toast.error(
+            error.response?.data.message.includes(
+              'Too many database connections opened: ERROR HY000 (1040',
+            )
+              ? 'Erro no Servidor'
+              : error.response?.data.message,
+          )
           console.error(error.response)
         }
       }
@@ -179,6 +203,7 @@ export default function AccessControl() {
           const users = await api.get('/usuarios')
 
           reset()
+          toast.success('Perfil atualizado com sucesso!')
           setPerfis(users.data?.conteudo)
           setModalIsOpenOrClose(false)
         }
@@ -186,7 +211,7 @@ export default function AccessControl() {
       } catch (e) {
         const error = e as AxiosError | Error
         if (error instanceof AxiosError) {
-          console.error(error.response)
+          toast.error(error.response?.data.message)
         }
       }
     }
@@ -199,14 +224,17 @@ export default function AccessControl() {
 
   const nameCategori = (c: string) => {
     if (userCategories !== undefined) {
-      const exist = userCategories.some((uc) =>
+      return userCategories.some((uc) =>
         uc.categoria.nome_categoria.includes(c),
       )
-      if (exist) {
-        return true
-      } else if (!exist) {
-        return false
-      }
+    }
+  }
+
+  const descCategori = (sc: string) => {
+    if (userCategories !== undefined) {
+      return userCategories.some((ic) =>
+        ic.categoria.itens_categoria.includes(sc),
+      )
     }
   }
 
@@ -229,6 +257,7 @@ export default function AccessControl() {
     setModalIsOpenOrClose(true)
     setUserCategories([])
     setSelectedUser(selectedUserState)
+    setViewDashboards(false)
     setSelectedCategories([])
     setModalTitle('Cadastrar')
   }
@@ -245,6 +274,7 @@ export default function AccessControl() {
         console.log(data, getUser().id_usuario)
         setUserCategories(data)
         setSelectedUser(infoToSelected)
+        setViewDashboards(infoToSelected.admin)
         setModalIsOpenOrClose(true)
         setModalTitle('Editar')
       })
@@ -274,18 +304,25 @@ export default function AccessControl() {
     } catch (e) {
       const error = e as AxiosError | Error
       if (error instanceof AxiosError) {
-        console.error(error.response)
+        toast.error(
+          error.response?.data.message.includes(
+            'Foreign key constraint failed on the field: `id_usuario`',
+          )
+            ? 'Existe permissões vínculada a este perfil'
+            : error.response?.data.message,
+        )
       }
     }
   }
 
   return (
     <>
-      <Header title="Controle de acesso" />
+      <Toaster position="top-right" richColors />
+      <Header title="CONTROLE DE ACESSO" />
 
       <main className="relative flex min-h-screen items-center justify-center">
         <div className="flex h-[500px] w-2/3 flex-col justify-between rounded-lg border-2 border-gray-300">
-          <div className="overflow-y-auto">
+          <div className="h-full overflow-y-auto">
             <table className=" max-h-screen w-full rounded-e-lg  rounded-s-lg">
               <thead className="border-b-2 border-b-gray-200">
                 <tr className="rounded-s-lg text-blue_warm-80">
@@ -370,9 +407,11 @@ export default function AccessControl() {
               </tbody>
             </table>
           </div>
-          <div className="flex justify-center">
-            <span>paginação</span>
-          </div>
+          {perfis.length === 10 && (
+            <div className="flex justify-center">
+              <span>paginação</span>
+            </div>
+          )}
 
           <Modal
             isOpen={modalIsOpenOrCloseExclude}
@@ -463,7 +502,7 @@ export default function AccessControl() {
                       label="ATIVO:"
                       register={register}
                       disabled
-                      defaultValue={selectedUser.email}
+                      defaultChecked={selectedUser.ativo}
                       onChange={(e) =>
                         setSelectedUser({
                           ...selectedUser,
@@ -484,6 +523,7 @@ export default function AccessControl() {
                       label="ADMIN:"
                       disabled
                       register={register}
+                      defaultChecked={selectedUser.admin}
                       onChange={(e) =>
                         setSelectedUser({
                           ...selectedUser,
@@ -615,7 +655,7 @@ export default function AccessControl() {
 
                   <div className="flex h-16 w-1/3 gap-2">
                     <div className="flex w-full justify-between gap-2">
-                      <div className="flex h-20 w-2/3  flex-col items-start">
+                      <div className="flex h-20 w-2/3  flex-col items-center">
                         <label
                           htmlFor="ativo"
                           className={`flex rounded-md px-1 text-blue_warm-70`}
@@ -642,7 +682,7 @@ export default function AccessControl() {
                           </span>
                         )}
                       </div>
-                      <div className="flex h-20 w-2/3  flex-col items-start">
+                      <div className="flex h-20 w-2/3  flex-col items-center">
                         <label
                           htmlFor="admin"
                           className={`flex rounded-md px-1 text-blue_warm-70`}
@@ -655,6 +695,7 @@ export default function AccessControl() {
                           {...register('admin')}
                           id="admin"
                           type="checkbox"
+                          onChange={(e) => setViewDashboards(e.target.checked)}
                           className={`h-10 w-full rounded-sm px-3 py-2 text-lg uppercase `}
                         />
 
@@ -713,43 +754,136 @@ export default function AccessControl() {
                     )}
                   </div>
                 </div>
-                <div className="flex w-full flex-col">
-                  <span className="mb-5 w-full border-b-2 border-gray-300 font-serif text-blue_warm-70">
-                    Dashboards!
-                  </span>
-                  <ul>
-                    {categories.map((c, i) => (
-                      <li key={i}>
-                        <span>
-                          <Input
-                            className="flex w-2/4 flex-col items-start"
-                            classNameInput="rounded-sm w-full text-lg"
-                            classNameInputDiv="w-8 pl-2"
-                            classNameLabel="text-blue_warm-70"
-                            classNameError="bg-red-600 px-2 text-white rounded-lg ml-3 mt-1"
-                            id={`${i}_category`}
-                            type="checkbox"
-                            label={c.nome_categoria}
-                            register={register}
-                            defaultChecked={nameCategori(c.nome_categoria)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                const newCategory = [...selectedCategories, c]
-                                setSelectedCategories(newCategory)
-                              } else {
-                                const removeCategory =
-                                  selectedCategories.filter(
-                                    (sc) => sc.id_categoria !== c.id_categoria,
-                                  )
-                                setSelectedCategories(removeCategory)
-                              }
-                            }}
-                          />
+                {!viewDashboards && (
+                  <div className="flex w-full flex-col">
+                    <span className="mb-7 w-full border-b-2 border-gray-300 font-serif font-bold text-blue_warm-70">
+                      Dashboards!
+                    </span>
+                    <ul>
+                      {categories.map((c, i) => (
+                        <li key={i} className="mb-5">
+                          <span>
+                            <Input
+                              className="flex w-2/3 flex-col items-start gap-2"
+                              classNameInput="rounded-sm h-9 w-10 text-lg"
+                              classNameInputDiv="w-full pl-1"
+                              classNameLabel="text-blue_warm-70"
+                              classNameError="bg-red-600 px-2 text-white rounded-lg ml-3 mt-1"
+                              id={`${i}_category`}
+                              type="checkbox"
+                              label={c.nome_categoria}
+                              register={register}
+                              defaultChecked={nameCategori(c.nome_categoria)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  const newCategory = [...selectedCategories, c]
+                                  setSelectedCategories(newCategory)
+                                } else {
+                                  const removeCategory =
+                                    selectedCategories.filter(
+                                      (sc) =>
+                                        sc.id_categoria !== c.id_categoria,
+                                    )
+                                  setSelectedCategories(removeCategory)
+                                }
+                              }}
+                            />
+                          </span>
+                        </li>
+                      ))}
+
+                      <li className="mb-2 mt-7 w-full border-b-2 border-gray-300">
+                        <span className=" w-full font-serif text-blue_warm-70">
+                          {'Predições > Meio ambiente'}
                         </span>
                       </li>
-                    ))}
-                  </ul>
-                </div>
+
+                      <li className="mb-5 flex gap-3">
+                        {subEnvironment.map((sc, i) => (
+                          <li key={i} className="w-full">
+                            <span>
+                              <Input
+                                className="flex w-2/4 flex-col items-start gap-2"
+                                classNameInput="rounded-sm h-9 w-10 text-lg"
+                                classNameInputDiv="w-8 pl-2"
+                                classNameLabel="text-blue_warm-70"
+                                classNameError="bg-red-600 px-2 text-white rounded-lg ml-3 mt-1"
+                                id={`${i}_sub_category`}
+                                type="checkbox"
+                                label={sc.itens_categoria}
+                                register={register}
+                                defaultChecked={descCategori(
+                                  sc.itens_categoria,
+                                )}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    const newCategory = [
+                                      ...selectedCategories,
+                                      sc,
+                                    ]
+                                    setSelectedCategories(newCategory)
+                                  } else {
+                                    const removeCategory =
+                                      selectedCategories.filter(
+                                        (usc) =>
+                                          usc.id_categoria !== sc.id_categoria,
+                                      )
+                                    setSelectedCategories(removeCategory)
+                                  }
+                                }}
+                              />
+                            </span>
+                          </li>
+                        ))}
+                      </li>
+
+                      <li className="mb-2 mt-7 w-full border-b-2 border-gray-300">
+                        <span className=" w-full  font-serif text-blue_warm-70">
+                          {'Predições > Desabastecimento'}
+                        </span>
+                      </li>
+
+                      <li className="flex gap-3">
+                        {subShortages.map((sc, i) => (
+                          <li key={i} className="w-full">
+                            <span>
+                              <Input
+                                className="flex w-2/4 flex-col items-start gap-2"
+                                classNameInput="rounded-sm h-9 w-10 text-lg"
+                                classNameInputDiv="w-8 pl-2"
+                                classNameLabel="text-blue_warm-70"
+                                classNameError="bg-red-600 px-2 text-white rounded-lg ml-3 mt-1"
+                                id={`${i}_sub_category`}
+                                type="checkbox"
+                                label={sc.itens_categoria}
+                                register={register}
+                                defaultChecked={descCategori(
+                                  sc.itens_categoria,
+                                )}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    const newCategory = [
+                                      ...selectedCategories,
+                                      sc,
+                                    ]
+                                    setSelectedCategories(newCategory)
+                                  } else {
+                                    const removeCategory =
+                                      selectedCategories.filter(
+                                        (usc) =>
+                                          usc.id_categoria !== sc.id_categoria,
+                                      )
+                                    setSelectedCategories(removeCategory)
+                                  }
+                                }}
+                              />
+                            </span>
+                          </li>
+                        ))}
+                      </li>
+                    </ul>
+                  </div>
+                )}
 
                 <div className="absolute bottom-1 flex w-2/4 items-center justify-center gap-3 bg-gray-100 px-2">
                   <Button
