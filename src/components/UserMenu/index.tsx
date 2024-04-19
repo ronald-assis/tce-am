@@ -151,13 +151,13 @@ export function UserMenu(props: UserProp) {
 
               {permitted('desc', 'Desabastecimento') && (
                 <li className="h-8 border-b-2 border-gray-500">
-                  <span>{'Predições > Desabastecimento'}</span>
+                  <span>{'Previções > Desabastecimento'}</span>
                 </li>
               )}
 
               {permitted('item', 'Medicação') && (
                 <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                  <Link href={'/predicoes/desabastecimento/medicacao'}>
+                  <Link href={'/previcoes/desabastecimento/medicacao'}>
                     <span>Medicação</span>
                   </Link>
                 </li>
@@ -165,7 +165,7 @@ export function UserMenu(props: UserProp) {
 
               {permitted('item', 'Merenda escolar') && (
                 <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                  <Link href={'/predicoes/desabastecimento/merenda_escolar'}>
+                  <Link href={'/previcoes/desabastecimento/merenda_escolar'}>
                     <span>Merenda Escolar</span>
                   </Link>
                 </li>
@@ -173,13 +173,13 @@ export function UserMenu(props: UserProp) {
 
               {permitted('desc', 'Meio ambiente') && (
                 <li className="h-8 border-b-2 border-gray-500">
-                  <span>{'Predições > Meio Ambiente'}</span>
+                  <span>{'Previções > Meio Ambiente'}</span>
                 </li>
               )}
 
               {permitted('item', 'Qualidade do ar') && (
                 <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                  <Link href={'/predicoes/meio_ambiente/qualidade_do_ar'}>
+                  <Link href={'/previcoes/meio_ambiente/qualidade_do_ar'}>
                     <span>Qualidade do Ar</span>
                   </Link>
                 </li>
@@ -187,7 +187,7 @@ export function UserMenu(props: UserProp) {
 
               {permitted('item', 'Desmatamento') && (
                 <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                  <Link href={'/predicoes/meio_ambiente/desmatamento'}>
+                  <Link href={'/previcoes/meio_ambiente/desmatamento'}>
                     <span>Desmatamento</span>
                   </Link>
                 </li>

@@ -2,6 +2,8 @@
 
 import React, { InputHTMLAttributes, useState } from 'react'
 import { UseFormRegister } from 'react-hook-form'
+import InputMask from 'react-input-mask'
+
 import { Icons, NameIcons } from '../Icons'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -15,6 +17,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   classNameInputDiv?: string
   classNameLabel?: string
   classNameError?: string
+  mask?: boolean
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   register?: UseFormRegister<any>
@@ -31,6 +34,7 @@ export const Input: React.FC<InputProps> = ({
   errorMessage,
   classNameError,
   classNameInputDiv,
+  mask,
   ...rest
 }) => {
   const [viewPass, setViewPass] = useState(false)
@@ -57,12 +61,21 @@ export const Input: React.FC<InputProps> = ({
         )}
       </label>
       <div className={`${classNameInputDiv} relative`}>
-        <input
-          {...rest}
-          {...(register && name ? { ...register(name) } : {})}
-          type={rest.icon === 'bsEye' && viewPass ? 'text' : rest.type}
-          className={`${classNameInput} h-12 px-3 py-2 `}
-        />
+        {mask ? (
+          <InputMask
+            {...rest}
+            {...(register && name ? { ...register(name) } : {})}
+            className={`${classNameInput} h-12 px-3 py-2 `}
+            mask="999.999.999-99"
+          />
+        ) : (
+          <input
+            {...rest}
+            {...(register && name ? { ...register(name) } : {})}
+            type={rest.icon === 'bsEye' && viewPass ? 'text' : rest.type}
+            className={`${classNameInput} h-12 px-3 py-2 `}
+          />
+        )}
         {rest.icon && (
           <button
             type="button"

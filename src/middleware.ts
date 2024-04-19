@@ -18,11 +18,13 @@ export async function middleware(request: NextRequest) {
     const error = e as AxiosError | Error
     if (error instanceof AxiosError) {
       console.error(error.response)
-      return NextResponse.redirect(redirectURL, {
-        headers: {
-          'Set-Cookie': `token=; Path=/; max-age=20; httpOnly;`,
-        },
-      })
+      if (error.response?.data.message === 'Token inválido') {
+        return NextResponse.redirect(redirectURL, {
+          headers: {
+            'Set-Cookie': `token=; Path=/; max-age=20; httpOnly;`,
+          },
+        })
+      }
     }
   }
 }

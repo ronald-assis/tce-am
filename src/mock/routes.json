@@ -13,7 +13,7 @@ http://localhost:3000/api/v1/usuario-permissoes/44273e47-0910-4822-a0ed-cc7e3a0d
     {
         "id_categoria": "2c692215-5b49-4fb7-b1d5-7363117d9147",
         "categoria": {
-            "nome_categoria": "predições",
+            "nome_categoria": "previções",
             "itens_categoria": ["desabastecimento_desmedicação", "desabastecimento_merenda_escolar"], // acrescentar esse campo
         }
     },
