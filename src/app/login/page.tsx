@@ -1,12 +1,14 @@
 'use client'
 
 import Image from 'next/image'
+import Cookies from 'js-cookie'
 import { Form } from '@/components/Form'
 import reddata from '../../../public/assets/reddata.png'
 import tceam from '../../../public/assets/logo.png'
 import bgImage from '../../../public/assets/bg.png'
 
 export default function Login() {
+  Cookies.remove('token')
   return (
     <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue_warm-80 to-blue_warm-30">
       <div className="flex h-[560px] w-2/3 max-w-[960px] items-center justify-between rounded-lg bg-white shadow-2xl min-[1240px]:h-[644px] min-[1240px]:w-3/4 min-[1240px]:max-w-[960px]">

@@ -1,7 +1,7 @@
-import Cookies from 'js-cookie'
 import { LoginResponse, FormData, ErrorLogin } from './schema'
 import { api } from './api'
 import { AxiosError } from 'axios'
+import Cookies from 'js-cookie'
 
 export async function signIn(data: FormData): Promise<ErrorLogin | undefined> {
   try {

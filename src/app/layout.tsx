@@ -4,6 +4,8 @@ import {
   Bai_Jamjuree as BaiJamjuree,
 } from 'next/font/google'
 import './globals.css'
+// import axios from 'axios'
+// import Cookies from 'js-cookie'
 
 const roboto = RobotoFlex({ subsets: ['latin'], variable: '--font-roboto' })
 const baiJamjuree = BaiJamjuree({
@@ -16,6 +18,9 @@ export const metadata: Metadata = {
   title: 'TCE - AM',
   description: 'Aplicação com base em Dashboard',
 }
+
+// const token = Cookies.get('token')
+// axios.defaults.headers.common.Authorization = token ? `Bearer ${token}` : ''
 
 export default function RootLayout({
   children,
