@@ -10,6 +10,9 @@ import { Input } from '@/components/Input'
 
 import { api } from '@/lib/api'
 import { getUser } from '@/lib/user'
+import { Toaster, toast } from 'sonner'
+import { AxiosError } from 'axios'
+import { Footer } from '@/components/Footer'
 
 Modal.setAppElement('body')
 
@@ -144,19 +147,25 @@ export default function Perfil() {
   }
 
   const sendNewPass = async () => {
-    const request = await api.patch(`/auth/update/${getUser().id_usuario}`, {
-      senha: infoUser.senha,
-    })
+    try {
+      const request = await api.patch(`/auth/update/${getUser().id_usuario}`, {
+        senha: infoUser.senha,
+      })
 
-    const response = await request.statusText
+      const response = await request.statusText
 
-    if (response === 'OK') {
-      setInfoUser({ ...infoUser, senha: '' })
-      setChangePassModal(false)
-      setDisabledPass(true)
+      if (response === 'OK') {
+        setInfoUser({ ...infoUser, senha: '' })
+        setChangePassModal(false)
+        setDisabledPass(true)
+        toast.success('Senha alterada com sucesso!')
+      }
+    } catch (e) {
+      const error = e as AxiosError | Error
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message)
+      }
     }
-
-    console.log(response)
   }
 
   const handlePermission = (
@@ -186,7 +195,9 @@ export default function Perfil() {
 
   return (
     <>
+      <Toaster richColors position="top-right" />
       <Header title="Dados Pessoais" />
+      <Footer />
       <main className="mt-40 flex justify-center">
         <div className="mt-8 grid  w-2/3 grid-cols-2">
           <div className="flex justify-center">

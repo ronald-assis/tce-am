@@ -1,3 +1,4 @@
+import axios from 'axios'
 import Cookies from 'js-cookie'
 import { jwtDecode } from 'jwt-decode'
 import { redirect } from 'next/navigation'
@@ -10,6 +11,8 @@ export interface User {
 
 export function getUser(): User {
   const token = Cookies.get('token')
+
+  axios.defaults.headers.common.Authorization = token ? `Bearer ${token}` : ''
 
   if (!token) {
     return redirect('/login')

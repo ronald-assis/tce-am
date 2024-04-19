@@ -8,7 +8,7 @@ export default function Predicoes() {
   const path = usePathname()
   let title = ''
 
-  if (path === '/predicoes/desbastecimento/medicacao') {
+  if (path === '/predicoes/desabastecimento/medicacao') {
     title = 'precições > desabastecimento > Medicação'
   } else if (path === '/predicoes/desabastecimento/merenda_escolar') {
     title = 'precições > desabastecimento > merenda escolar'

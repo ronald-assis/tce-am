@@ -1,7 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { AxiosError } from 'axios'
+
+import { api } from '@/lib/api'
 
 import { Button } from '../Button'
 import { Icons } from '../Icons'
@@ -12,8 +15,69 @@ type UserProp = {
   admin: number
 }
 
+type CategoryType = {
+  nome_categoria: string
+  desc_categoria: string
+  itens_categoria: string
+  url_dashboard_simples: string
+  url_dashboard_completa: string
+}
+
+interface ResponseCategoryType {
+  id_categoria: string
+  categoria: CategoryType
+}
+
 export function UserMenu(props: UserProp) {
   const [showMenu, setShowMenu] = useState(false)
+  const [permissions, setPermissions] = useState<ResponseCategoryType[] | []>(
+    [],
+  )
+
+  useEffect(() => {
+    api
+      .get(`usuarios-permissao/${props.id_usuario}`)
+      .then((response) => {
+        setPermissions(response.data)
+      })
+      .catch((e) => {
+        const error = e as AxiosError | Error
+        if (error instanceof AxiosError) {
+          console.error(error.response?.data)
+        }
+      })
+  }, [props.id_usuario])
+
+  const permitted = (
+    type: 'title' | 'desc' | 'item',
+    name: string,
+  ): boolean => {
+    if (type === 'title') {
+      if (props.admin !== 1) {
+        return permissions.some((t) =>
+          t.categoria.nome_categoria.includes(name),
+        )
+      }
+    }
+
+    if (type === 'desc') {
+      if (props.admin !== 1) {
+        return permissions.some((t) =>
+          t.categoria.desc_categoria.includes(name),
+        )
+      }
+    }
+
+    if (type === 'item') {
+      if (props.admin !== 1) {
+        return permissions.some((t) =>
+          t.categoria.itens_categoria.includes(name),
+        )
+      }
+    }
+
+    return true
+  }
 
   return (
     <div className="relative w-fit rounded-full p-1">
@@ -66,48 +130,68 @@ export function UserMenu(props: UserProp) {
           <div className="flex flex-col justify-center gap-2 ">
             <p className="h-8 border-b-2 border-gray-500">Dashboards</p>
             <ul className="flex flex-col justify-center gap-1 text-lg ">
-              <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                <Link href="/categoria/tipologia_de_fraudes_em_licitacoes_e_contrato">
-                  <span>T.F.L.C</span>
-                </Link>
-              </li>
-              <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                <Link href={'/categoria/indicadores_de_politicas_publicas'}>
-                  <span>Indicadores de Políticas Publicas</span>
-                </Link>
-              </li>
+              {permitted(
+                'title',
+                'Tipologia de Fraudes em Licitações e Contratos',
+              ) && (
+                <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
+                  <Link href="/categoria/tipologia_de_fraudes_em_licitacoes_e_contrato">
+                    <span>T.F.L.C</span>
+                  </Link>
+                </li>
+              )}
 
-              <li className="h-8 border-b-2 border-gray-500">
-                <span>{'Predições > Desabastecimento'}</span>
-              </li>
+              {permitted('title', 'Indicadores de Políticas Publicas') && (
+                <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
+                  <Link href={'/categoria/indicadores_de_politicas_publicas'}>
+                    <span>Indicadores de Políticas Publicas</span>
+                  </Link>
+                </li>
+              )}
 
-              <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                <Link href={'/categoria/desabastecimento/medicação'}>
-                  <span>Medicação</span>
-                </Link>
-              </li>
+              {permitted('desc', 'Desabastecimento') && (
+                <li className="h-8 border-b-2 border-gray-500">
+                  <span>{'Predições > Desabastecimento'}</span>
+                </li>
+              )}
 
-              <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                <Link href={'/categoria/desabastecimento/merenda_escolar'}>
-                  <span>Merenda Escolar</span>
-                </Link>
-              </li>
+              {permitted('item', 'Medicação') && (
+                <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
+                  <Link href={'/categoria/desabastecimento/medicacao'}>
+                    <span>Medicação</span>
+                  </Link>
+                </li>
+              )}
 
-              <li className="h-8 border-b-2 border-gray-500">
-                <span>{'Predições > Meio Ambiente'}</span>
-              </li>
+              {permitted('item', 'Merenda escolar') && (
+                <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
+                  <Link href={'/categoria/desabastecimento/merenda_escolar'}>
+                    <span>Merenda Escolar</span>
+                  </Link>
+                </li>
+              )}
 
-              <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                <Link href={'/categoria/meio_ambiente/qualidade_do_ar'}>
-                  <span>Qualidade do Ar</span>
-                </Link>
-              </li>
+              {permitted('desc', 'Meio ambiente') && (
+                <li className="h-8 border-b-2 border-gray-500">
+                  <span>{'Predições > Meio Ambiente'}</span>
+                </li>
+              )}
 
-              <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                <Link href={'/categoria/meio_ambiente/desmatamento'}>
-                  <span>Desmatamento</span>
-                </Link>
-              </li>
+              {permitted('item', 'Qualidade do ar') && (
+                <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
+                  <Link href={'/categoria/meio_ambiente/qualidade_do_ar'}>
+                    <span>Qualidade do Ar</span>
+                  </Link>
+                </li>
+              )}
+
+              {permitted('item', 'Desmatamento') && (
+                <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
+                  <Link href={'/categoria/meio_ambiente/desmatamento'}>
+                    <span>Desmatamento</span>
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
         </div>

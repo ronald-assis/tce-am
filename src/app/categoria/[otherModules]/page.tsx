@@ -18,6 +18,13 @@ export default function OtherModules() {
   return (
     <>
       <Header title={title.toUpperCase()} />
+      <main className="mt-40 w-full ">
+        <iframe
+          className="m-auto h-[43rem] w-11/12"
+          src="https://bigdata.redmaxx.com.br/b/dashboard-tce-am-fraudes-licitacoes-contratos"
+          frameBorder="0"
+        ></iframe>
+      </main>
       <Footer />
     </>
   )
