@@ -1,7 +1,7 @@
 import axios from 'axios'
-import Cookies from 'js-cookie'
 import { jwtDecode } from 'jwt-decode'
 import { redirect } from 'next/navigation'
+import Cookies from 'js-cookie'
 
 export interface User {
   id_usuario: string

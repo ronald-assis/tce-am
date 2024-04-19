@@ -157,7 +157,7 @@ export function UserMenu(props: UserProp) {
 
               {permitted('item', 'Medicação') && (
                 <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                  <Link href={'/categoria/desabastecimento/medicacao'}>
+                  <Link href={'/predicoes/desabastecimento/medicacao'}>
                     <span>Medicação</span>
                   </Link>
                 </li>
@@ -165,7 +165,7 @@ export function UserMenu(props: UserProp) {
 
               {permitted('item', 'Merenda escolar') && (
                 <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                  <Link href={'/categoria/desabastecimento/merenda_escolar'}>
+                  <Link href={'/predicoes/desabastecimento/merenda_escolar'}>
                     <span>Merenda Escolar</span>
                   </Link>
                 </li>
@@ -179,7 +179,7 @@ export function UserMenu(props: UserProp) {
 
               {permitted('item', 'Qualidade do ar') && (
                 <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                  <Link href={'/categoria/meio_ambiente/qualidade_do_ar'}>
+                  <Link href={'/predicoes/meio_ambiente/qualidade_do_ar'}>
                     <span>Qualidade do Ar</span>
                   </Link>
                 </li>
@@ -187,7 +187,7 @@ export function UserMenu(props: UserProp) {
 
               {permitted('item', 'Desmatamento') && (
                 <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                  <Link href={'/categoria/meio_ambiente/desmatamento'}>
+                  <Link href={'/predicoes/meio_ambiente/desmatamento'}>
                     <span>Desmatamento</span>
                   </Link>
                 </li>
@@ -196,7 +196,7 @@ export function UserMenu(props: UserProp) {
           </div>
         </div>
 
-        <Link href="/api/auth/logout" className="flex justify-end">
+        <Link href="/login" className="flex justify-end">
           <Button className="w-2/5 rounded-full border-2 border-blue_warm-50  text-blue_warm-70 hover:bg-gray-300">
             <span className="w-full px-2">sair da conta</span>
           </Button>
