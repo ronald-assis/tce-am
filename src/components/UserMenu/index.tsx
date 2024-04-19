@@ -151,7 +151,7 @@ export function UserMenu(props: UserProp) {
 
               {permitted('desc', 'Desabastecimento') && (
                 <li className="h-8 border-b-2 border-gray-500">
-                  <span>{'previsões > Desabastecimento'}</span>
+                  <span>{'Previsões > Desabastecimento'}</span>
                 </li>
               )}
 
@@ -173,7 +173,7 @@ export function UserMenu(props: UserProp) {
 
               {permitted('desc', 'Meio ambiente') && (
                 <li className="h-8 border-b-2 border-gray-500">
-                  <span>{'previsões > Meio Ambiente'}</span>
+                  <span>{'Previsões > Meio Ambiente'}</span>
                 </li>
               )}
 
