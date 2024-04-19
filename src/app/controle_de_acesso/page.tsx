@@ -850,7 +850,7 @@ export default function AccessControl() {
 
                       <li className="mb-2 mt-7 w-full border-b-2 border-gray-300">
                         <span className=" w-full font-serif text-blue_warm-70">
-                          {'Previções > Meio ambiente'}
+                          {'Previsões > Meio ambiente'}
                         </span>
                       </li>
 
@@ -904,7 +904,7 @@ export default function AccessControl() {
 
                       <li className="mb-2 mt-7 w-full border-b-2 border-gray-300">
                         <span className=" w-full  font-serif text-blue_warm-70">
-                          {'Previções > Desabastecimento'}
+                          {'Previsões > Desabastecimento'}
                         </span>
                       </li>
 

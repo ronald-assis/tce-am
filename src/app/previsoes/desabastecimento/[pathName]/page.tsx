@@ -4,13 +4,14 @@ import { usePathname } from 'next/navigation'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
 
-export default function Previcoes() {
+export default function previsoes() {
   const path = usePathname()
   let title = ''
-  if (path === '/previcoes/meio_ambiente/qualidade_do_ar') {
-    title = 'previções > meio ambiente > qualidade do ar'
-  } else if (path === '/previcoes/meio_ambiente/desmatamento') {
-    title = 'previções > meio ambiente > desmatamento'
+
+  if (path === '/previsoes/desabastecimento/medicacao') {
+    title = 'previsões > desabastecimento > Medicação'
+  } else if (path === '/previsoes/desabastecimento/merenda_escolar') {
+    title = 'previsões > desabastecimento > merenda escolar'
   }
 
   return (

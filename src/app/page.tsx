@@ -161,14 +161,14 @@ export default function Home() {
           </aside>
 
           <Card
-            title={'Previções'}
+            title={'Previsões'}
             sizeIcon={88}
             className={`${showCards ? '-translate-y-2  scale-105 bg-blue_warm-80' : ''} disabled:hover:-translate-none h-56 w-64 cursor-not-allowed disabled:bg-blue_warm-20 xl:w-80`}
             icon={'liaFileContractSolid'}
             onClick={handleShowCardCategory}
             disabled={
               getUser().admin !== 1
-                ? !title.nome_categoria.some((t) => t.includes('Previções'))
+                ? !title.nome_categoria.some((t) => t.includes('Previsões'))
                 : false
             }
           />
@@ -246,7 +246,7 @@ export default function Home() {
                 itenSubTitle.itens_categoria.some((t) =>
                   t.includes('Medicação'),
                 )
-                  ? `/previcoes/desabastecimento/medicacao`
+                  ? `/previsoes/desabastecimento/medicacao`
                   : ''
               }
               className={`h-full w-full cursor-not-allowed`}
@@ -272,7 +272,7 @@ export default function Home() {
                 itenSubTitle.itens_categoria.some((t) =>
                   t.includes('Merenda escolar'),
                 )
-                  ? `/previcoes/desabastecimento/merenda_escolar`
+                  ? `/previsoes/desabastecimento/merenda_escolar`
                   : ''
               }
               className={`h-full w-full cursor-not-allowed`}
@@ -302,7 +302,7 @@ export default function Home() {
                 itenSubTitle.itens_categoria.some((t) =>
                   t.includes('Qualidade do ar'),
                 )
-                  ? `/previcoes/meio_ambiente/qualidade_do_ar`
+                  ? `/previsoes/meio_ambiente/qualidade_do_ar`
                   : ''
               }
               className={`h-full w-full cursor-not-allowed`}
@@ -328,7 +328,7 @@ export default function Home() {
                 itenSubTitle.itens_categoria.some((t) =>
                   t.includes('Desmatamento'),
                 )
-                  ? `/previcoes/meio_ambiente/desmatamento`
+                  ? `/previsoes/meio_ambiente/desmatamento`
                   : ''
               }
               className={`h-full w-full cursor-not-allowed`}

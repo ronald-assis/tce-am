@@ -309,17 +309,17 @@ export default function Perfil() {
                     </p>
                   )}
 
-                  {handlePermission('title', 'Previções') && (
+                  {handlePermission('title', 'Previsões') && (
                     <p className="flex h-auto w-2/4 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
                       <span>
-                        <b>Previções</b>
+                        <b>Previsões</b>
                       </span>
                     </p>
                   )}
                 </div>
 
                 <h3 className="mb-2 mt-5 w-4/5 border-b-2 border-gray-300 font-ald text-lg text-blue_warm-70">
-                  {'Categorias > Previções > Desabastecimento'}
+                  {'Categorias > Previsões > Desabastecimento'}
                 </h3>
 
                 <div className="flex gap-3">
@@ -341,7 +341,7 @@ export default function Perfil() {
                 </div>
 
                 <h3 className="mb-2 mt-5 w-4/5 border-b-2 border-gray-300 font-ald text-lg text-blue_warm-70">
-                  {'Categorias > Previções > Meio Ambiente'}
+                  {'Categorias > Previsões > Meio Ambiente'}
                 </h3>
 
                 <div className="flex gap-3">
