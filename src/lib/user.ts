@@ -11,6 +11,7 @@ export interface User {
 
 export function getUser(): User {
   const token = Cookies.get('token')
+  console.log(token)
 
   axios.defaults.headers.common.Authorization = token ? `Bearer ${token}` : ''
 
