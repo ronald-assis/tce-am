@@ -2,10 +2,11 @@
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Modal from 'react-modal'
-import { Toaster, toast } from 'sonner'
+import { AxiosError } from 'axios'
 
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Toaster, toast } from 'sonner'
 
 import { Button } from '@/components/Button'
 import { Footer } from '@/components/Footer'
@@ -13,8 +14,6 @@ import { Header } from '@/components/Header'
 import { Icons, NameIcons } from '@/components/Icons'
 import { Input } from '@/components/Input'
 import { api } from '@/lib/api'
-import { AxiosError } from 'axios'
-import { getUser } from '@/lib/user'
 
 Modal.setAppElement('body')
 
@@ -115,7 +114,6 @@ export default function AccessControl() {
     api
       .get('/usuarios')
       .then(({ data }: ResponseType<UserInfoType<number>>) => {
-        console.log(data)
         setPerfis(data.conteudo)
       })
       .catch((e) => {
@@ -125,8 +123,6 @@ export default function AccessControl() {
     api
       .get('/categorias')
       .then(({ data }: ResponseType<CategoryType>) => {
-        console.log(data)
-
         const filterToCategory = data.conteudo.filter(
           (c) => c.nome_categoria !== 'Predições',
         )
@@ -149,7 +145,6 @@ export default function AccessControl() {
   }, [reset, selectedUser])
 
   const handleRegiterOrUpdate = async (data: FormData) => {
-    console.log(data, modalIsOpenOrClose, categories, selectedUser)
     const bodyRequest: UserInfoType<number> = Object.assign(data, {
       ativo: data.ativo ? 1 : 0,
       admin: data.admin ? 1 : 0,
@@ -168,7 +163,6 @@ export default function AccessControl() {
     if (modalTitle === 'Cadastrar') {
       try {
         const response = await api.post('/usuarios', bodyRequest)
-        console.log(response)
         if (response.statusText === 'Created') {
           const users = await api.get('/usuarios')
 
@@ -207,7 +201,6 @@ export default function AccessControl() {
           setPerfis(users.data?.conteudo)
           setModalIsOpenOrClose(false)
         }
-        console.log(response)
       } catch (e) {
         const error = e as AxiosError | Error
         if (error instanceof AxiosError) {
@@ -274,7 +267,7 @@ export default function AccessControl() {
         const addingIdUser = data.map((uc) =>
           Object.assign(uc, { id_usuario: infoToSelected.id_usuario }),
         )
-        console.log(addingIdUser, getUser().id_usuario)
+
         setUserCategories(addingIdUser)
         setSelectedUser(infoToSelected)
         setViewDashboards(infoToSelected.admin)

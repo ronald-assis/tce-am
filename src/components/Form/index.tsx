@@ -70,7 +70,7 @@ export function Form() {
         <Input
           id="user"
           className="mb-2 flex w-4/5 flex-col-reverse gap-1 text-2xl text-gray-500"
-          classNameInput={`${errors.user ? 'border-2 border-red-600' : ''} focus:outline-0`}
+          classNameInput={`${errors.user ? 'border-2 border-red-600' : ''} w-full focus:outline-0`}
           icon="user"
           name="user"
           label={errors.user && errors.user?.message}
@@ -87,7 +87,7 @@ export function Form() {
           placeholder="Senha"
           className="mb-2 flex w-4/5 flex-col-reverse gap-1 text-2xl text-gray-500"
           onIconClick
-          classNameInput={`${errors.pass ? 'border-2 border-red-600' : ''} focus:outline-0`}
+          classNameInput={`${errors.pass ? 'border-2 border-red-600' : ''} w-full focus:outline-0`}
           label={errors.pass && errors.pass?.message}
           iconLabel="circleX"
           classNameLabel="bg-red-600 text-[11px] justify-center text-white w-44"

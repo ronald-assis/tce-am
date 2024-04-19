@@ -67,10 +67,46 @@ export function UserMenu(props: UserProp) {
             <p className="h-8 border-b-2 border-gray-500">Dashboards</p>
             <ul className="flex flex-col justify-center gap-1 text-lg ">
               <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                <span>link para o dash</span>
+                <Link href="/categoria/tipologia_de_fraudes_em_licitacoes_e_contrato">
+                  <span>T.F.L.C</span>
+                </Link>
               </li>
               <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
-                <span>link para o dash</span>
+                <Link href={'/categoria/indicadores_de_politicas_publicas'}>
+                  <span>Indicadores de Políticas Publicas</span>
+                </Link>
+              </li>
+
+              <li className="h-8 border-b-2 border-gray-500">
+                <span>{'Predições > Desabastecimento'}</span>
+              </li>
+
+              <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
+                <Link href={'/categoria/desabastecimento/medicação'}>
+                  <span>Medicação</span>
+                </Link>
+              </li>
+
+              <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
+                <Link href={'/categoria/desabastecimento/merenda_escolar'}>
+                  <span>Merenda Escolar</span>
+                </Link>
+              </li>
+
+              <li className="h-8 border-b-2 border-gray-500">
+                <span>{'Predições > Meio Ambiente'}</span>
+              </li>
+
+              <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
+                <Link href={'/categoria/meio_ambiente/qualidade_do_ar'}>
+                  <span>Qualidade do Ar</span>
+                </Link>
+              </li>
+
+              <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
+                <Link href={'/categoria/meio_ambiente/desmatamento'}>
+                  <span>Desmatamento</span>
+                </Link>
               </li>
             </ul>
           </div>

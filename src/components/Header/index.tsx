@@ -16,7 +16,7 @@ export function Header({ title, homePage }: HeaderPropType) {
   const user = getUser()
 
   return (
-    <div className=" fixed left-0 right-0 top-0 z-50 flex flex-col ">
+    <div className="absolute left-0 right-0 top-0 z-50 flex flex-col ">
       <header className="flex w-full items-center justify-center bg-gradient-to-tl from-blue_warm-80 to-blue_warm-20 py-2 shadow-lg">
         <nav className="flex w-2/3 items-center justify-between">
           <a
