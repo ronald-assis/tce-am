@@ -4,14 +4,14 @@ import { usePathname } from 'next/navigation'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
 
-export default function Predicoes() {
+export default function Previsoes() {
   const path = usePathname()
   let title = ''
 
-  if (path === '/predicoes/desabastecimento/medicacao') {
-    title = 'precições > desabastecimento > Medicação'
-  } else if (path === '/predicoes/desabastecimento/merenda_escolar') {
-    title = 'precições > desabastecimento > merenda escolar'
+  if (path === '/previsoes/desabastecimento/medicacao') {
+    title = 'previsões > desabastecimento > Medicação'
+  } else if (path === '/previsoes/desabastecimento/merenda_escolar') {
+    title = 'previsões > desabastecimento > merenda escolar'
   }
 
   return (

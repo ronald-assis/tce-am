@@ -124,7 +124,7 @@ export default function AccessControl() {
       .get('/categorias')
       .then(({ data }: ResponseType<CategoryType>) => {
         const filterToCategory = data.conteudo.filter(
-          (c) => c.nome_categoria !== 'Predições',
+          (c) => c.nome_categoria !== 'Previsões',
         )
 
         const filterToEnviroment = data.conteudo.filter((c) => {
@@ -805,7 +805,7 @@ export default function AccessControl() {
                 {!viewDashboards && (
                   <div className="flex w-full flex-col">
                     <span className="mb-7 w-full border-b-2 border-gray-300 font-serif font-bold text-blue_warm-70">
-                      Dashboards!
+                      Dashboards
                     </span>
                     <ul>
                       {categories.map((c, i) => (
@@ -850,7 +850,7 @@ export default function AccessControl() {
 
                       <li className="mb-2 mt-7 w-full border-b-2 border-gray-300">
                         <span className=" w-full font-serif text-blue_warm-70">
-                          {'Predições > Meio ambiente'}
+                          {'Previsões > Meio ambiente'}
                         </span>
                       </li>
 
@@ -904,7 +904,7 @@ export default function AccessControl() {
 
                       <li className="mb-2 mt-7 w-full border-b-2 border-gray-300">
                         <span className=" w-full  font-serif text-blue_warm-70">
-                          {'Predições > Desabastecimento'}
+                          {'Previsões > Desabastecimento'}
                         </span>
                       </li>
 
