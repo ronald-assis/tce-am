@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { AxiosError } from 'axios'
+
 import { getUser } from './lib/user'
 import { api } from './lib/api'
-import { AxiosError } from 'axios'
 
 export async function middleware(request: NextRequest) {
   const redirectURL = new URL('/tceam-bi/login', request.url)

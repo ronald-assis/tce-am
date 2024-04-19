@@ -1,12 +1,11 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 
 import { Card } from '@/components/Card'
 import { Header } from '@/components/Header'
-import { useEffect, useState } from 'react'
-import { Button } from '@/components/Button'
+
 import { api } from '@/lib/api'
 import { getUser } from '@/lib/user'
 import { Footer } from '@/components/Footer'
@@ -51,7 +50,6 @@ export default function Home() {
   const [itenSubTitle, setItenSubTitle] = useState<PermissionItenSubTitle>({
     itens_categoria: [],
   })
-  const pathName = usePathname()
 
   const handleShowCardCategory = () => {
     setShowCards(!showCards)
@@ -122,14 +120,14 @@ export default function Home() {
         <div
           className={`${showCards ? 'mt-40' : ''} flex w-3/4 items-center justify-center gap-6`}
         >
-          <Button className={`h-56 w-72 xl:w-80`}>
+          <aside className={`h-56 w-72 xl:w-80`}>
             <Link
               href={
                 getUser().admin !== 1 ||
                 !title.nome_categoria.some((t) =>
                   t.includes('Tipologia de Fraudes em Licitações e Contratos'),
                 )
-                  ? `/categoria/${pathName}/tipologia_de_fraudes_em_licitacoes_e_contrato`
+                  ? `/categoria/tipologia_de_fraudes_em_licitacoes_e_contrato`
                   : ''
               }
               className={`h-full w-full cursor-not-allowed`}
@@ -150,7 +148,7 @@ export default function Home() {
                 }
               />
             </Link>
-          </Button>
+          </aside>
 
           <Card
             title={'Predições'}
@@ -165,14 +163,14 @@ export default function Home() {
             }
           />
 
-          <Button className={`h-56 w-72 xl:w-80`}>
+          <aside className={`h-56 w-72 xl:w-80`}>
             <Link
               href={
                 getUser().admin === 1 ||
                 !title.nome_categoria.some((t) =>
                   t.includes('Indicadores de Políticas Publicas'),
                 )
-                  ? `/categoria/${pathName}/indicadores_de_politicas_publicas`
+                  ? `/categoria/indicadores_de_politicas_publicas`
                   : ''
               }
               className={`h-full w-full cursor-not-allowed`}
@@ -191,7 +189,7 @@ export default function Home() {
                 }
               />
             </Link>
-          </Button>
+          </aside>
         </div>
 
         {showCards && (
