@@ -9,6 +9,7 @@ import { Header } from '@/components/Header'
 import { api } from '@/lib/api'
 import { getUser } from '@/lib/user'
 import { Footer } from '@/components/Footer'
+import { AxiosError } from 'axios'
 
 type CategoriesType = {
   nome_categoria: string
@@ -75,6 +76,15 @@ export default function Home() {
         setTitle({ nome_categoria: nameCategories })
         setSubTitle({ desc_categoria: descCategories })
         setItenSubTitle({ itens_categoria: itemCategories })
+      })
+      .catch((e) => {
+        const error = e as AxiosError | Error
+        if (error instanceof AxiosError) {
+          console.log(error.response?.data.message)
+          if (error.response?.data.status === 'unauthorized') {
+            window.location.reload()
+          }
+        }
       })
   }, [])
 
