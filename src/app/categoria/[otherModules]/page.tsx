@@ -21,7 +21,7 @@ export default function OtherModules() {
       <main className="mt-40 w-full ">
         <iframe
           className="m-auto h-[43rem] w-11/12"
-          src="https://bigdata.redmaxx.com.br/b/dashboard-tce-am-fraudes-licitacoes-contratos"
+          src="https://bigdata.redmaxx.com.br/b/tceam_fraudes"
           frameBorder="0"
         ></iframe>
       </main>
