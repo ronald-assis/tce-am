@@ -136,7 +136,7 @@ export function UserMenu(props: UserProp) {
               ) && (
                 <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
                   <Link href="/categoria/tipologia_de_fraudes_em_licitacoes_e_contrato">
-                    <span>T.F.L.C</span>
+                    <span>Tipologia de Fraudes</span>
                   </Link>
                 </li>
               )}

@@ -293,7 +293,7 @@ export default function Perfil() {
                   ) && (
                     <p className="flex h-7 w-2/5 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
                       <span>
-                        <b>T.F.L.C</b>
+                        <b>Tipologia de Fraudes</b>
                       </span>
                     </p>
                   )}

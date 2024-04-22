@@ -122,6 +122,30 @@ export default function Home() {
     return ''
   }
 
+  const disabledWhenClickButtonCategory = (category: string): boolean => {
+    if (showCards) {
+      return showCards
+    }
+
+    return getUser().admin !== 1
+      ? !title.nome_categoria.some((t) => t.includes(category))
+      : false
+  }
+
+  const disabledWhenClickButtonSub = (
+    category: string,
+    typeSub: boolean,
+    otherSub: boolean,
+  ): boolean => {
+    if (typeSub) {
+      return !otherSub
+    }
+
+    return getUser().admin !== 1
+      ? !subTitle.desc_categoria.some((t) => t.includes(category))
+      : false
+  }
+
   return (
     <>
       <Header homePage title="PAINEL DE TRABALHO DO AUDITOR" />
@@ -133,8 +157,8 @@ export default function Home() {
           <aside className={`h-56 w-72 xl:w-80`}>
             <Link
               href={
-                getUser().admin !== 1 ||
-                !title.nome_categoria.some((t) =>
+                getUser().admin === 1 ||
+                title.nome_categoria.some((t) =>
                   t.includes('Tipologia de Fraudes em Licitações e Contratos'),
                 )
                   ? `/categoria/tipologia_de_fraudes_em_licitacoes_e_contrato`
@@ -147,31 +171,27 @@ export default function Home() {
                 sizeIcon={88}
                 className={`disabled:hover:-translate-none motion-reduce:translate-none h-full w-full cursor-not-allowed disabled:bg-blue_warm-20`}
                 icon={'liaFileContractSolid'}
-                disabled={
-                  getUser().admin !== 1
-                    ? !title.nome_categoria.some((t) =>
-                        t.includes(
-                          'Tipologia de Fraudes em Licitações e Contratos',
-                        ),
-                      )
-                    : false
-                }
+                disabled={disabledWhenClickButtonCategory(
+                  'Tipologia de Fraudes em Licitações e Contratos',
+                )}
               />
             </Link>
           </aside>
 
-          <Card
-            title={'Previsões'}
-            sizeIcon={88}
-            className={`${showCards ? '-translate-y-2  scale-105 bg-blue_warm-80' : ''} disabled:hover:-translate-none h-56 w-64 cursor-not-allowed disabled:bg-blue_warm-20 xl:w-80`}
-            icon={'liaFileContractSolid'}
-            onClick={handleShowCardCategory}
-            disabled={
-              getUser().admin !== 1
-                ? !title.nome_categoria.some((t) => t.includes('Previsões'))
-                : false
-            }
-          />
+          <a className="cursor-not-allowed">
+            <Card
+              title={'Previsões'}
+              sizeIcon={88}
+              className={`${showCards ? '-translate-y-2  scale-105 bg-blue_warm-80' : ''} disabled:hover:-translate-none h-56 w-64 cursor-not-allowed disabled:bg-blue_warm-20 xl:w-80`}
+              icon={'liaFileContractSolid'}
+              onClick={handleShowCardCategory}
+              disabled={
+                getUser().admin !== 1
+                  ? !title.nome_categoria.some((t) => t.includes('Previsões'))
+                  : false
+              }
+            />
+          </a>
 
           <aside className={`h-56 w-72 xl:w-80`}>
             <Link
@@ -190,13 +210,9 @@ export default function Home() {
                 sizeIcon={88}
                 className={`disabled:hover:-translate-none motion-reduce:translate-none h-full w-full cursor-not-allowed disabled:bg-blue_warm-20`}
                 icon={'liaFileContractSolid'}
-                disabled={
-                  getUser().admin !== 1
-                    ? !title.nome_categoria.some((t) =>
-                        t.includes('Indicadores de Políticas Publicas'),
-                      )
-                    : false
-                }
+                disabled={disabledWhenClickButtonCategory(
+                  'Indicadores de Políticas Publicas',
+                )}
               />
             </Link>
           </aside>
@@ -206,35 +222,35 @@ export default function Home() {
           <div
             className={`${showShortages || showNaturalEnvironment ? 'mb-0' : 'mb-28'} mt-8 flex gap-5`}
           >
-            <Card
-              title={'Desabastecimento'}
-              sizeIcon={64}
-              icon={'siSpond'}
-              className={`${changeClassName('desabastecimento')} w-72 disabled:bg-blue_warm-20`}
-              onClick={showSubCategories('desabastecimento')}
-              disabled={
-                getUser().admin !== 1
-                  ? !subTitle.desc_categoria.some((t) =>
-                      t.includes('Desmatamento'),
-                    )
-                  : false
-              }
-            />
+            <a className="cursor-not-allowed">
+              <Card
+                title={'Desabastecimento'}
+                sizeIcon={64}
+                icon={'siSpond'}
+                className={`${changeClassName('desabastecimento')} w-72 disabled:bg-blue_warm-20`}
+                onClick={showSubCategories('desabastecimento')}
+                disabled={disabledWhenClickButtonSub(
+                  'Desabastecimento',
+                  showNaturalEnvironment,
+                  showShortages,
+                )}
+              />
+            </a>
 
-            <Card
-              title={'Meio Ambiente'}
-              sizeIcon={64}
-              icon={'faEnvira'}
-              className={`${changeClassName('meio_ambiente')} w-72 disabled:cursor-not-allowed disabled:bg-blue_warm-20`}
-              onClick={showSubCategories('meio_ambiente')}
-              disabled={
-                getUser().admin !== 1
-                  ? !subTitle.desc_categoria.some((t) =>
-                      t.includes('Meio ambiente'),
-                    )
-                  : false
-              }
-            />
+            <a className="cursor-not-allowed">
+              <Card
+                title={'Meio Ambiente'}
+                sizeIcon={64}
+                icon={'faEnvira'}
+                className={`${changeClassName('meio_ambiente')} w-72 disabled:cursor-not-allowed disabled:bg-blue_warm-20`}
+                onClick={showSubCategories('meio_ambiente')}
+                disabled={disabledWhenClickButtonSub(
+                  'Meio ambiente',
+                  showShortages,
+                  showNaturalEnvironment,
+                )}
+              />
+            </a>
           </div>
         )}
 
@@ -328,7 +344,7 @@ export default function Home() {
                 itenSubTitle.itens_categoria.some((t) =>
                   t.includes('Desmatamento'),
                 )
-                  ? `/previsoes/meio_ambiente/desmatamento`
+                  ? '/previsoes/meio_ambiente/desmatamento'
                   : ''
               }
               className={`h-full w-full cursor-not-allowed`}
