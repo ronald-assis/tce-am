@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Modal from 'react-modal'
+import InputMask from 'react-input-mask'
 import { AxiosError } from 'axios'
 
 import { z } from 'zod'
@@ -114,7 +115,15 @@ export default function AccessControl() {
     api
       .get('/usuarios')
       .then(({ data }: ResponseType<UserInfoType<number>>) => {
-        setPerfis(data.conteudo)
+        const dataConteudo = data.conteudo.map((dc) =>
+          Object.assign(dc, {
+            cpf_usuario: dc.cpf_usuario.replace(
+              /^(\d{3})(\d{3})(\d{3})(\d{2})$/,
+              '$1.$2.$3-$4',
+            ),
+          }),
+        )
+        setPerfis(dataConteudo)
       })
       .catch((e) => {
         console.error(e)
@@ -146,6 +155,7 @@ export default function AccessControl() {
 
   const handleRegiterOrUpdate = async (data: FormData) => {
     const bodyRequest: UserInfoType<number> = Object.assign(data, {
+      cpf_usuario: data.cpf_usuario.replace(/\D/g, ''),
       ativo: data.ativo ? 1 : 0,
       admin: data.admin ? 1 : 0,
     })
@@ -198,7 +208,17 @@ export default function AccessControl() {
 
           reset()
           toast.success('Perfil atualizado com sucesso!')
-          setPerfis(users.data?.conteudo)
+
+          const dataConteudo = users.data.conteudo.map(
+            (dc: UserInfoType<number>) =>
+              Object.assign(dc, {
+                cpf_usuario: dc.cpf_usuario.replace(
+                  /^(\d{3})(\d{3})(\d{3})(\d{2})$/,
+                  '$1.$2.$3-$4',
+                ),
+              }),
+          )
+          setPerfis(dataConteudo)
           setModalIsOpenOrClose(false)
         }
       } catch (e) {
@@ -294,7 +314,16 @@ export default function AccessControl() {
         const users = await api.get('/usuarios')
 
         reset()
-        setPerfis(users.data?.conteudo)
+        const dataConteudo = users.data.conteudo.map(
+          (dc: UserInfoType<number>) =>
+            Object.assign(dc, {
+              cpf_usuario: dc.cpf_usuario.replace(
+                /^(\d{3})(\d{3})(\d{3})(\d{2})$/,
+                '$1.$2.$3-$4',
+              ),
+            }),
+        )
+        setPerfis(dataConteudo)
         toast.success('Perfil excluido com sucesso!')
         setModalIsOpenOrCloseExclude(false)
       }
@@ -502,6 +531,7 @@ export default function AccessControl() {
                     classNameInput="rounded-lg disabled:bg-gray-200 rounded-lg w-full text-lg h-10 uppercase"
                     classNameInputDiv="w-full"
                     classNameLabel="text-blue_warm-70"
+                    mask
                     classNameError="bg-red-600 px-2 text-xs flex text-white rounded-lg ml-3 mt-1"
                     errorMessage={
                       errors.cpf_usuario && errors.cpf_usuario?.message
@@ -512,7 +542,7 @@ export default function AccessControl() {
                     onChange={(e) =>
                       setSelectedUser({
                         ...selectedUser,
-                        cpf_usuario: e.target.value,
+                        cpf_usuario: e.target.value.replace(/\D/g, ''),
                       })
                     }
                   />
@@ -562,7 +592,7 @@ export default function AccessControl() {
                     <div></div>
                     <Input
                       className="flex w-2/4 flex-col items-start"
-                      classNameInput="rounded-sm disabled:bg-gray-200 text-lg"
+                      classNameInput="rounded-sm disabled:bg-gray-200 w-full text-lg"
                       classNameInputDiv="w-8 pl-2"
                       classNameLabel="text-blue_warm-70"
                       errorMessage={errors.admin && errors.admin?.message}
@@ -653,8 +683,9 @@ export default function AccessControl() {
                         <span className="font-ald ">CPF:</span>
                       </span>
                     </label>
-                    <input
+                    <InputMask
                       id="cpf_usuario"
+                      mask="999.999.999-99"
                       disabled={modalTitle === 'Editar'}
                       {...register('cpf_usuario')}
                       className={`h-10 w-full rounded-lg px-3 py-2 text-lg uppercase disabled:bg-gray-200 `}

@@ -73,6 +73,7 @@ export function Form() {
           classNameInput={`${errors.user ? 'border-2 border-red-600' : ''} w-full focus:outline-0`}
           icon="user"
           name="user"
+          mask
           label={errors.user && errors.user?.message}
           classNameLabel="bg-red-600 w-56 flex justify-start pl-2 text-start text-[11px]  text-white"
           iconLabel="circleX"
