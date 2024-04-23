@@ -332,7 +332,7 @@ export default function Perfil() {
                     </p>
                   )}
 
-                  {handlePermission('item', 'Merenda Escolar') && (
+                  {handlePermission('item', 'Merenda escolar') && (
                     <p className="flex h-auto w-2/5 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
                       <span>
                         <b>Merenda Escolar</b>
@@ -346,7 +346,7 @@ export default function Perfil() {
                 </h3>
 
                 <div className="flex gap-3">
-                  {handlePermission('item', 'Qualidade do Ar') && (
+                  {handlePermission('item', 'Qualidade do ar') && (
                     <p className="flex h-auto w-2/5 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
                       <span>
                         <b>Qualidade do Ar</b>
