@@ -212,6 +212,7 @@ export default function Perfil() {
                     className="flex"
                     classNameInput="focus:outline-0 text-gray-600"
                     label="CPF"
+                    mask
                     value={infoUser.cpf_usuario}
                     disabled
                   />
