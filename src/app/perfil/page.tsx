@@ -286,13 +286,13 @@ export default function Perfil() {
                 Categorias
               </h3>
 
-              <div className="flex flex-col gap-3">
+              <div className="flex h-96 flex-col gap-3 overflow-y-auto">
                 <div className="flex flex-col gap-3">
                   {handlePermission(
                     'title',
                     'Tipologia de Fraudes em Licitações e Contratos',
                   ) && (
-                    <p className="flex h-7 w-2/5 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
+                    <p className="flex h-auto w-2/4 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
                       <span>
                         <b>Tipologia de Fraudes</b>
                       </span>
@@ -325,7 +325,7 @@ export default function Perfil() {
 
                 <div className="flex gap-3">
                   {handlePermission('item', 'Medicação') && (
-                    <p className="flex h-auto w-1/4 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
+                    <p className="flex h-auto w-2/6 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
                       <span>
                         <b>Medicação</b>
                       </span>
@@ -333,7 +333,7 @@ export default function Perfil() {
                   )}
 
                   {handlePermission('item', 'Merenda escolar') && (
-                    <p className="flex h-auto w-2/5 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
+                    <p className="flex h-auto w-2/4 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
                       <span>
                         <b>Merenda Escolar</b>
                       </span>
@@ -347,7 +347,7 @@ export default function Perfil() {
 
                 <div className="flex gap-3">
                   {handlePermission('item', 'Qualidade do ar') && (
-                    <p className="flex h-auto w-2/5 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
+                    <p className="flex h-auto w-2/4 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
                       <span>
                         <b>Qualidade do Ar</b>
                       </span>
@@ -355,7 +355,7 @@ export default function Perfil() {
                   )}
 
                   {handlePermission('item', 'Desmatamento') && (
-                    <p className="flex h-auto w-2/5 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
+                    <p className="flex h-auto w-2/4 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
                       <span>
                         <b>Desmatamento</b>
                       </span>

@@ -44,7 +44,7 @@ export function Footer() {
               target="_blank"
               rel="noreferrer"
             >
-              <Icons name="faTwitter" />
+              <Icons name="faXTwitter" />
             </a>
           </li>
           <li>
