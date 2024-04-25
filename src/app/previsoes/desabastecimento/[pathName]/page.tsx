@@ -43,7 +43,7 @@ export default function Previsoes() {
             path.includes('medicacao')
               ? c.itens_categoria.includes('Medicação')
               : path.includes('escolar') &&
-                c.nome_categoria.includes('Escolar'),
+                c.itens_categoria.includes('Escolar'),
           )
           setDashboardUrl(url?.url_dashboard_completa)
           setTimeout(() => {
@@ -57,14 +57,38 @@ export default function Previsoes() {
           }
         })
     }
+
+    if (user.admin !== 1) {
+      api
+        .get(`/usuarios-permissao/${user.id_usuario}`)
+        .then(({ data }) => {
+          const response: ResponseCategoriesType = data
+          const url = response.conteudo.find((c) =>
+            path.includes('medicacao')
+              ? c.itens_categoria.includes('Medicação')
+              : path.includes('escolar') &&
+                c.itens_categoria.includes('Escolar'),
+          )
+          setDashboardUrl(url?.url_dashboard_completa)
+          setTimeout(() => {
+            setLoading(false)
+          }, 2500)
+        })
+        .catch((e) => {
+          const error = e as AxiosError | Error
+          if (error instanceof AxiosError) {
+            console.error(error.response?.data)
+          }
+        })
+    }
   }, [path])
 
   let title = ''
 
   if (path === '/previsoes/desabastecimento/medicacao') {
-    title = 'previsões > desabastecimento > Medicação'
+    title = 'previsões - desabastecimento - Medicação'
   } else if (path === '/previsoes/desabastecimento/merenda_escolar') {
-    title = 'previsões > desabastecimento > merenda escolar'
+    title = 'previsões - desabastecimento - merenda escolar'
   }
 
   return (
@@ -81,7 +105,7 @@ export default function Previsoes() {
         )}
         <iframe
           className={`${loading ? 'hidden' : 'flex'} m-auto h-[44rem] w-11/12`}
-          src={dashboardUrl}
+          src={''}
           frameBorder="0"
         ></iframe>
       </main>

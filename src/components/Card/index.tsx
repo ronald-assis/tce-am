@@ -22,7 +22,7 @@ export function Card({
 }: CardType) {
   return (
     <Button
-      className={`${className} ${disabled ? 'pointer-events-none' : 'hover:-translate-y-2 hover:scale-105 hover:bg-blue_warm-80'} flex cursor-pointer flex-col items-center justify-center rounded-lg bg-blue_warm-70 text-white shadow-2xl transition duration-300 `}
+      className={`${className} ${disabled ? 'pointer-events-none' : 'hover:-translate-y-2 hover:scale-105'} flex cursor-pointer flex-col items-center justify-center rounded-lg bg-blue_warm-70 text-white shadow-2xl transition duration-300 `}
       onClick={onClick}
       disabled={disabled}
     >

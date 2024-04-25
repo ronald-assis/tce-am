@@ -48,7 +48,31 @@ export default function Previsoes() {
           setDashboardUrl(url?.url_dashboard_completa)
           setTimeout(() => {
             setLoading(false)
-          }, 1700)
+          }, 2500)
+        })
+        .catch((e) => {
+          const error = e as AxiosError | Error
+          if (error instanceof AxiosError) {
+            console.error(error.response?.data)
+          }
+        })
+    }
+
+    if (user.admin !== 1) {
+      api
+        .get(`/usuarios-permissao/${user.id_usuario}`)
+        .then(({ data }) => {
+          const response: ResponseCategoriesType = data
+          const url = response.conteudo.find((c) =>
+            path.includes('qualidade')
+              ? c.itens_categoria.includes('Qualidade')
+              : path.includes('desmatamento') &&
+                c.itens_categoria.includes('Desmatamento'),
+          )
+          setDashboardUrl(url?.url_dashboard_completa)
+          setTimeout(() => {
+            setLoading(false)
+          }, 2500)
         })
         .catch((e) => {
           const error = e as AxiosError | Error
