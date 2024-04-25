@@ -157,7 +157,7 @@ export default function Home() {
               <Card
                 title={'Tipologia de Fraudes em Licitações e Contratos'}
                 sizeIcon={88}
-                className={`${showCards ? 'bg-blue_warm-20 hover:bg-blue_warm-20' : 'hover:bg-blue_warm-80'}  disabled:hover:-translate-none motion-reduce:translate-none h-full w-full cursor-not-allowed disabled:bg-blue_warm-20`}
+                className={`${showCards ? 'bg-blue_warm-20 hover:bg-blue_warm-20' : 'bg-blue_warm-70 hover:bg-blue_warm-80'}  disabled:hover:-translate-none motion-reduce:translate-none h-full w-full cursor-not-allowed disabled:bg-blue_warm-20`}
                 icon={'liaFileContractSolid'}
                 disabled={disabledWhenClickButtonCategory(
                   'Tipologia de Fraudes em Licitações e Contratos',
@@ -170,7 +170,7 @@ export default function Home() {
             <Card
               title={'Previsões'}
               sizeIcon={88}
-              className={`${showCards ? '-translate-y-2  scale-105 bg-blue_warm-80' : ''} disabled:hover:-translate-none h-56 w-64 cursor-not-allowed disabled:bg-blue_warm-20 xl:w-80`}
+              className={`${showCards ? '-translate-y-2  scale-105 bg-blue_warm-80' : 'bg-blue_warm-70'} disabled:hover:-translate-none h-56 w-64 cursor-not-allowed disabled:bg-blue_warm-20 xl:w-80`}
               icon={'liaFileContractSolid'}
               onClick={handleShowCardCategory}
               disabled={
@@ -196,7 +196,7 @@ export default function Home() {
               <Card
                 title={'Indicadores de Políticas Publicas'}
                 sizeIcon={88}
-                className={`${showCards ? 'bg-blue_warm-20 hover:bg-blue_warm-20' : 'hover:bg-blue_warm-80'}  disabled:hover:-translate-none motion-reduce:translate-none h-full w-full cursor-not-allowed disabled:bg-blue_warm-20`}
+                className={`${showCards ? 'bg-blue_warm-20 hover:bg-blue_warm-20' : 'bg-blue_warm-70 hover:bg-blue_warm-80'}  disabled:hover:-translate-none motion-reduce:translate-none h-full w-full cursor-not-allowed disabled:bg-blue_warm-20`}
                 icon={'liaFileContractSolid'}
                 disabled={disabledWhenClickButtonCategory(
                   'Indicadores de Políticas Publicas',
@@ -216,7 +216,7 @@ export default function Home() {
                   title={'Desabastecimento'}
                   sizeIcon={64}
                   icon={'siSpond'}
-                  className={`${changeClassName('desabastecimento')} ${showNaturalEnvironment ? 'bg-blue_warm-20 hover:bg-blue_warm-20' : 'hover:bg-blue_warm-80'} w-72 disabled:bg-blue_warm-20`}
+                  className={`${changeClassName('desabastecimento')} ${showNaturalEnvironment ? 'bg-blue_warm-20 hover:bg-blue_warm-20' : 'bg-blue_warm-70 hover:bg-blue_warm-80'} w-72 disabled:bg-blue_warm-20`}
                   onClick={showSubCategories('desabastecimento')}
                   disabled={disabledWhenClickButtonSub('Desabastecimento')}
                 />
@@ -227,7 +227,7 @@ export default function Home() {
                   title={'Meio Ambiente'}
                   sizeIcon={64}
                   icon={'faEnvira'}
-                  className={`${changeClassName('meio_ambiente')} ${showShortages ? 'bg-blue_warm-20 hover:bg-blue_warm-20' : 'hover:bg-blue_warm-80'} w-72 disabled:cursor-not-allowed disabled:bg-blue_warm-20`}
+                  className={`${changeClassName('meio_ambiente')} ${showShortages ? 'bg-blue_warm-20 hover:bg-blue_warm-20' : 'bg-blue_warm-70 hover:bg-blue_warm-80'} w-72 disabled:cursor-not-allowed disabled:bg-blue_warm-20`}
                   onClick={showSubCategories('meio_ambiente')}
                   disabled={disabledWhenClickButtonSub('Meio ambiente')}
                 />
@@ -252,7 +252,7 @@ export default function Home() {
                   title={'Medicação'}
                   sizeIcon={44}
                   icon={'giMedicines'}
-                  className="h-24 w-60 disabled:bg-blue_warm-20"
+                  className="h-24 w-60 bg-blue_warm-70 disabled:bg-blue_warm-20"
                   disabled={
                     getUser().admin !== 1
                       ? !itenSubTitle.itens_categoria.some((t) =>
@@ -278,7 +278,7 @@ export default function Home() {
                   title={'Merenda Escolar'}
                   sizeIcon={44}
                   icon={'giMeal'}
-                  className="h-24 w-60 disabled:bg-blue_warm-20"
+                  className="h-24 w-60 bg-blue_warm-70 disabled:bg-blue_warm-20"
                   disabled={
                     getUser().admin !== 1
                       ? !itenSubTitle.itens_categoria.some((t) =>
@@ -308,7 +308,7 @@ export default function Home() {
                   title={'Qualidade do Ar'}
                   sizeIcon={44}
                   icon={'siAirFlow'}
-                  className="h-24 w-60 disabled:bg-blue_warm-20"
+                  className="h-24 w-60 bg-blue_warm-70 disabled:bg-blue_warm-20"
                   disabled={
                     getUser().admin !== 1
                       ? !itenSubTitle.itens_categoria.some((t) =>
@@ -334,7 +334,7 @@ export default function Home() {
                   title={'Desmatamento'}
                   sizeIcon={44}
                   icon={'giBurningTree'}
-                  className="h-24 w-60 disabled:bg-blue_warm-20"
+                  className="h-24 w-60 bg-blue_warm-70 disabled:bg-blue_warm-20"
                   disabled={
                     getUser().admin !== 1
                       ? !itenSubTitle.itens_categoria.some((t) =>
