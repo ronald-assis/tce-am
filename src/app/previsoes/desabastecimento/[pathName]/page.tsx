@@ -91,6 +91,8 @@ export default function Previsoes() {
     title = 'previsões - desabastecimento - merenda escolar'
   }
 
+  console.log(dashboardUrl)
+
   return (
     <>
       <Header title={title.toUpperCase()} />
