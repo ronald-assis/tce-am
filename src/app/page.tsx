@@ -123,24 +123,12 @@ export default function Home() {
   }
 
   const disabledWhenClickButtonCategory = (category: string): boolean => {
-    if (showCards) {
-      return showCards
-    }
-
     return getUser().admin !== 1
       ? !title.nome_categoria.some((t) => t.includes(category))
       : false
   }
 
-  const disabledWhenClickButtonSub = (
-    category: string,
-    typeSub: boolean,
-    otherSub: boolean,
-  ): boolean => {
-    if (typeSub) {
-      return !otherSub
-    }
-
+  const disabledWhenClickButtonSub = (category: string): boolean => {
     return getUser().admin !== 1
       ? !subTitle.desc_categoria.some((t) => t.includes(category))
       : false
@@ -169,7 +157,7 @@ export default function Home() {
               <Card
                 title={'Tipologia de Fraudes em Licitações e Contratos'}
                 sizeIcon={88}
-                className={`disabled:hover:-translate-none motion-reduce:translate-none h-full w-full cursor-not-allowed disabled:bg-blue_warm-20`}
+                className={`${showCards ? 'bg-blue_warm-20 hover:bg-blue_warm-20' : 'hover:bg-blue_warm-80'}  disabled:hover:-translate-none motion-reduce:translate-none h-full w-full cursor-not-allowed disabled:bg-blue_warm-20`}
                 icon={'liaFileContractSolid'}
                 disabled={disabledWhenClickButtonCategory(
                   'Tipologia de Fraudes em Licitações e Contratos',
@@ -208,7 +196,7 @@ export default function Home() {
               <Card
                 title={'Indicadores de Políticas Publicas'}
                 sizeIcon={88}
-                className={`disabled:hover:-translate-none motion-reduce:translate-none h-full w-full cursor-not-allowed disabled:bg-blue_warm-20`}
+                className={`${showCards ? 'bg-blue_warm-20 hover:bg-blue_warm-20' : 'hover:bg-blue_warm-80'}  disabled:hover:-translate-none motion-reduce:translate-none h-full w-full cursor-not-allowed disabled:bg-blue_warm-20`}
                 icon={'liaFileContractSolid'}
                 disabled={disabledWhenClickButtonCategory(
                   'Indicadores de Políticas Publicas',
@@ -218,153 +206,147 @@ export default function Home() {
           </aside>
         </div>
 
-        {showCards && (
-          <div
-            className={`${showShortages || showNaturalEnvironment ? 'mb-0' : 'mb-28'} mt-8 flex gap-5`}
-          >
-            <a className="cursor-not-allowed">
-              <Card
-                title={'Desabastecimento'}
-                sizeIcon={64}
-                icon={'siSpond'}
-                className={`${changeClassName('desabastecimento')} w-72 disabled:bg-blue_warm-20`}
-                onClick={showSubCategories('desabastecimento')}
-                disabled={disabledWhenClickButtonSub(
-                  'Desabastecimento',
-                  showNaturalEnvironment,
-                  showShortages,
-                )}
-              />
-            </a>
-
-            <a className="cursor-not-allowed">
-              <Card
-                title={'Meio Ambiente'}
-                sizeIcon={64}
-                icon={'faEnvira'}
-                className={`${changeClassName('meio_ambiente')} w-72 disabled:cursor-not-allowed disabled:bg-blue_warm-20`}
-                onClick={showSubCategories('meio_ambiente')}
-                disabled={disabledWhenClickButtonSub(
-                  'Meio ambiente',
-                  showShortages,
-                  showNaturalEnvironment,
-                )}
-              />
-            </a>
-          </div>
-        )}
-
-        {showShortages && (
-          <div className="mb-44 mt-8 flex gap-3">
-            <Link
-              href={
-                getUser().admin === 1 ||
-                itenSubTitle.itens_categoria.some((t) =>
-                  t.includes('Medicação'),
-                )
-                  ? `/previsoes/desabastecimento/medicacao`
-                  : ''
-              }
-              className={`h-full w-full cursor-not-allowed`}
+        <div className="flex w-[80%] flex-col items-center xl:w-[53%]">
+          {showCards && (
+            <div
+              className={`${showShortages || showNaturalEnvironment ? 'mb-0' : 'mb-28'} mt-8 flex gap-5`}
             >
-              <Card
-                title={'Medicação'}
-                sizeIcon={44}
-                icon={'giMedicines'}
-                className="h-24 w-60 disabled:bg-blue_warm-20"
-                disabled={
-                  getUser().admin !== 1
-                    ? !itenSubTitle.itens_categoria.some((t) =>
-                        t.includes('Medicação'),
-                      )
-                    : false
-                }
-              />
-            </Link>
+              <a className="cursor-not-allowed">
+                <Card
+                  title={'Desabastecimento'}
+                  sizeIcon={64}
+                  icon={'siSpond'}
+                  className={`${changeClassName('desabastecimento')} ${showNaturalEnvironment ? 'bg-blue_warm-20 hover:bg-blue_warm-20' : 'hover:bg-blue_warm-80'} w-72 disabled:bg-blue_warm-20`}
+                  onClick={showSubCategories('desabastecimento')}
+                  disabled={disabledWhenClickButtonSub('Desabastecimento')}
+                />
+              </a>
 
-            <Link
-              href={
-                getUser().admin === 1 ||
-                itenSubTitle.itens_categoria.some((t) =>
-                  t.includes('Merenda escolar'),
-                )
-                  ? `/previsoes/desabastecimento/merenda_escolar`
-                  : ''
-              }
-              className={`h-full w-full cursor-not-allowed`}
-            >
-              <Card
-                title={'Merenda Escolar'}
-                sizeIcon={44}
-                icon={'giMeal'}
-                className="h-24 w-60 disabled:bg-blue_warm-20"
-                disabled={
-                  getUser().admin !== 1
-                    ? !itenSubTitle.itens_categoria.some((t) =>
-                        t.includes('Merenda Escolar'),
-                      )
-                    : false
-                }
-              />
-            </Link>
-          </div>
-        )}
+              <a className="cursor-not-allowed">
+                <Card
+                  title={'Meio Ambiente'}
+                  sizeIcon={64}
+                  icon={'faEnvira'}
+                  className={`${changeClassName('meio_ambiente')} ${showShortages ? 'bg-blue_warm-20 hover:bg-blue_warm-20' : 'hover:bg-blue_warm-80'} w-72 disabled:cursor-not-allowed disabled:bg-blue_warm-20`}
+                  onClick={showSubCategories('meio_ambiente')}
+                  disabled={disabledWhenClickButtonSub('Meio ambiente')}
+                />
+              </a>
+            </div>
+          )}
 
-        {showNaturalEnvironment && (
-          <div className="mb-44 mt-8 flex gap-3">
-            <Link
-              href={
-                getUser().admin === 1 ||
-                itenSubTitle.itens_categoria.some((t) =>
-                  t.includes('Qualidade do ar'),
-                )
-                  ? `/previsoes/meio_ambiente/qualidade_do_ar`
-                  : ''
-              }
-              className={`h-full w-full cursor-not-allowed`}
-            >
-              <Card
-                title={'Qualidade do Ar'}
-                sizeIcon={44}
-                icon={'siAirFlow'}
-                className="h-24 w-60 disabled:bg-blue_warm-20"
-                disabled={
-                  getUser().admin !== 1
-                    ? !itenSubTitle.itens_categoria.some((t) =>
-                        t.includes('Qualidade do ar'),
-                      )
-                    : false
+          {showShortages && (
+            <div className="mb-44 mt-8 flex gap-3 self-start">
+              <Link
+                href={
+                  getUser().admin === 1 ||
+                  itenSubTitle.itens_categoria.some((t) =>
+                    t.includes('Medicação'),
+                  )
+                    ? `/previsoes/desabastecimento/medicacao`
+                    : ''
                 }
-              />
-            </Link>
+                className={`h-full w-full cursor-not-allowed`}
+              >
+                <Card
+                  title={'Medicação'}
+                  sizeIcon={44}
+                  icon={'giMedicines'}
+                  className="h-24 w-60 disabled:bg-blue_warm-20"
+                  disabled={
+                    getUser().admin !== 1
+                      ? !itenSubTitle.itens_categoria.some((t) =>
+                          t.includes('Medicação'),
+                        )
+                      : false
+                  }
+                />
+              </Link>
 
-            <Link
-              href={
-                getUser().admin === 1 ||
-                itenSubTitle.itens_categoria.some((t) =>
-                  t.includes('Desmatamento'),
-                )
-                  ? '/previsoes/meio_ambiente/desmatamento'
-                  : ''
-              }
-              className={`h-full w-full cursor-not-allowed`}
-            >
-              <Card
-                title={'Desmatamento'}
-                sizeIcon={44}
-                icon={'giBurningTree'}
-                className="h-24 w-60 disabled:bg-blue_warm-20"
-                disabled={
-                  getUser().admin !== 1
-                    ? !itenSubTitle.itens_categoria.some((t) =>
-                        t.includes('Desmatamento'),
-                      )
-                    : false
+              <Link
+                href={
+                  getUser().admin === 1 ||
+                  itenSubTitle.itens_categoria.some((t) =>
+                    t.includes('Merenda escolar'),
+                  )
+                    ? `/previsoes/desabastecimento/merenda_escolar`
+                    : ''
                 }
-              />
-            </Link>
-          </div>
-        )}
+                className={`h-full w-full cursor-not-allowed`}
+              >
+                <Card
+                  title={'Merenda Escolar'}
+                  sizeIcon={44}
+                  icon={'giMeal'}
+                  className="h-24 w-60 disabled:bg-blue_warm-20"
+                  disabled={
+                    getUser().admin !== 1
+                      ? !itenSubTitle.itens_categoria.some((t) =>
+                          t.includes('Merenda Escolar'),
+                        )
+                      : false
+                  }
+                />
+              </Link>
+            </div>
+          )}
+
+          {showNaturalEnvironment && (
+            <div className="mb-44 mt-8 flex gap-3 self-end">
+              <Link
+                href={
+                  getUser().admin === 1 ||
+                  itenSubTitle.itens_categoria.some((t) =>
+                    t.includes('Qualidade do ar'),
+                  )
+                    ? `/previsoes/meio_ambiente/qualidade_do_ar`
+                    : ''
+                }
+                className={`h-full w-full cursor-not-allowed`}
+              >
+                <Card
+                  title={'Qualidade do Ar'}
+                  sizeIcon={44}
+                  icon={'siAirFlow'}
+                  className="h-24 w-60 disabled:bg-blue_warm-20"
+                  disabled={
+                    getUser().admin !== 1
+                      ? !itenSubTitle.itens_categoria.some((t) =>
+                          t.includes('Qualidade do ar'),
+                        )
+                      : false
+                  }
+                />
+              </Link>
+
+              <Link
+                href={
+                  getUser().admin === 1 ||
+                  itenSubTitle.itens_categoria.some((t) =>
+                    t.includes('Desmatamento'),
+                  )
+                    ? '/previsoes/meio_ambiente/desmatamento'
+                    : ''
+                }
+                className={`h-full w-full cursor-not-allowed`}
+              >
+                <Card
+                  title={'Desmatamento'}
+                  sizeIcon={44}
+                  icon={'giBurningTree'}
+                  className="h-24 w-60 disabled:bg-blue_warm-20"
+                  disabled={
+                    getUser().admin !== 1
+                      ? !itenSubTitle.itens_categoria.some((t) =>
+                          t.includes('Desmatamento'),
+                        )
+                      : false
+                  }
+                />
+              </Link>
+            </div>
+          )}
+        </div>
       </main>
     </>
   )

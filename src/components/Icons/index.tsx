@@ -8,6 +8,7 @@ import {
   FaUserLarge,
   FaRegEnvelope,
   FaLock,
+  FaXTwitter,
 } from 'react-icons/fa6'
 import { PiGraduationCapBold } from 'react-icons/pi'
 import {
@@ -63,6 +64,7 @@ export type NameIcons =
   | 'faTwitter'
   | 'siSpond'
   | 'faEnvira'
+  | 'faXTwitter'
 
 interface DynamicIconProp {
   name: NameIcons
@@ -73,6 +75,7 @@ interface DynamicIconProp {
 
 const icons: Record<NameIcons, IconType> = {
   user: AiOutlineUser,
+  faXTwitter: FaXTwitter,
   giMeal: GiMeal,
   giMedicines: GiMedicines,
   giBurningTree: GiBurningTree,
