@@ -132,7 +132,7 @@ export function UserMenu(props: UserProp) {
             <ul className="flex flex-col justify-center gap-1 text-lg ">
               {permitted(
                 'title',
-                'Tipologia de Fraudes em Licitações e Contratos',
+                'Tipologia de fraudes em licitações e contratos',
               ) && (
                 <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
                   <Link href="/categoria/tipologia_de_fraudes_em_licitacoes_e_contrato">
@@ -163,7 +163,7 @@ export function UserMenu(props: UserProp) {
                 </li>
               )}
 
-              {permitted('item', 'Merenda escolar') && (
+              {permitted('item', 'Merenda Escolar') && (
                 <li className="flex h-8 items-center text-blue_warm-70 hover:cursor-pointer  hover:bg-gray-300">
                   <Link href={'/previsoes/desabastecimento/merenda_escolar'}>
                     <span>Merenda Escolar</span>

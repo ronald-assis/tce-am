@@ -25,6 +25,19 @@ interface ResponseCategoriesType {
   conteudo: CategoryType[]
 }
 
+interface PUCategoryType {
+  id_categoria: string
+  nome_categoria: string
+  desc_categoria: string
+  itens_categoria: string
+  url_simples: string
+  url_completa: string
+}
+interface PermissionUsertype {
+  categoria: PUCategoryType
+  id_categoria: string
+}
+
 export default function OtherModules() {
   const [loading, setLoading] = useState(false)
   const [dashboardUrl, setDashboardUrl] = useState<string | undefined>('')
@@ -62,14 +75,14 @@ export default function OtherModules() {
       api
         .get(`/usuarios-permissao/${user.id_usuario}`)
         .then(({ data }) => {
-          const response: CategoryType[] = data
+          const response: PermissionUsertype[] = data
           const url = response.find((c) =>
             path.includes('fraudes')
-              ? c.nome_categoria.includes('fraudes')
+              ? c.categoria.nome_categoria.includes('fraudes')
               : path.includes('indicadores') &&
-                c.nome_categoria.includes('Indicadores'),
+                c.categoria.nome_categoria.includes('Indicadores'),
           )
-          setDashboardUrl(url?.url_dashboard_completa)
+          setDashboardUrl(url?.categoria.url_completa)
           setTimeout(() => {
             setLoading(false)
           }, 1500)

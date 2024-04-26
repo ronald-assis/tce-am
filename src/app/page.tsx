@@ -162,7 +162,7 @@ export default function Home() {
               href={
                 getUser().admin === 1 ||
                 title.nome_categoria.some((t) =>
-                  t.includes('Tipologia de Fraudes em Licitações e Contratos'),
+                  t.includes('Tipologia de fraudes em licitações e contratos'),
                 )
                   ? `/categoria/tipologia_de_fraudes_em_licitacoes_e_contrato`
                   : ''
@@ -175,7 +175,7 @@ export default function Home() {
                 className={`${showCards ? 'bg-blue_warm-20 hover:bg-blue_warm-20' : 'bg-blue_warm-70 hover:bg-blue_warm-80'}  disabled:hover:-translate-none motion-reduce:translate-none h-full w-full cursor-not-allowed disabled:bg-blue_warm-20`}
                 icon={'liaFileContractSolid'}
                 disabled={disabledWhenClickButtonCategory(
-                  'Tipologia de Fraudes em Licitações e Contratos',
+                  'Tipologia de fraudes em licitações e contratos',
                 )}
               />
             </Link>
@@ -200,7 +200,7 @@ export default function Home() {
             <Link
               href={
                 getUser().admin === 1 ||
-                !title.nome_categoria.some((t) =>
+                title.nome_categoria.some((t) =>
                   t.includes('Indicadores de Políticas Publicas'),
                 )
                   ? `/categoria/indicadores_de_politicas_publicas`
@@ -282,7 +282,7 @@ export default function Home() {
                 href={
                   getUser().admin === 1 ||
                   itenSubTitle.itens_categoria.some((t) =>
-                    t.includes('Merenda escolar'),
+                    t.includes('Merenda Escolar'),
                   )
                     ? `/previsoes/desabastecimento/merenda_escolar`
                     : ''
