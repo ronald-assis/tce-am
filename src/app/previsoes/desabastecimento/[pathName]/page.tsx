@@ -104,8 +104,6 @@ export default function Previsoes() {
     title = 'previsões - desabastecimento - merenda escolar'
   }
 
-  console.log(dashboardUrl)
-
   return (
     <>
       <Header title={title.toUpperCase()} />
@@ -120,7 +118,7 @@ export default function Previsoes() {
         )}
         <iframe
           className={`${loading ? 'hidden' : 'flex'} m-auto h-[44rem] w-11/12`}
-          src={''}
+          src={dashboardUrl}
           frameBorder="0"
         ></iframe>
       </main>
