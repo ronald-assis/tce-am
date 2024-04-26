@@ -85,8 +85,8 @@ export function UserMenu(props: UserProp) {
         onClick={() => setShowMenu(!showMenu)}
         className={`${showMenu ? 'border-2 border-gray-400' : ''} flex w-44 items-center gap-2 rounded-full bg-white p-1 hover:bg-blue_warm-20`}
       >
-        <div className=" rounded-full bg-gray-500 text-white">
-          <Icons name="user" />
+        <div className="ml-1 h-6 w-6 rounded-full bg-gray-500 text-white">
+          <span className="font-ald">{props.nome_usuario[0]}</span>
         </div>
         <div className="flex items-center gap-1 text-center">
           <span className="text-gray-700">
