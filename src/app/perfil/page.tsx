@@ -290,7 +290,7 @@ export default function Perfil() {
                 <div className="flex flex-col gap-3">
                   {handlePermission(
                     'title',
-                    'Tipologia de Fraudes em Licitações e Contratos',
+                    'Tipologia de fraudes em licitações e contratos',
                   ) && (
                     <p className="flex h-auto w-2/4 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
                       <span>
@@ -332,7 +332,7 @@ export default function Perfil() {
                     </p>
                   )}
 
-                  {handlePermission('item', 'Merenda escolar') && (
+                  {handlePermission('item', 'Merenda Escolar') && (
                     <p className="flex h-auto w-2/4 items-center justify-center rounded-full bg-blue_warm-50 text-center uppercase text-white">
                       <span>
                         <b>Merenda Escolar</b>
