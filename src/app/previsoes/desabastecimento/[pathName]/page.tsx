@@ -25,6 +25,19 @@ interface ResponseCategoriesType {
   conteudo: CategoryType[]
 }
 
+interface PUCategoryType {
+  id_categoria: string
+  nome_categoria: string
+  desc_categoria: string
+  itens_categoria: string
+  url_simples: string
+  url_completa: string
+}
+interface PermissionUsertype {
+  categoria: PUCategoryType
+  id_categoria: string
+}
+
 export default function Previsoes() {
   const [loading, setLoading] = useState(false)
   const [dashboardUrl, setDashboardUrl] = useState<string | undefined>('')
@@ -62,14 +75,14 @@ export default function Previsoes() {
       api
         .get(`/usuarios-permissao/${user.id_usuario}`)
         .then(({ data }) => {
-          const response: ResponseCategoriesType = data
-          const url = response.conteudo.find((c) =>
+          const response: PermissionUsertype[] = data
+          const url = response.find((c) =>
             path.includes('medicacao')
-              ? c.itens_categoria.includes('Medicação')
+              ? c.categoria.itens_categoria.includes('Medicação')
               : path.includes('escolar') &&
-                c.itens_categoria.includes('Escolar'),
+                c.categoria.itens_categoria.includes('Escolar'),
           )
-          setDashboardUrl(url?.url_dashboard_completa)
+          setDashboardUrl(url?.categoria.url_completa)
           setTimeout(() => {
             setLoading(false)
           }, 2500)
