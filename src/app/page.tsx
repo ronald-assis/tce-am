@@ -59,9 +59,9 @@ export default function Home() {
   }
 
   useEffect(() => {
-    const idUser = getUser().id_usuario
+    const user = getUser()
     api
-      .get(`/usuarios-permissao/${idUser}`)
+      .get(`/usuarios-permissao/${user.id_usuario}`)
       .then(({ data }: UserPermissionResponseType) => {
         const nameCategories: string[] = []
         const descCategories: string[] = []
@@ -86,6 +86,21 @@ export default function Home() {
           }
         }
       })
+
+    if (user.admin === 1) {
+      api
+        .get('/categorias')
+        .then()
+        .catch((e) => {
+          const error = e as AxiosError | Error
+          if (error instanceof AxiosError) {
+            console.log(error.response?.data.message)
+            if (error.response?.data.message === 'Acesso não autorizado!') {
+              window.location.reload()
+            }
+          }
+        })
+    }
   }, [])
 
   const showSubCategories = (params?: string) => {
