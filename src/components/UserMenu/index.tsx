@@ -83,21 +83,21 @@ export function UserMenu(props: UserProp) {
     <div className="relative w-fit rounded-full p-1">
       <Button
         onClick={() => setShowMenu(!showMenu)}
-        className={`${showMenu ? 'border-2 border-gray-400' : ''} flex w-44 items-center gap-2 rounded-full bg-white p-1 hover:bg-blue_warm-20`}
+        className={`${showMenu ? 'border-2 border-gray-400' : ''} flex w-auto items-center justify-between gap-2 rounded-full bg-white py-1 pl-1 pr-3 hover:bg-blue_warm-20`}
       >
-        <div className="ml-1 h-6 w-6 rounded-full bg-gray-500 text-white">
-          <span className="font-ald">{props.nome_usuario[0]}</span>
-        </div>
-        <div className="flex items-center gap-1 text-center">
-          <span className="text-gray-700">
-            Olá, <b>{props.nome_usuario && props.nome_usuario.split(' ')[0]}</b>
-          </span>
-          <div className="text-blue_warm-80">
-            <Icons
-              name={`${showMenu ? 'ioArrowUp' : 'ioArrowDown'}`}
-              color=""
-            />
+        <aside className="flex gap-2">
+          <div className="ml-1 h-6 w-6 rounded-full bg-gray-500 text-white">
+            <span className="font-ald">{props.nome_usuario[0]}</span>
           </div>
+          <div className="flex items-center gap-1 text-center">
+            <span className="text-gray-700">
+              Olá,{' '}
+              <b>{props.nome_usuario && props.nome_usuario.split(' ')[0]}</b>
+            </span>
+          </div>
+        </aside>
+        <div className="text-blue_warm-80">
+          <Icons name={`${showMenu ? 'ioArrowUp' : 'ioArrowDown'}`} color="" />
         </div>
       </Button>
 
